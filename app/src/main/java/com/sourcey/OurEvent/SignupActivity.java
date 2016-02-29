@@ -1,6 +1,7 @@
 package com.sourcey.OurEvent;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,8 +11,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import butterknife.ButterKnife;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -81,6 +95,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
+        new senddata(true).execute(_emailText.getText().toString(),_passwordText.getText().toString(), _nameText.getText().toString());
         setResult(RESULT_OK, null);
         finish();
     }
@@ -120,5 +135,58 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+
+    public class senddata extends AsyncTask<String, String, String>
+    {
+
+        public senddata(String email, String password, String userName)
+        {
+
+        }
+
+        public senddata(boolean b) {
+            super();
+
+        }
+        @Override
+        protected String doInBackground(String... strings) {
+
+            HttpResponse resp = null;
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost post = new HttpPost(
+                    "https://eventfy.herokuapp.com/webapi/signup");
+            post.setHeader("content-type", "application/json");
+
+            JSONObject dato = new JSONObject();
+            try {
+                dato.put("DOB", null);
+
+                dato.put("email", strings[0]);
+
+                dato.put("password", strings[1]);
+
+                dato.put("userName", strings[2]);
+
+
+                StringEntity entity = new StringEntity(dato.toString());
+                post.setEntity(entity);
+                resp = httpClient.execute(post);
+
+                Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +resp.getEntity().toString());
+
+                return EntityUtils.toString(resp.getEntity());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

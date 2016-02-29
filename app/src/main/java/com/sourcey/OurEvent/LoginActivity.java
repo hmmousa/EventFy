@@ -1,35 +1,34 @@
 package com.sourcey.OurEvent;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-///////////////////////////
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONArray;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
-import android.os.AsyncTask;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
+
+///////////////////////////
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -72,7 +71,9 @@ public class LoginActivity extends AppCompatActivity {
             onLoginFailed();
             return;
         }
-
+        else{
+            new senddata(true).execute(_emailText.getText().toString(), _passwordText.getText().toString());
+        }
         _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
@@ -120,6 +121,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
+      //  new senddata().execute(_emailText.getText(), _passwordText.getText());
         finish();
     }
 
@@ -135,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {
@@ -150,5 +152,52 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+
+    public class senddata extends AsyncTask<String, String, String>
+    {
+
+
+        public senddata(boolean b) {
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            HttpResponse resp = null;
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost post = new HttpPost(
+                    "https://eventfy.herokuapp.com/webapi/login");
+            post.setHeader("content-type", "application/json");
+
+            JSONObject dato = new JSONObject();
+            try {
+                dato.put("password", strings[1]);
+                dato.put("username", strings[0]);
+
+               // Log.d("APP:  ", "request is : * * * *  * * ** * * * * ** * * * * * * ** *    " + dato.toString());
+            StringEntity entity = new StringEntity(dato.toString());
+
+            post.setEntity(entity);
+                resp = httpClient.execute(post);
+                String responseText = EntityUtils.toString(resp.getEntity());
+                Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +responseText);
+
+return null;
+               // return EntityUtils.toString(resp.getEntity());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+         return null;
+        }
+
+
     }
 }
