@@ -174,7 +174,7 @@ public class SignupActivity extends AppCompatActivity {
                 post.setEntity(entity);
                 resp = httpClient.execute(post);
 
-                Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +resp.getEntity().toString());
+              //  Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +resp.getEntity().toString());
 
                 return EntityUtils.toString(resp.getEntity());
             } catch (JSONException e) {
