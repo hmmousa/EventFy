@@ -33,6 +33,7 @@ public class SignupActivity extends AppCompatActivity {
     @Bind(R.id.input_name) EditText _nameText;
     @Bind(R.id.input_email) EditText _emailText;
     @Bind(R.id.input_password) EditText _passwordText;
+    @Bind(R.id.input_DOB) EditText _dobtext;
     @Bind(R.id.btn_signup) Button _signupButton;
     @Bind(R.id.link_login) TextView _loginLink;
     
@@ -75,6 +76,7 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.show();
 
         String name = _nameText.getText().toString();
+        String dob =  _dobtext.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
@@ -95,7 +97,11 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
-        new senddata(true).execute(_emailText.getText().toString(),_passwordText.getText().toString(), _nameText.getText().toString());
+        new senddata(true).execute(
+                _emailText.getText().toString(),
+                _dobtext.getText().toString(),_passwordText.getText().toString(),
+                _nameText.getText().toString());
+
         setResult(RESULT_OK, null);
         finish();
     }
@@ -112,6 +118,7 @@ public class SignupActivity extends AppCompatActivity {
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
+        String dob = _dobtext.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
             _nameText.setError("at least 3 characters");
@@ -119,6 +126,14 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             _nameText.setError(null);
         }
+
+        if (dob.isEmpty()){
+            _dobtext.setError("Enter a valid Date of Birth");
+        valid = false;}
+        else
+        { _dobtext.setError(null);
+        }
+
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");

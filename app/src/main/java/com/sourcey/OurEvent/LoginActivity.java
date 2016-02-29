@@ -28,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-///////////////////////////
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
