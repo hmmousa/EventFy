@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,13 +67,21 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
 
+         String result = null;
         if (!validate()) {
             onLoginFailed();
             return;
         }
-        else{
-            new senddata(true).execute(_emailText.getText().toString(), _passwordText.getText().toString());
-        }
+//        else{
+//            senddata senddataObj = new senddata(true);
+//            try {
+//                result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//        }
         _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
@@ -90,8 +99,26 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
+
+
+                        senddata senddataObj = new senddata(true);
+                        try {
+                           String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
+                            Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** *    " +result);
+                        if(result!=null)
+                          onLoginSuccess();
+                        else
+                        {
+                            onLoginFailed();
+                        }
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                        //
+
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -156,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public class senddata extends AsyncTask<String, String, String>
     {
-
+        String responseText;
 
         public senddata(boolean b) {
         }
@@ -175,16 +202,15 @@ public class LoginActivity extends AppCompatActivity {
                 dato.put("password", strings[1]);
                 dato.put("username", strings[0]);
 
-               // Log.d("APP:  ", "request is : * * * *  * * ** * * * * ** * * * * * * ** *    " + dato.toString());
+               Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** * json" + dato.toString());
             StringEntity entity = new StringEntity(dato.toString());
 
-            post.setEntity(entity);
+                post.setEntity(entity);
                 resp = httpClient.execute(post);
-                String responseText = EntityUtils.toString(resp.getEntity());
+                responseText = EntityUtils.toString(resp.getEntity());
                 Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +responseText);
 
-return null;
-               // return EntityUtils.toString(resp.getEntity());
+                return responseText;
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (ClientProtocolException e) {
@@ -194,7 +220,7 @@ return null;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-         return null;
+         return responseText;
         }
 
 
