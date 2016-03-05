@@ -1,4 +1,4 @@
-package com.sourcey.OurEvent;
+package com.CSUF.EventFy;
 
 import android.content.Intent;
 import android.os.Bundle;
