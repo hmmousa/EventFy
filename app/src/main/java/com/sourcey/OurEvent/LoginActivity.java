@@ -99,13 +99,10 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-
-
                         senddata senddataObj = new senddata(true);
                         try {
                            String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
-                            Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** *    " +result);
-                        if(result!=null)
+                        if(result!=null && result.contains("userName"))
                           onLoginSuccess();
                         else
                         {
@@ -190,6 +187,31 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
+
+
+//            Client client = ClientBuilder.newClient();
+//            WebTarget target = client.target("https://eventfy.herokuapp.com/webapi/login").path("resource");
+//
+//            Form form = new Form();
+//            form.param("password", strings[1]);
+//            form.param("username", strings[0]);
+//
+//            JSONObject dato = new JSONObject();
+//            try {
+//                dato.put("password", strings[1]);
+//                dato.put("username", strings[0]);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            User bean =
+//                    target.request(MediaType.APPLICATION_JSON_TYPE)
+//                            .post(Entity.entity(form, MediaType.APPLICATION_JSON),
+//                                    User.class);
+//
+//            responseText = bean.getEmail();
+//            Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** * json" + responseText);
+
 
             HttpResponse resp = null;
             HttpClient httpClient = new DefaultHttpClient();

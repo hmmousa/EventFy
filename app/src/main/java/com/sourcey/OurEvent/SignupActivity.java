@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -87,7 +88,27 @@ public class SignupActivity extends AppCompatActivity {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        onSignupSuccess();
+
+                        senddata senddataObj = new senddata(true);
+                        try {
+                            String result = senddataObj.execute(_emailText.getText().toString(),_passwordText.getText().toString(),
+                                    _nameText.getText().toString(), _dobtext.getText().toString()).get();
+                            _dobtext.getText().toString();
+                            if(result!=null && result.contains("userName"))
+                                onSignupSuccess();
+                            else
+                            {
+                                onSignupFailed();
+                            }
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+
+
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
@@ -98,9 +119,7 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         new senddata(true).execute(
-                _emailText.getText().toString(),
-                _dobtext.getText().toString(),_passwordText.getText().toString(),
-                _nameText.getText().toString());
+                );
 
         setResult(RESULT_OK, null);
         finish();
@@ -176,7 +195,6 @@ public class SignupActivity extends AppCompatActivity {
 
             JSONObject dato = new JSONObject();
             try {
-                dato.put("DOB", null);
 
                 dato.put("email", strings[0]);
 
@@ -184,6 +202,7 @@ public class SignupActivity extends AppCompatActivity {
 
                 dato.put("userName", strings[2]);
 
+                dato.put("DOB", strings[3]);
 
                 StringEntity entity = new StringEntity(dato.toString());
                 post.setEntity(entity);
