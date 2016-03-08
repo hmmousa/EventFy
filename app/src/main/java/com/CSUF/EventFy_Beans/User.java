@@ -1,4 +1,4 @@
-package com.CSUF.OurEvent_Beans;
+package com.CSUF.EventFy_Beans;
 
 /**
  * Created by swapnil on 3/4/16.
