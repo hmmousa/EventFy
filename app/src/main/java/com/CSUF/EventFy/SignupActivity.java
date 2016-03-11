@@ -75,7 +75,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
         _dobtext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 datePickerDialog.setVibrate(isVibrate());
-                datePickerDialog.setYearRange(1985, 2028);
+                datePickerDialog.setYearRange(1910, calendar.get(Calendar.YEAR)-10);
                 datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
                 datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
