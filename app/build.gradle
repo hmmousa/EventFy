@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.csuf.EventFy"
+        applicationId "com.sourcey.OurEvent"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'org.json:json:20160212'
+    compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
 }

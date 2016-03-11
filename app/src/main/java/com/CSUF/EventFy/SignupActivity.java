@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fourmob.datetimepicker.date.DatePickerDialog;
+import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -23,12 +26,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SignupActivity extends AppCompatActivity {
+;
+
+public class SignupActivity extends AppCompatActivity implements OnDateSetListener {
     private static final String TAG = "SignupActivity";
 
     @Bind(R.id.input_name) EditText _nameText;
@@ -37,12 +43,19 @@ public class SignupActivity extends AppCompatActivity {
     @Bind(R.id.input_DOB) EditText _dobtext;
     @Bind(R.id.btn_signup) Button _signupButton;
     @Bind(R.id.link_login) TextView _loginLink;
-    
+
+
+    public static final String DATEPICKER_TAG = "datepicker";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
+
+        final Calendar calendar = Calendar.getInstance();
+
+        final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(SignupActivity.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +71,36 @@ public class SignupActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        _dobtext.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                datePickerDialog.setVibrate(isVibrate());
+                datePickerDialog.setYearRange(1985, 2028);
+                datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
+
+        });
+
     }
+
+
+    private boolean isVibrate() {
+        return false;
+    }
+
+    private boolean isCloseOnSingleTapDay() {
+        return false;
+    }
+
+    private boolean isCloseOnSingleTapMinute() {
+        return false;
+    }
+
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        _dobtext.setText(year + "-" + month + "-" + day);
+    }
+
 
     public void signup() {
         Log.d(TAG, "Signup");
@@ -91,13 +133,12 @@ public class SignupActivity extends AppCompatActivity {
 
                         senddata senddataObj = new senddata(true);
                         try {
-                            String result = senddataObj.execute(_emailText.getText().toString(),_passwordText.getText().toString(),
+                            String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString(),
                                     _nameText.getText().toString(), _dobtext.getText().toString()).get();
                             _dobtext.getText().toString();
-                            if(result!=null && result.contains("userName"))
+                            if (result != null && result.contains("userName"))
                                 onSignupSuccess();
-                            else
-                            {
+                            else {
                                 onSignupFailed();
                             }
 
@@ -106,7 +147,6 @@ public class SignupActivity extends AppCompatActivity {
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
-
 
 
                         // onSignupFailed();
@@ -119,7 +159,7 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         new senddata(true).execute(
-                );
+        );
 
         setResult(RESULT_OK, null);
         finish();
