@@ -46,8 +46,10 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
 
 
     public static final String DATEPICKER_TAG = "datepicker";
+public  final  senddata senddataObj = new senddata(true);
 
-    @Override
+
+@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
@@ -56,7 +58,6 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
         final Calendar calendar = Calendar.getInstance();
 
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(SignupActivity.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
-
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,8 +75,8 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
 
         _dobtext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                datePickerDialog.setVibrate(isVibrate());
-                datePickerDialog.setYearRange(1910, calendar.get(Calendar.YEAR)-10);
+               // datePickerDialog.setVibrate(isVibrate());
+                datePickerDialog.setYearRange(1910, calendar.get(Calendar.YEAR) - 10);
                 datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
                 datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
@@ -130,12 +131,10 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-
-                        senddata senddataObj = new senddata(true);
                         try {
                             String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString(),
                                     _nameText.getText().toString(), _dobtext.getText().toString()).get();
-                            _dobtext.getText().toString();
+
                             if (result != null && result.contains("userName"))
                                 onSignupSuccess();
                             else {
@@ -148,7 +147,6 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
                             e.printStackTrace();
                         }
 
-
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
@@ -158,8 +156,6 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
-        new senddata(true).execute(
-        );
 
         setResult(RESULT_OK, null);
         finish();
@@ -212,7 +208,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
     }
 
 
-    public class senddata extends AsyncTask<String, String, String>
+    public  class senddata extends AsyncTask<String, String, String>
     {
 
         public senddata(String email, String password, String userName)
@@ -250,6 +246,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
 
                 String json = EntityUtils.toString(resp.getEntity());
                Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +json);
+                Thread.sleep(200);
 
                 return json;
             } catch (JSONException e) {
@@ -259,6 +256,8 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             return null;

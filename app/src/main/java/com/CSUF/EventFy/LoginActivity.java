@@ -144,7 +144,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-      //  new senddata().execute(_emailText.getText(), _passwordText.getText());
         finish();
     }
 
