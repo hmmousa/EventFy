@@ -11,7 +11,10 @@
         android:layout_height="wrap_content"
         android:paddingTop="56dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
 
         <!-- Name Label -->
         <ImageView
@@ -35,18 +38,7 @@
                       android:textColor="@color/black"/>
         </android.support.design.widget.TextInputLayout>'
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_DOB"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords|date"
-                android:hint="DOB"
-                      android:textColor="@color/black"/>
-        </android.support.design.widget.TextInputLayout>
+
 
         <!--  Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -75,6 +67,25 @@
                 android:hint="Password"
                       android:textColor="@color/black"/>
         </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:focusable="false"
+            android:clickable="true">
+            <EditText android:id="@+id/input_DOB"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:inputType="textCapWords|date"
+                      android:hint="Date Of Birth"
+                      android:textColor="@color/black"
+                      android:focusable="false"
+                      android:clickable="true"
+                     />
+        </android.support.design.widget.TextInputLayout>
+
 
         <!-- Signup Button -->
 
