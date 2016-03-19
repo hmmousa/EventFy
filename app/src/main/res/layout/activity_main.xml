@@ -12,7 +12,7 @@
         android:layout_marginBottom="45dp"
         android:layout_marginLeft="34dp"
         android:layout_marginStart="34dp"
-        android:drawableTop="@drawable/MyAcc"
+        android:drawableTop="@drawable/my_acc"
         android:text="E-mail"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -20,32 +20,34 @@
         android:id="@+id/btcharts"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_above="@+id/btemail"
-        android:layout_alignLeft="@+id/btemail"
-        android:drawableTop="@drawable/MyA"
+        android:drawableTop="@drawable/my_acc"
         android:drawablePadding="-35dp"
         android:text="Charts"
-        android:textAppearance="?android:attr/textAppearanceSmall"  />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_alignTop="@+id/bteacc"
+        android:layout_toRightOf="@+id/bteacc"
+        android:layout_toEndOf="@+id/bteacc"/>
 
     <Button
         android:id="@+id/bthistory"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_alignBaseline="@+id/btemail"
-        android:layout_alignBottom="@+id/btemail"
-        android:layout_toRightOf="@+id/btemail"
-        android:drawableTop="@drawable/list"
+        android:drawableTop="@drawable/shw_evnt"
         android:text="History"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_above="@+id/btimport"
+        android:layout_toLeftOf="@+id/btimport"
+        android:layout_toStartOf="@+id/btimport"/>
 
     <Button
         android:id="@+id/btimport"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_alignLeft="@+id/bthistory"
-        android:layout_alignTop="@+id/btcharts"
-        android:drawableTop="@drawable/add"
+        android:drawableTop="@drawable/add_evnt"
         android:text="New Measurement"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/bteacc"
+        android:layout_toEndOf="@+id/bteacc"/>
 
 </RelativeLayout>

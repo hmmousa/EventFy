@@ -4,15 +4,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/btnaccmenu"
-            android:icon="@drawable/MyAcc"
+            android:icon="@drawable/my_acc"
             android:title="My Account" />
         <item
             android:id="@+id/btnaddmenu"
-            android:icon="@drawable/AddEvnt"
+            android:icon="@drawable/add_evnt"
             android:title="Add Event" />
         <item
             android:id="@+id/btnshowmenu"
-            android:icon="@drawable/ShwEvnt"
+            android:icon="@drawable/shw_evnt"
             android:title="Show Events" />
         <item
             android:id="@+id/btnlogout"

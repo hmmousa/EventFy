@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EventFy.iml" filepath="$PROJECT_DIR$/EventFy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OurEvent-BETA.iml" filepath="$PROJECT_DIR$/OurEvent-BETA.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
