@@ -46,7 +46,7 @@
             android:textSize="30dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-        
+
     </LinearLayout>
 
 

@@ -1,6 +1,7 @@
 package com.CSUF.EventFy;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -157,8 +158,10 @@ public  final  senddata senddataObj = new senddata(true);
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
 
-        setResult(RESULT_OK, null);
-        finish();
+        Intent intent = new Intent(this, Main2Activity.class);
+        startActivity(intent);
+     //   setResult(RESULT_OK, null);
+   //     finish();
     }
 
     public void onSignupFailed() {
