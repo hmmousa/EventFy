@@ -1,5 +1,6 @@
 package com.CSUF.EventFy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +27,7 @@ public class Main2Activity extends AppCompatActivity
 
     private SliderLayout mDemoSlider;
     private SliderLayout mDemoSlider1;
+    private SliderLayout mDemoSlider2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,18 +45,13 @@ public class Main2Activity extends AppCompatActivity
 
         mDemoSlider = (SliderLayout)findViewById(R.id.slider);
         mDemoSlider1 = (SliderLayout)findViewById(R.id.slider1);
+        mDemoSlider2 = (SliderLayout)findViewById(R.id.slider2);
 
         HashMap<String,String> url_maps = new HashMap<String, String>();
         url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
         url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
         url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
         url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-
-//        HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
-//        file_maps.put("Hannibal",R.drawable.hannibal);
-//        file_maps.put("Big Bang Theory",R.drawable.bigbang);
-//        file_maps.put("House of Cards",R.drawable.house);
-//        file_maps.put("Game of Thrones", R.drawable.game_of_thrones);
 
         for(String name : url_maps.keySet()){
             TextSliderView textSliderView = new TextSliderView(this);
@@ -72,19 +69,25 @@ public class Main2Activity extends AppCompatActivity
 
             mDemoSlider.addSlider(textSliderView);
             mDemoSlider1.addSlider(textSliderView);
+            mDemoSlider2.addSlider(textSliderView);
         }
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.setDuration(4000);
+        mDemoSlider.setDuration(2000);
         mDemoSlider.addOnPageChangeListener(this);
 
         mDemoSlider1.setPresetTransformer(SliderLayout.Transformer.Accordion);
         mDemoSlider1.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         mDemoSlider1.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider1.setDuration(4000);
+        mDemoSlider1.setDuration(3000);
         mDemoSlider1.addOnPageChangeListener(this);
 
+        mDemoSlider2.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        mDemoSlider2.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        mDemoSlider2.setCustomAnimation(new DescriptionAnimation());
+        mDemoSlider2.setDuration(4000);
+        mDemoSlider2.addOnPageChangeListener(this);
 
     }
 
@@ -141,6 +144,7 @@ public class Main2Activity extends AppCompatActivity
     @Override
     public void onPageSelected(int position) {
         Log.d("Slider Demo", "Page Changed: " + position);
+
     }
 
     @Override
@@ -154,11 +158,14 @@ public class Main2Activity extends AppCompatActivity
         // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
         mDemoSlider.stopAutoCycle();
         mDemoSlider1.stopAutoCycle();
+        mDemoSlider2.stopAutoCycle();
         super.onStop();
     }
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
         Toast.makeText(this,slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
     }
 }
