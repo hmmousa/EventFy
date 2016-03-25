@@ -16,13 +16,13 @@
 
   <color name="ColorPrimary">#E12929</color>
   <color name="ColorPrimaryDark">#CC1D1D</color>
-  <color name="tabsScrollColor">#CC1D1D</color>
-
+  <color name="tabsScrollColor">@color/black</color>
+  <color name="unselected">@color/grey_600</color>
   <!-- App Main Palette -->
   <!--<color name="primary">@color/green_500</color>-->
   <color name="textPrimary">@color/text_white_text_icons_100</color>
 
-  <!-- Text -->
+
   <!-- Text -->
   <color name="text_black_100">#000000</color>
   <color name="text_black_text_87">#DE000000</color>
