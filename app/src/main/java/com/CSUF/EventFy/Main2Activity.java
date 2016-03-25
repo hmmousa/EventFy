@@ -1,171 +1,158 @@
 package com.CSUF.EventFy;
 
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.SliderLayout;
+import com.CSUF.customViews.ScrimInsetsFrameLayout;
+import com.CSUF.sliding.SlidingTabLayout;
+import com.CSUF.tabs.ViewPagerAdapter;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView.OnSliderClickListener;
 
-import java.util.HashMap;
+import utils.UtilsDevice;
+import utils.UtilsMiscellaneous;
 
-public class Main2Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,  BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
-    private SliderLayout mDemoSlider;
-    private SliderLayout mDemoSlider1;
-    private SliderLayout mDemoSlider2;
+/**
+ * Created by Edwin on 15/02/2015.
+ */
+public class Main2Activity extends ActionBarActivity implements OnSliderClickListener {
+
+    // Declaring Your View and Variables
+
+    Toolbar toolbar;
+    ViewPager pager;
+    ViewPagerAdapter adapter;
+    SlidingTabLayout tabs;
+    CharSequence Titles[]={"Upcomming","NearBy","Interested", "Map"};
+    int Numboftabs =4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
+        init_slider();
 
-        mDemoSlider = (SliderLayout)findViewById(R.id.slider);
-        mDemoSlider1 = (SliderLayout)findViewById(R.id.slider1);
-        mDemoSlider2 = (SliderLayout)findViewById(R.id.slider2);
-
-        HashMap<String,String> url_maps = new HashMap<String, String>();
-        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-
-        for(String name : url_maps.keySet()){
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(url_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra", name);
-
-            mDemoSlider.addSlider(textSliderView);
-            mDemoSlider1.addSlider(textSliderView);
-            mDemoSlider2.addSlider(textSliderView);
-        }
-        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
-        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.setDuration(2000);
-        mDemoSlider.addOnPageChangeListener(this);
-
-        mDemoSlider1.setPresetTransformer(SliderLayout.Transformer.Accordion);
-        mDemoSlider1.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mDemoSlider1.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider1.setDuration(3000);
-        mDemoSlider1.addOnPageChangeListener(this);
-
-        mDemoSlider2.setPresetTransformer(SliderLayout.Transformer.Accordion);
-        mDemoSlider2.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mDemoSlider2.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider2.setDuration(4000);
-        mDemoSlider2.addOnPageChangeListener(this);
-
+        init_navigator();
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-        MenuInflater menuInflater = getMenuInflater();
-     //   menuInflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.btnaccmenu) {
-            // Handle the camera action
-        } else if (id == R.id.btnaddmenu) {
-
-        } else if (id == R.id.btnshowmenu) {
-
-        } else if (id == R.id.btnlogout) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-    @Override
-    public void onPageSelected(int position) {
-        Log.d("Slider Demo", "Page Changed: " + position);
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    private void init_slider() {
+        // Creating The Toolbar and setting it as the Toolbar for the activity
+
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+
+
+        // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
+        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+
+        // Assigning ViewPager View and setting the adapter
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+
+        // Assiging the Sliding Tab Layout View
+        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+
+        // Setting Custom Color for the Scroll bar indicator of the Tab View
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.tabsScrollColor);
+            }
+        });
+
+        // Setting the ViewPager For the SlidingTabsLayout
+        tabs.setViewPager(pager);
+
+    }
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private ScrimInsetsFrameLayout mScrimInsetsFrameLayout;
+
+    private void init_navigator(){
+        // Navigation Drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_activity_DrawerLayout);
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
+        mScrimInsetsFrameLayout = (ScrimInsetsFrameLayout) findViewById(R.id.main_activity_navigation_drawer_rootLayout);
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle
+                (
+                        this,
+                        mDrawerLayout,
+                        toolbar,
+                        R.string.navigation_drawer_opened,
+                        R.string.navigation_drawer_closed
+                )
+        {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset)
+            {
+                // Disables the burger/arrow animation by default
+                super.onDrawerSlide(drawerView, 0);
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        mActionBarDrawerToggle.syncState();
+
+        // Navigation Drawer layout width
+        int possibleMinDrawerWidth = UtilsDevice.getScreenWidth(this) -
+                UtilsMiscellaneous.getThemeAttributeDimensionSize(this, android.R.attr.actionBarSize);
+        int maxDrawerWidth = getResources().getDimensionPixelSize(R.dimen.navigation_drawer_max_width);
+
+        mScrimInsetsFrameLayout.getLayoutParams().width = Math.min(possibleMinDrawerWidth, maxDrawerWidth);
+        // Set the first item as selected for the first time
+        getSupportActionBar().setTitle(R.string.toolbar_title_home);
+
 
     }
 
     @Override
-    public void onPageScrollStateChanged(int i) {
+    public void onSliderClick(BaseSliderView baseSliderView) {
 
-    }
-
-
-    @Override
-    protected void onStop() {
-        // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
-        mDemoSlider.stopAutoCycle();
-        mDemoSlider1.stopAutoCycle();
-        mDemoSlider2.stopAutoCycle();
-        super.onStop();
-    }
-
-    @Override
-    public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(this,slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(intent);
     }
 }
