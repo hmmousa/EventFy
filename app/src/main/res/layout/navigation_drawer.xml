@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.CSUF.customViews.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                                      xmlns:tools="http://schemas.android.com/tools"
-                                                                      android:id="@+id/main_activity_navigation_drawer_rootLayout"
-                                                                      style="@style/ScrimInsetsLayout"
-                                                                      tools:context=".MainActivity">
+<com.CSUF.customViews.ScrimInsetsFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_navigation_drawer_rootLayout"
+    style="@style/ScrimInsetsLayout"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -93,7 +94,7 @@
                     <com.CSUF.customViews.TintOnStateImageView
                         android:id="@+id/navigation_drawer_items_list_icon_home"
                         style="@style/NavDrawerRowItemIcon"
-                        android:src="@drawable/ic_home_white_24dp"
+                        android:src="@drawable/account_balance_black_192x192"
                         tools:ignore="ContentDescription"
                         tools:tint="@color/nav_drawer_item_icon_selected" />
 
