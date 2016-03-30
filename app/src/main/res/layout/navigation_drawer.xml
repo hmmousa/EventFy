@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.CSUF.customViews.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                                      xmlns:tools="http://schemas.android.com/tools"
-                                                                      android:id="@+id/main_activity_navigation_drawer_rootLayout"
-                                                                      style="@style/ScrimInsetsLayout"
-                                                                      tools:context=".MainActivity">
+<com.CSUF.customViews.ScrimInsetsFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_navigation_drawer_rootLayout"
+    style="@style/ScrimInsetsLayout"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -93,33 +94,33 @@
                     <com.CSUF.customViews.TintOnStateImageView
                         android:id="@+id/navigation_drawer_items_list_icon_home"
                         style="@style/NavDrawerRowItemIcon"
-                        android:src="@drawable/ic_home_white_24dp"
+                        android:src="@drawable/account_balance_black_192x192"
                         tools:ignore="ContentDescription"
                         tools:tint="@color/nav_drawer_item_icon_selected" />
 
                     <TextView
                         android:id="@+id/navigation_drawer_items_textView_home"
                         style="@style/NavDrawerRowItemText"
-                        android:text="First Menu"
+                        android:text="Home"
                         tools:fontFamily="sans-serif-medium"
                         tools:textColor="@color/nav_drawer_item_text_selected"/>
 
                 </FrameLayout>
 
                 <FrameLayout
-                    android:id="@+id/navigation_drawer_items_list_linearLayout_explore"
+                    android:id="@+id/navigation_drawer_items_list_linearLayout_myaccount"
                     style="@style/NavDrawerRowLayout.Main" >
 
                     <com.CSUF.customViews.TintOnStateImageView
-                        android:id="@+id/navigation_drawer_items_list_icon_explore"
+                        android:id="@+id/navigation_drawer_items_list_icon_myaccount"
                         style="@style/NavDrawerRowItemIcon"
-                        android:src="@drawable/ic_explore_white_24dp"
+                        android:src="@drawable/my_acc"
                         tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/navigation_drawer_items_textView_explore"
                         style="@style/NavDrawerRowItemText"
-                        android:text="Second Menu"
+                        android:text="My Account"
                         tools:fontFamily="sans-serif-medium"/>
 
                 </FrameLayout>
@@ -128,38 +129,100 @@
                     layout="@layout/navigation_drawer_divider"/>
 
                 <FrameLayout
-                    android:id="@+id/navigation_drawer_items_list_linearLayout_help_and_feedback"
+                    android:id="@+id/navigation_drawer_items_list_linearLayout_help_and_addevent"
                     style="@style/NavDrawerRowLayout.Secondary">
 
                     <com.CSUF.customViews.TintOnStateImageView
-                        android:id="@+id/navigation_drawer_items_list_icon_help_and_feedback"
+                        android:id="@+id/navigation_drawer_items_list_icon_help_and_addevent"
                         style="@style/NavDrawerRowItemIcon"
-                        android:src="@drawable/ic_help_white_24dp"
+                        android:src="@drawable/input_black_192x192"
                         tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:id="@+id/navigation_drawer_items_textView_help_and_feedback"
+                        android:id="@+id/navigation_drawer_items_textView_help_and_addevent"
                         style="@style/NavDrawerRowItemText"
-                        android:text="Help"
+                        android:text="Add An Event"
                         tools:fontFamily="sans-serif-medium" />
 
                 </FrameLayout>
 
                 <FrameLayout
-                    android:id="@+id/navigation_drawer_items_list_linearLayout_about"
+                    android:id="@+id/navigation_drawer_items_list_linearLayout_shwevents"
                     style="@style/NavDrawerRowLayout.Secondary">
 
                     <com.CSUF.customViews.TintOnStateImageView
-                        android:id="@+id/navigation_drawer_items_list_icon_about"
+                        android:id="@+id/navigation_drawer_items_list_icon_shwevents"
                         style="@style/NavDrawerRowItemIcon"
-                        android:src="@drawable/ic_info_white_24dp"
+                        android:src="@drawable/shw_evnt"
                         tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:id="@+id/navigation_drawer_items_textView_about"
+                        android:id="@+id/navigation_drawer_items_textView_shwevents"
                         style="@style/NavDrawerRowItemText"
-                        android:text="Abouts"
+                        android:text="Show Upcoming Events"
                         tools:fontFamily="sans-serif-medium" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/navigation_drawer_items_list_linearLayout_history"
+                    style="@style/NavDrawerRowLayout.Secondary">
+
+                    <com.CSUF.customViews.TintOnStateImageView
+                        android:id="@+id/navigation_drawer_items_list_icon_history"
+                        style="@style/NavDrawerRowItemIcon"
+                        android:src="@drawable/history_black_192x192"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/navigation_drawer_items_textView_hisory"
+                        style="@style/NavDrawerRowItemText"
+                        android:text="Events History"
+                        tools:fontFamily="sans-serif-medium" />
+
+                </FrameLayout>
+
+                <include
+                    layout="@layout/navigation_drawer_divider"/>
+
+                <FrameLayout
+                    android:id="@+id/navigation_drawer_items_list_linearLayout_help_and_about"
+                    style="@style/NavDrawerRowLayout.Secondary">
+
+                    <com.CSUF.customViews.TintOnStateImageView
+                        android:id="@+id/navigation_drawer_items_list_icon_help_and_about"
+                        style="@style/NavDrawerRowItemIcon"
+                        android:src="@drawable/info_outline_black_192x192"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/navigation_drawer_items_textView_help_and_about"
+                        style="@style/NavDrawerRowItemText"
+                        android:text="About"
+                        tools:fontFamily="sans-serif-medium" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/navigation_drawer_items_list_linearLayout_logout"
+                    style="@style/NavDrawerRowLayout.Secondary">
+
+                    <com.CSUF.customViews.TintOnStateImageView
+                        android:id="@+id/navigation_drawer_items_list_icon_logout"
+                        style="@style/NavDrawerRowItemIcon"
+                        android:src="@drawable/settings_power_black_192x192"
+                        tools:ignore="ContentDescription"
+                        tools:tint="@color/ColorPrimary"
+                        />
+
+                    <TextView
+                        android:id="@+id/navigation_drawer_items_textView_logout"
+                        style="@style/NavDrawerRowItemText"
+                        android:text="Log Out"
+                        tools:fontFamily="sans-serif-medium"
+                        tools:textColor="@color/ColorPrimary"
+                        />
+
 
                 </FrameLayout>
 
