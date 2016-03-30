@@ -1,53 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/drawer_layout"
+                tools:context="com.CSUF.EventFy.EventInfoActivity"
+    >
 
-    <ImageButton
-        android:id="@+id/bteacc"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="45dp"
-        android:layout_marginLeft="34dp"
-        android:layout_marginStart="34dp"
-        android:drawableTop="@drawable/my_acc"
-        android:text="E-mail"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <com.github.florent37.materialviewpager.MaterialViewPager
+        android:id="@+id/materialViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:viewpager_logo="@layout/header_logo"
+        app:viewpager_pagerTitleStrip="@layout/material_view_pager_pagertitlestrip_newstand"
+        app:viewpager_logoMarginTop="100dp"
+        app:viewpager_color="@color/colorPrimary"
+        app:viewpager_headerHeight="200dp"
+        app:viewpager_headerAlpha="1.0"
+        app:viewpager_imageHeaderDarkLayerAlpha="0.2"
+        app:viewpager_hideLogoWithFade="false"
+        app:viewpager_hideToolbarAndTitle="true"
+        app:viewpager_enableToolbarElevation="true"
+        app:viewpager_parallaxHeaderFactor="1.5"
+        app:viewpager_headerAdditionalHeight="20dp"
+        app:viewpager_displayToolbarWhenSwipe="true"
+        app:viewpager_transparentToolbar="false"
+        app:viewpager_animatedHeaderImage="true"
 
-    <Button
-        android:id="@+id/btcharts"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:drawableTop="@drawable/my_acc"
-        android:drawablePadding="-35dp"
-        android:text="Charts"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_alignTop="@+id/bteacc"
-        android:layout_toRightOf="@+id/bteacc"
-        android:layout_toEndOf="@+id/bteacc"/>
+        />
 
-    <Button
-        android:id="@+id/bthistory"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:drawableTop="@drawable/shw_evnt"
-        android:text="History"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_above="@+id/btimport"
-        android:layout_toLeftOf="@+id/btimport"
-        android:layout_toStartOf="@+id/btimport"/>
 
-    <Button
-        android:id="@+id/btimport"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:drawableTop="@drawable/add_evnt"
-        android:text="New Measurement"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/bteacc"
-        android:layout_toEndOf="@+id/bteacc"/>
+
+
 
 </RelativeLayout>

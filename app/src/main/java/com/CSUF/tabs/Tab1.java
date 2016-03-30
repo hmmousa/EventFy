@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.CSUF.EventFy.LoginActivity;
+import com.CSUF.EventFy.EventInfoActivity;
 import com.CSUF.EventFy.R;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
@@ -31,6 +31,7 @@ public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_1,container,false);
 
+        Log.e("tab1","");
         mDemoSlider = (SliderLayout)v.findViewById(R.id.slider);
 
         HashMap<String,String> url_maps = new HashMap<String, String>();
@@ -94,7 +95,7 @@ public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListen
     @Override
     public void onSliderClick(BaseSliderView slider) {
         Toast.makeText(getContext(), slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), EventInfoActivity.class);
         startActivity(intent);
     }
 

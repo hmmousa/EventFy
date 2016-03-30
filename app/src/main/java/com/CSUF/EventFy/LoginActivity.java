@@ -24,7 +24,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -99,21 +98,21 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        senddata senddataObj = new senddata(true);
-                        try {
-                           String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
-                        if(result!=null && result.contains("userName"))
+                      //  senddata senddataObj = new senddata(true);
+                     //   try {
+                      //     String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
+                       // if(result!=null && result.contains("userName"))
                           onLoginSuccess();
-                        else
+                       // else
                         {
-                            onLoginFailed();
+                       //     onLoginFailed();
                         }
 
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }
+                   //     } catch (InterruptedException e) {
+                    //        e.printStackTrace();
+                   //     } catch (ExecutionException e) {
+                    //        e.printStackTrace();
+                   //     }
                         //
 
                         progressDialog.dismiss();

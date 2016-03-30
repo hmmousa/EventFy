@@ -65,4 +65,12 @@
   <!-- Black and White -->
   <color name="black_alpha_50">#80000000</color>
 
+
+  <color name="accent_color">@color/primary_dark</color>
+  <color name="colorPrimary">@color/primary_dark</color>
+  <color name="colorPrimaryDark">@color/primary_darker</color>
+  <color name="statusBarColor">@color/primary_darker</color>
+  <color name="navigationBarColor">@android:color/black</color>
+  <color name="drawerArrowColor">@android:color/white</color>
+
 </resources>
