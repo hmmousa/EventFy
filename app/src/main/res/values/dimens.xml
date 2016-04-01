@@ -26,4 +26,12 @@
 
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="divider_height">1dp</dimen>
+
+
+    <dimen name="margin_short">8dp</dimen>
+    <dimen name="margin_extra_short">4dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="flexible_space_image_height">240dp</dimen>
+    <dimen name="margin_standard">2dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">20dp</dimen>
 </resources>
