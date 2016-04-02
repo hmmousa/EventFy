@@ -42,6 +42,8 @@
             android:name=".CreatePublicEvent"
             android:label="@string/title_activity_create_public_event">
         </activity>
+
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
     </application>
 
 </manifest>

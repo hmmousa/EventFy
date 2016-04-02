@@ -1,5 +1,11 @@
 package com.CSUF.EventFy;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +29,18 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.soundcloud.android.crop.Crop;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class CreatePublicEvent extends ActionBarActivity implements ObservableScrollViewCallbacks {
 
+    private Uri dest = null;
+    private static final int PICK_IMAGE_ID = 234;
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private MaterialViewPager mViewPager;
-    private View mImageView;
+    private ImageView mImageView;
     private View mOverlayView;
     private ObservableScrollView mScrollView;
     private TextView mTitleView;
@@ -40,6 +53,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
     private Toolbar toolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private DrawerLayout mDrawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +65,6 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         Log.e("toolbar : ", "" + toolbar);
 //        setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout1);
-
-
-
-
 
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
@@ -90,7 +100,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
             mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
             //mActionBarSize = getActionBarSize();
 
-            mImageView = findViewById(R.id.image);
+            mImageView = (ImageView) findViewById(R.id.eventImage);
             mOverlayView = findViewById(R.id.overlay);
             mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
             mScrollView.setScrollViewCallbacks(this);
@@ -102,6 +112,8 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(CreatePublicEvent.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+                    Intent chooseImageIntent = ImagePicker.getPickImageIntent(v.getContext());
+                    startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
                 }
             });
             mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
@@ -217,6 +229,71 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         // as you specify a parent activity in AndroidManifest.xml.
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e("request code  : ", ""+requestCode);
+        Log.e("request code crop : ", ""+Crop.REQUEST_CROP);
+
+        if (requestCode == PICK_IMAGE_ID) {
+            Uri selectedImage = ImagePicker.getImageFromResult(this, resultCode, data);
+            dest = beginCrop(selectedImage);
+            Log.e("request code dest : ", ""+dest);
+        } else if (requestCode == Crop.REQUEST_CROP) {
+            Log.e("request code dest h : ", ""+dest);
+            handleCrop(resultCode, data, dest);
+        }
+
+    }
+
+    private Uri beginCrop(Uri source) {
+
+        Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
+
+        Crop.of(source, destination).withAspect(250, 240).start(this);
+
+
+       return destination;
+    }
+
+
+    private void handleCrop(int resultCode, Intent result, Uri destination) {
+
+
+        if (resultCode == RESULT_OK) {
+            Log.e("crop : ", "" +getCacheDir());
+
+            Bitmap bm = decodeBitmap(this,destination,3);
+            mImageView.setImageBitmap(bm);
+
+            //   mImageView.setImageURI(Crop.getOutput(result));
+        } else if (resultCode == Crop.RESULT_ERROR) {
+            Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sampleSize;
+
+
+        AssetFileDescriptor fileDescriptor = null;
+        try {
+            fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
+                fileDescriptor.getFileDescriptor(), null, options);
+
+        Log.d("img : ", options.inSampleSize + " sample method bitmap ... " +
+                actuallyUsableBitmap.getWidth() + " " + actuallyUsableBitmap.getHeight());
+
+        return actuallyUsableBitmap;
     }
 
 }

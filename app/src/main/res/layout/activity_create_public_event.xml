@@ -29,7 +29,7 @@
              android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/eventImage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/flexible_space_image_height"
         android:scaleType="centerCrop"
@@ -102,8 +102,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left|top"
         android:scaleType="center"
-        app:fab_colorNormal="@color/green"
-        app:fab_colorPressed="@color/accent" />
+        android:src="@drawable/ic_camera_enhance_black_24dp"
+        app:fab_colorNormal="@color/primary_dark"
+        app:fab_colorPressed="@color/primary_darker" />
 </FrameLayout>
         <include
             layout="@layout/navigation_drawer"/>

@@ -46,4 +46,7 @@ dependencies {
 
     compile 'com.github.ksoichiro:android-observablescrollview:VERSION'
     compile 'com.melnykov:floatingactionbutton:1.0.7'
+
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
+
 }
