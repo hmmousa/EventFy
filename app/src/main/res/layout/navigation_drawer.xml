@@ -128,6 +128,24 @@
                     layout="@layout/navigation_drawer_divider"/>
 
                 <FrameLayout
+                    android:id="@+id/navigation_drawer_items_list_linearLayout_help_and_addpevent"
+                    style="@style/NavDrawerRowLayout.Secondary">
+
+                    <com.CSUF.customViews.TintOnStateImageView
+                        android:id="@+id/navigation_drawer_items_list_icon_help_and_addpevent"
+                        style="@style/NavDrawerRowItemIcon"
+                        android:src="@drawable/input_black_192x192"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/navigation_drawer_items_textView_help_and_addpevent"
+                        style="@style/NavDrawerRowItemText"
+                        android:text="Create a Public Event"
+                        tools:fontFamily="sans-serif-medium" />
+
+                </FrameLayout>
+
+                <FrameLayout
                     android:id="@+id/navigation_drawer_items_list_linearLayout_help_and_addevent"
                     style="@style/NavDrawerRowLayout.Secondary">
 
@@ -140,7 +158,7 @@
                     <TextView
                         android:id="@+id/navigation_drawer_items_textView_help_and_addevent"
                         style="@style/NavDrawerRowItemText"
-                        android:text="Add An Event"
+                        android:text="Create a Private Event"
                         tools:fontFamily="sans-serif-medium" />
 
                 </FrameLayout>
