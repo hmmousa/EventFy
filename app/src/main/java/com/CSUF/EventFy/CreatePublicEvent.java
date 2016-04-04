@@ -3,6 +3,7 @@ package com.CSUF.EventFy;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fourmob.datetimepicker.date.DatePickerDialog;
+import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -31,10 +35,15 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.soundcloud.android.crop.Crop;
 
+import org.florescu.android.rangeseekbar.RangeSeekBar;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Calendar;
 
-public class CreatePublicEvent extends ActionBarActivity implements ObservableScrollViewCallbacks {
+import butterknife.Bind;
+
+public class CreatePublicEvent extends ActionBarActivity implements ObservableScrollViewCallbacks, OnDateSetListener {
 
     private Uri dest = null;
     private static final int PICK_IMAGE_ID = 234;
@@ -53,20 +62,30 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
     private Toolbar toolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private DrawerLayout mDrawerLayout;
+    @Bind(R.id.public_event_visiblity_seekbar)
+    RangeSeekBar rangeSeekBarTextColorWithCode;
+    private TextView mEventDate;
+
+    public static final String DATEPICKER_TAG = "datepicker";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_public_event);
-//
+
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
-
-        Log.e("toolbar : ", "" + toolbar);
-//        setSupportActionBar(toolbar);
+       // mActionBarSize = getActionBarSize();
+        Log.e("action bar size : ", ""+mActionBarSize);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout1);
 
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
+        mEventDate = (TextView) findViewById(R.id.public_event_date);
+        final Calendar calendar = Calendar.getInstance();
+        final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(CreatePublicEvent.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
+
+
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -92,13 +111,10 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
                 );        //  Log.e("mdrawer", "" + findViewById(R.id.drawer_layout));
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
-        // if (toolbar != null) {
-         //   setSupportActionBar(toolbar);
 
 
             mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
             mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-            //mActionBarSize = getActionBarSize();
 
             mImageView = (ImageView) findViewById(R.id.eventImage);
             mOverlayView = findViewById(R.id.overlay);
@@ -129,17 +145,45 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
                     //mScrollView.scrollTo(0, 0);
                     // The initial scrollY is 0, so it won't invoke onScrollChanged().
                     // To do this, use the following:
-                    //onScrollChanged(0, false, false);
+                    // onScrollChanged(0, false, false);
 
                     // You can also achieve it with the following codes.
                     // This causes scroll change from 1 to 0.
                     //mScrollView.scrollTo(0, 1);
-                    //mScrollView.scrollTo(0, 0);
+                  //  mScrollView.scrollTo(0, 0);
                 }
             });
-        }
 
+        mEventDate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                datePickerDialog.setYearRange(calendar.get(Calendar.YEAR) , calendar.get(Calendar.YEAR) + 10);
+                datePickerDialog.setFirstDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK ));
+                datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
 
+        });
+
+    }
+
+    protected int getActionBarSize() {
+        TypedValue typedValue = new TypedValue();
+        int[] textSizeAttr = new int[]{R.attr.actionBarSize};
+        int indexOfAttrTextSize = 0;
+        TypedArray a = obtainStyledAttributes(typedValue.data, textSizeAttr);
+        int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
+        a.recycle();
+        return actionBarSize;
+    }
+
+    private boolean isCloseOnSingleTapDay() {
+        return true;
+    }
+
+    private boolean isVibrate() {
+        return false;
+    }
 
     private void showFab() {
         if (!mFabIsShown) {
@@ -163,7 +207,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
         ViewHelper.setTranslationY(mOverlayView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
-        ViewHelper.setTranslationY(mImageView, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
+        ViewHelper.setTranslationY(mImageView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
 
         // Change alpha of overlay
         ViewHelper.setAlpha(mOverlayView, ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
@@ -296,4 +340,8 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         return actuallyUsableBitmap;
     }
 
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        mEventDate.setText(year + "-" + month + "-" + day);
+    }
 }

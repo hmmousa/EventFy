@@ -32,6 +32,6 @@
     <dimen name="margin_extra_short">4dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="flexible_space_image_height">240dp</dimen>
-    <dimen name="margin_standard">2dp</dimen>
-    <dimen name="flexible_space_show_fab_offset">20dp</dimen>
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
 </resources>

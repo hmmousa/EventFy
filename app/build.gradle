@@ -24,6 +24,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:design:22.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'org.json:json:20160212'
     compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
@@ -49,4 +50,7 @@ dependencies {
 
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
 
+    compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
+
+    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 }

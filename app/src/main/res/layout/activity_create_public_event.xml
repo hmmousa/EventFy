@@ -15,97 +15,223 @@
 
         >
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        />
-
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/eventImage"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/flexible_space_image_height"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logo"
-        android:paddingTop="10dp"
-        />
-
-    <View
-        android:id="@+id/overlay"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/flexible_space_image_height"
-        android:background="?attr/colorPrimary" />
-
-    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
-        android:id="@+id/scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            />
 
-            <View
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/eventImage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/flexible_space_image_height"
-                android:background="@android:color/transparent" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo"
+                android:paddingTop="10dp"
+                />
 
-            <TextView
+            <View
+                android:id="@+id/overlay"
                 android:layout_width="match_parent"
+                android:layout_height="@dimen/flexible_space_image_height"
+                android:background="?attr/colorPrimary" />
+
+            <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+                android:id="@+id/scroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="40dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    >
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/flexible_space_image_height"
+                        android:background="@android:color/transparent" />
+
+                    <!--Name of event-->
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp">
+                        <EditText android:id="@+id/public_event_name"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:inputType="text"
+                                  android:hint="Event Name"
+                                  android:textColor="@color/black"
+
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+
+
+                    <!--Date of event-->
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:focusable="false"
+                        android:clickable="true">
+                        <EditText android:id="@+id/public_event_date"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:inputType="textCapWords|date"
+                                  android:hint="Event Date"
+                                  android:textColor="@color/black"
+                                  android:focusable="false"
+                                  android:clickable="true"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:id="@+id/footer">
+
+                        <EditText
+
+                            android:id="@+id/public_event_location"
+
+                            android:inputType="textCapWords|date"
+                            android:hint="Event Place"
+                            android:textColor="@color/black"
+                            android:focusable="false"
+                            android:clickable="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+
+                        <com.github.siyamed.shapeimageview.CircularImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_location_on_black_18dp"
+                            app:siBorderWidth="6dp"
+                            app:siBorderColor="@color/primary_darker"
+                            android:paddingLeft="20dp"
+                            android:id="@+id/public_event_current_location"
+                            />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:text="Visiblity(miles) : "
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        android:id="@+id/public_event_visiblity_text"
+                        />
+
+                    <org.florescu.android.rangeseekbar.RangeSeekBar
+                        android:id="@+id/public_event_visiblity_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:absoluteMaxValue="150"
+                        app:absoluteMinValue="00"
+                        app:singleThumb="true"
+                        app:textAboveThumbsColor="@color/primary_darker"
+                        app:thumbDisabled="@drawable/custom_slider_thumb"
+                        app:thumbNormal="@drawable/custom_slider_thumb"
+                        app:thumbPressed="@drawable/custom_slider_thumb"
+                        app:thumbShadow="true"
+                        app:thumbShadowBlur="3dp"
+                        app:thumbShadowColor="@color/black"
+                        app:thumbShadowXOffset="1dp"
+                        app:thumbShadowYOffset="2dp"
+                        android:layout_marginBottom="8dp"
+                        />
+
+                    <Spinner
+
+                        android:id="@+id/public_event_type"
+
+                        style="@style/spinner_style"
+                        />
+
+
+                    <CheckBox
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Volatile?"
+                        android:id="@+id/public_event_duration"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textSize="12dp"
+                        />
+
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/public_create_event"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:padding="12dp"
+                        android:text="Create"/>
+
+
+
+
+                </LinearLayout>
+            </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_standard"
+                >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:minHeight="?attr/actionBarSize"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/flexible_space_image_height"
+                    android:background="@android:color/transparent" />
+            </LinearLayout>
+
+            <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:text="@string/lipsum" />
-        </LinearLayout>
-    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/margin_standard"
-        >
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:minHeight="?attr/actionBarSize"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/flexible_space_image_height"
-            android:background="@android:color/transparent" />
-    </LinearLayout>
-
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|top"
-        android:scaleType="center"
-        android:src="@drawable/ic_camera_enhance_black_24dp"
-        app:fab_colorNormal="@color/primary_dark"
-        app:fab_colorPressed="@color/primary_darker" />
-</FrameLayout>
+                android:layout_gravity="left|top"
+                android:scaleType="center"
+                android:src="@drawable/ic_camera_enhance_black_24dp"
+                app:fab_colorNormal="@color/primary_dark"
+                app:fab_colorPressed="@color/primary_darker" />
+        </FrameLayout>
         <include
             layout="@layout/navigation_drawer"/>
     </LinearLayout>
