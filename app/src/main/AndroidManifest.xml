@@ -18,18 +18,26 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
+
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.Dark"
+            android:label="@string/app_name"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/AppTheme.Dark"/>
+            </activity>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <activity
             android:name=".SignupActivity"
             android:theme="@style/AppTheme.Dark"/>
@@ -52,6 +60,22 @@
         </activity>
 
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+
+
+
+        <activity android:name="com.facebook.FacebookActivity"
+                  android:configChanges=
+                      "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:label="@string/app_name" />
     </application>
+
+    <provider android:authorities="com.facebook.app.FacebookContentProvider250414581969875"
+              android:name="com.facebook.FacebookContentProvider"
+              android:exported="true"
+        />
+
+
+
 
 </manifest>

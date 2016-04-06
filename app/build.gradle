@@ -53,4 +53,6 @@ dependencies {
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
 
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
 }

@@ -41,8 +41,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Calendar;
 
-import butterknife.Bind;
-
 public class CreatePublicEvent extends ActionBarActivity implements ObservableScrollViewCallbacks, OnDateSetListener {
 
     private Uri dest = null;
@@ -62,7 +60,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
     private Toolbar toolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    @Bind(R.id.public_event_visiblity_seekbar)
+ //   @Bind(R.id.public_event_visiblity_seekbar)
     RangeSeekBar rangeSeekBarTextColorWithCode;
     private TextView mEventDate;
 

@@ -56,4 +56,7 @@ Quam libero nulla netus eu porta curae, ut nulla bibendum facilisis et urna sed,
         <item>Mars</item>
     </string-array>
 
+
+    <string name="facebook_app_id">250414581969875</string>
+
 </resources>

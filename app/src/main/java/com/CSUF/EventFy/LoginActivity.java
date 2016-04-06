@@ -6,11 +6,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -24,16 +33,19 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
+
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-
-    @Bind(R.id.input_email) EditText _emailText;
+    CallbackManager callbackManager;
+    private EditText _emailText;
+    private static String TAG_ERROR = "Error";
+    private static String  TAG_CANCEL = "Cancel";
     @Bind(R.id.input_password) EditText _passwordText;
     @Bind(R.id.btn_login) Button _loginButton;
     @Bind(R.id.link_signup) TextView _signupLink;
@@ -41,30 +53,158 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+          callbackManager = CallbackManager.Factory.create();
+//        ButterKnife.bind(this);
+
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-        
-        _loginButton.setOnClickListener(new View.OnClickListener() {
+
+        _emailText = (EditText) findViewById(R.id.input_email);
+
+        LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+
+
+
+
+//       AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
+//            @Override
+//            protected void onCurrentAccessTokenChanged(
+//                    AccessToken oldAccessToken,
+//                    AccessToken currentAccessToken) {
+//                // Set the access token using
+//                // currentAccessToken when it's loaded or set.
+//            }
+//        };
+//        // If the access token is available already assign it.
+//      AccessToken  accessToken = AccessToken.getCurrentAccessToken();
+
+       // loginButton.setReadPermissions("public_profile", "email", "user_friends");
+
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+              //  Intent i = new Intent(LoginActivity.this, LoginActivity.class);
+              //  startActivity(i);
+              //  System.out.print("Logged in");
+                onFblogin();
+            }
 
             @Override
-            public void onClick(View v) {
-                login();
+            public void onCancel() {
+                // App code
+
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.i("Error" , "Error");
             }
         });
 
-        _signupLink.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-            }
-        });
+
+//        _loginButton.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                login();
+//            }
+//        });
+//        _signupLink.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                // Start the Signup activity
+//                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+//                startActivityForResult(intent, REQUEST_SIGNUP);
+//            }
+//        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+
+    // Private method to handle Facebook login and callback
+    private void onFblogin()
+    {
+        //callbackManager = CallbackManager.Factory.create();
+
+        // Set permissions
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "user_photos", "public_profile"));
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+
+                        System.out.println("Success");
+                        GraphRequest.newMeRequest(
+                                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject json, GraphResponse response) {
+                                        if (response.getError() != null) {
+                                            // handle error
+                                            System.out.println("ERROR");
+                                        } else {
+                                            System.out.println("Success");
+                                            try {
+
+                                                String jsonresult = String.valueOf(json);
+                                                System.out.println("JSON Result" + jsonresult);
+
+                                                String str_email = json.getString("email");
+                                                String str_id = json.getString("id");
+                                                String str_firstname = json.getString("first_name");
+                                                String str_lastname = json.getString("last_name");
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                }).executeAsync();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG_CANCEL, "On cancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.d(TAG_ERROR,error.toString());
+                    }
+                });
+    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        callbackmanager.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == REQUEST_SIGNUP) {
+//            if (resultCode == RESULT_OK) {
+//                this.finish();
+//            }
+//        }
+//
+//
+//    }
+
+
+
+
     public void login() {
-        Log.d(TAG, "Login");
+        //Log.d(TAG, "Login");
 
          String result = null;
         if (!validate()) {
@@ -121,17 +261,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
 
-
-
-                this.finish();
-            }
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -223,13 +353,12 @@ public class LoginActivity extends AppCompatActivity {
                 dato.put("password", strings[1]);
                 dato.put("username", strings[0]);
 
-               Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** * json" + dato.toString());
+               //Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** * json" + dato.toString());
             StringEntity entity = new StringEntity(dato.toString());
 
                 post.setEntity(entity);
                 resp = httpClient.execute(post);
                 responseText = EntityUtils.toString(resp.getEntity());
-                Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +responseText);
 
                 return responseText;
             } catch (JSONException e) {
