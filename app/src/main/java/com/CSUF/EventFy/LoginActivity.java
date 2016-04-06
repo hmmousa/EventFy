@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -56,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-          callbackManager = CallbackManager.Factory.create();
+
 //        ButterKnife.bind(this);
 
         setContentView(R.layout.activity_login);
@@ -64,9 +65,6 @@ public class LoginActivity extends AppCompatActivity {
         _emailText = (EditText) findViewById(R.id.input_email);
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
-
-
-
 
 //       AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
 //            @Override
@@ -82,29 +80,14 @@ public class LoginActivity extends AppCompatActivity {
 
        // loginButton.setReadPermissions("public_profile", "email", "user_friends");
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-              //  Intent i = new Intent(LoginActivity.this, LoginActivity.class);
-              //  startActivity(i);
-              //  System.out.print("Logged in");
+            public void onClick(View view) {
                 onFblogin();
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
 
             }
 
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                Log.i("Error" , "Error");
-            }
         });
-
-
 
 //        _loginButton.setOnClickListener(new View.OnClickListener() {
 //
@@ -135,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
     // Private method to handle Facebook login and callback
     private void onFblogin()
     {
-        //callbackManager = CallbackManager.Factory.create();
+        callbackManager = CallbackManager.Factory.create();
 
         // Set permissions
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "user_photos", "public_profile"));
@@ -160,10 +143,15 @@ public class LoginActivity extends AppCompatActivity {
                                                 String jsonresult = String.valueOf(json);
                                                 System.out.println("JSON Result" + jsonresult);
 
-                                                String str_email = json.getString("email");
+                                              //  String str_email = json.getString("email");
                                                 String str_id = json.getString("id");
-                                                String str_firstname = json.getString("first_name");
-                                                String str_lastname = json.getString("last_name");
+                                                String str_UserName = json.getString("name");
+                                              //  String str_lastname = json.getString("last_name");
+
+                                                Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
+                                                intent.putExtra("UserName",str_UserName);
+                                                intent.putExtra("UserFbId",str_id);
+                                                startActivity(intent);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();

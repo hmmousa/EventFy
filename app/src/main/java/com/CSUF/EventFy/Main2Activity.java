@@ -1,21 +1,35 @@
 package com.CSUF.EventFy;
 
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.CSUF.customViews.ScrimInsetsFrameLayout;
 import com.CSUF.sliding.SlidingTabLayout;
 import com.CSUF.tabs.ViewPagerAdapter;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView.OnSliderClickListener;
+
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import utils.UtilsDevice;
 import utils.UtilsMiscellaneous;
@@ -32,17 +46,39 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Upcomming","NearBy","Interested", "Map"};
-    int Numboftabs =4;
+    CharSequence Titles[]={"NearBy","Interested", "Map"};
+    int Numboftabs =3;
+    //ImageView profilePic;
+    ProgressDialog pDialog;
+    TextView userName;
+    ImageView profilePic;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private ScrimInsetsFrameLayout mScrimInsetsFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        Intent in = getIntent();
+        String UserName= in.getExtras().getString("UserName");
+        String UserFbId = in.getExtras().getString("UserFbId");
+
+
         init_slider();
 
         init_navigator();
+
+
+        try {
+            set_loginData(UserName, UserFbId);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -67,7 +103,6 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     private void init_slider() {
@@ -101,9 +136,7 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
     }
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private ScrimInsetsFrameLayout mScrimInsetsFrameLayout;
+
 
     private void init_navigator(){
         // Navigation Drawer
@@ -151,8 +184,65 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
     }
 
+
+    private void set_loginData(String UserName, String userFbId) throws MalformedURLException, URISyntaxException {
+
+        profilePic = (ImageView) findViewById(R.id.navigation_drawer_user_account_picture_profile);
+        //String url = ""+R.string.profile_start_url+userFbId+""+R.string.profile_end_url;
+        String url = "https://graph.facebook.com/"+userFbId+"/picture?type=large";
+        new LoadImage().execute(url);
+
+        userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
+        userName.setText(UserName);
+
+    }
+
     @Override
     public void onSliderClick(BaseSliderView baseSliderView) {
 
     }
+
+
+
+
+    private class LoadImage extends AsyncTask<String, String, Bitmap> {
+      Bitmap bitmap;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Main2Activity.this);
+            pDialog.setMessage("Loading Image ....");
+            pDialog.show();
+
+        }
+        protected Bitmap doInBackground(String... args) {
+            try {
+                bitmap = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        protected void onPostExecute(Bitmap image) {
+
+            if(image != null){
+
+                profilePic.setImageBitmap(image);
+                Log.e("prof : ", "" + image.getByteCount());
+                pDialog.dismiss();
+
+            }else{
+
+                pDialog.dismiss();
+                Toast.makeText(Main2Activity.this, "Image Does Not exist or Network Error", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
 }
+
+
+
+

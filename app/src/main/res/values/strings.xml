@@ -58,5 +58,7 @@ Quam libero nulla netus eu porta curae, ut nulla bibendum facilisis et urna sed,
 
 
     <string name="facebook_app_id">250414581969875</string>
+<string name="profile_start_url">https://graph.facebook.com/</string>
+    <string name="profile_end_url">/picture?type=large</string>
 
 </resources>
