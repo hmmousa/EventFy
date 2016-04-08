@@ -62,8 +62,11 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
         setContentView(R.layout.activity_main2);
 
         Intent in = getIntent();
-        String UserName= in.getExtras().getString("UserName");
+        String UserName= in.getExtras().getString("userName");
         String UserFbId = in.getExtras().getString("UserFbId");
+
+        userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
+        userName.setText(UserName);
 
 
         init_slider();
@@ -72,6 +75,7 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
 
         try {
+            if(UserFbId!=null)
             set_loginData(UserName, UserFbId);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -191,9 +195,6 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
         //String url = ""+R.string.profile_start_url+userFbId+""+R.string.profile_end_url;
         String url = "https://graph.facebook.com/"+userFbId+"/picture?type=large";
         new LoadImage().execute(url);
-
-        userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
-        userName.setText(UserName);
 
     }
 

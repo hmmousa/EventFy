@@ -44,6 +44,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
     @Bind(R.id.input_DOB) TextView _dobtext;
     @Bind(R.id.btn_signup) Button _signupButton;
     @Bind(R.id.link_login) TextView _loginLink;
+    private boolean isEmail;
 
 
     public static final String DATEPICKER_TAG = "datepicker";
@@ -133,10 +134,9 @@ public  final  senddata senddataObj = new senddata(true);
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
                         try {
-                            String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString(),
-                                    _nameText.getText().toString(), _dobtext.getText().toString()).get();
+                            String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
 
-                            if (result != null && result.contains("userName"))
+                            if (result != null && result.equals("Success"))
                                 onSignupSuccess();
                             else {
                                 onSignupFailed();
@@ -151,15 +151,26 @@ public  final  senddata senddataObj = new senddata(true);
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                    }, 3000);
     }
 
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
 
-        Intent intent = new Intent(this, Main2Activity.class);
+
+
+        //  String str_lastname = json.getString("last_name");
+
+        Intent intent = new Intent(SignupActivity.this, VerifyAccount.class);
+        intent.putExtra("userId",_emailText.getText().toString());
+        intent.putExtra("uassword",_passwordText.getText().toString());
+        intent.putExtra("userName", _nameText.getText().toString());
+        intent.putExtra("DOB",_dobtext.getText().toString());
+        intent.putExtra("isEmail",isEmail);
+
         startActivity(intent);
+
      //   setResult(RESULT_OK, null);
    //     finish();
     }
@@ -178,7 +189,14 @@ public  final  senddata senddataObj = new senddata(true);
         String password = _passwordText.getText().toString();
         String dob = _dobtext.getText().toString();
 
-        if (name.isEmpty() || name.length() < 3) {
+        if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        {
+            isEmail = true;
+        }else{
+             isEmail = false;
+        }
+
+        if (name.isEmpty() || name.length() < 3 ) {
             _nameText.setError("at least 3 characters");
             valid = false;
         } else {
@@ -193,7 +211,7 @@ public  final  senddata senddataObj = new senddata(true);
         }
 
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {
@@ -229,29 +247,30 @@ public  final  senddata senddataObj = new senddata(true);
             HttpResponse resp = null;
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost(
-                    "https://eventfy.herokuapp.com/webapi/signup");
+                    "https://eventfy.herokuapp.com/webapi/signup/checkusernamevalid");
             post.setHeader("content-type", "application/json");
 
             JSONObject dato = new JSONObject();
             try {
 
-                dato.put("email", strings[0]);
+                dato.put("username", strings[0]);
 
                 dato.put("password", strings[1]);
 
-                dato.put("userName", strings[2]);
+               // dato.put("userName", strings[2]);
 
-                dato.put("DOB", strings[3]);
+              //  dato.put("DOB", strings[3]);
 
+
+                Log.e("json to send :: ", ""+dato);
                 StringEntity entity = new StringEntity(dato.toString());
                 post.setEntity(entity);
                 resp = httpClient.execute(post);
 
-                String json = EntityUtils.toString(resp.getEntity());
-               Log.d("APP:  ", "response is : * * * *  * * ** * * * * ** * * * * * * ** *    " +json);
-                Thread.sleep(200);
+                String result = EntityUtils.toString(resp.getEntity());
 
-                return json;
+                Log.e("result in sign up :: ", ""+result);
+                return result;
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (ClientProtocolException e) {
@@ -259,8 +278,6 @@ public  final  senddata senddataObj = new senddata(true);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             return null;

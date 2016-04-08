@@ -149,8 +149,8 @@ public class LoginActivity extends AppCompatActivity {
                                               //  String str_lastname = json.getString("last_name");
 
                                                 Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
-                                                intent.putExtra("UserName",str_UserName);
-                                                intent.putExtra("UserFbId",str_id);
+                                                intent.putExtra("userName",str_UserName);
+                                                intent.putExtra("userFbId",str_id);
                                                 startActivity(intent);
 
                                             } catch (JSONException e) {
