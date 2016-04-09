@@ -5,31 +5,20 @@ package com.CSUF.EventFy_Beans;
  */
 public class User {
 
-    String DOB;
-    String email;
-    String userName;
+    private String username;
+    private String password;
 
-    public String getDOB() {
-        return DOB;
+
+    public String getUsername() {
+        return username;
     }
-
-    public void setDOB(String DOB) {
-        this.DOB = DOB;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
-    public String getEmail() {
-        return email;
+    public String getPassword() {
+        return password;
     }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

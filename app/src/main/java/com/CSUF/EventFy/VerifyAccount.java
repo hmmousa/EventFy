@@ -253,6 +253,12 @@ public class VerifyAccount extends ActionBarActivity {
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+        }
     }
 
 }

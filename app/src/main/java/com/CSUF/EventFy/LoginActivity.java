@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.CSUF.EventFy_Beans.SignUp;
+import com.CSUF.EventFy_Beans.User;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -22,19 +24,16 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 
@@ -63,24 +62,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         _emailText = (EditText) findViewById(R.id.input_email);
+        _loginButton = (Button) findViewById(R.id.btn_login);
+        _passwordText = (EditText) findViewById(R.id.input_password);
 
-        LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        LoginButton fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
 
-//       AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
-//            @Override
-//            protected void onCurrentAccessTokenChanged(
-//                    AccessToken oldAccessToken,
-//                    AccessToken currentAccessToken) {
-//                // Set the access token using
-//                // currentAccessToken when it's loaded or set.
-//            }
-//        };
-//        // If the access token is available already assign it.
-//      AccessToken  accessToken = AccessToken.getCurrentAccessToken();
 
-       // loginButton.setReadPermissions("public_profile", "email", "user_friends");
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        fbLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onFblogin();
@@ -89,13 +77,13 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
-//        _loginButton.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                login();
-//            }
-//        });
+        _loginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
 //        _signupLink.setOnClickListener(new View.OnClickListener() {
 //
 //            @Override
@@ -194,22 +182,7 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         //Log.d(TAG, "Login");
 
-         String result = null;
-        if (!validate()) {
-            onLoginFailed();
-            return;
-        }
-//        else{
-//            senddata senddataObj = new senddata(true);
-//            try {
-//                result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            } catch (ExecutionException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        _loginButton.setEnabled(false);
+
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
@@ -225,6 +198,23 @@ public class LoginActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
+                        _loginButton.setEnabled(false);
+
+                        String result = null;
+                        if (!validate()) {
+                            onLoginFailed();
+                            return;
+                        }
+                        else{
+                            senddata senddataObj = new senddata(true);
+                            try {
+                                senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         // On complete call either onLoginSuccess or onLoginFailed
                       //  senddata senddataObj = new senddata(true);
                      //   try {
@@ -243,6 +233,9 @@ public class LoginActivity extends AppCompatActivity {
                    //     }
                         //
 
+
+
+
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -260,8 +253,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
 
-        Intent intent = new Intent(this, Main2Activity.class);
-        startActivity(intent);
+      //  Intent intent = new Intent(this, Main2Activity.class);
+      //  startActivity(intent);
         //finish();
     }
 
@@ -295,7 +288,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public class senddata extends AsyncTask<String, String, String>
+    public class senddata extends AsyncTask<String, String, SignUp>
     {
         String responseText;
 
@@ -303,64 +296,28 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected SignUp doInBackground(String... strings) {
 
 
-//            Client client = ClientBuilder.newClient();
-//            WebTarget target = client.target("https://eventfy.herokuapp.com/webapi/login").path("resource");
-//
-//            Form form = new Form();
-//            form.param("password", strings[1]);
-//            form.param("username", strings[0]);
-//
-//            JSONObject dato = new JSONObject();
-//            try {
-//                dato.put("password", strings[1]);
-//                dato.put("username", strings[0]);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            User bean =
-//                    target.request(MediaType.APPLICATION_JSON_TYPE)
-//                            .post(Entity.entity(form, MediaType.APPLICATION_JSON),
-//                                    User.class);
-//
-//            responseText = bean.getEmail();
-//            Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** * json" + responseText);
+            User user = new User();
+            user.setUsername(strings[0]);
+            user.setPassword(strings[1]);
+
+            final String url = "http://192.168.0.5:8080/EventFy/webapi/login";
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            HttpEntity<User> request = new HttpEntity<>(user);
+
+            ResponseEntity<SignUp> rateResponse =
+                    restTemplate.exchange(url,
+                            HttpMethod.POST, request, SignUp.class);
+            SignUp signUp = rateResponse.getBody();
 
 
-            HttpResponse resp = null;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(
-                    "https://eventfy.herokuapp.com/webapi/login");
-            post.setHeader("content-type", "application/json");
+            Log.e("return : ", ""+signUp.getUserName());
+            return signUp;
 
-            JSONObject dato = new JSONObject();
-            try {
-                dato.put("password", strings[1]);
-                dato.put("username", strings[0]);
-
-               //Log.d("APP:  ", "result  : * * * *  * * ** * * * * ** * * * * * * ** * json" + dato.toString());
-            StringEntity entity = new StringEntity(dato.toString());
-
-                post.setEntity(entity);
-                resp = httpClient.execute(post);
-                responseText = EntityUtils.toString(resp.getEntity());
-
-                return responseText;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-         return responseText;
         }
-
-
     }
 }
