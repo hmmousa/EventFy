@@ -55,15 +55,29 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private ScrimInsetsFrameLayout mScrimInsetsFrameLayout;
-
+    private boolean isFacebook;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
         Intent in = getIntent();
-        String UserName= in.getExtras().getString("userName");
-        String UserFbId = in.getExtras().getString("UserFbId");
+        String UserFbId = null;
+        isFacebook = in.getExtras().getBoolean("isFacebook");
+        String UserName= in.getExtras().getString("userId");
+        String DOB= in.getExtras().getString("DOB");
+
+        Log.e("ifFacebook : ", ""+isFacebook);
+        if(isFacebook)
+        {
+
+
+
+        }else{
+
+
+        }
+
 
         userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
         userName.setText(UserName);
@@ -75,8 +89,11 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
 
         try {
-            if(UserFbId!=null)
-            set_loginData(UserName, UserFbId);
+            if(isFacebook) {
+                UserFbId  = in.getExtras().getString("userFbId");
+                Log.e("user FB id : ", ""+UserFbId);
+                set_loginData(UserName, UserFbId);
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {

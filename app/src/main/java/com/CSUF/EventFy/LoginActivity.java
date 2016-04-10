@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         _emailText = (EditText) findViewById(R.id.input_email);
         _loginButton = (Button) findViewById(R.id.btn_login);
         _passwordText = (EditText) findViewById(R.id.input_password);
+        _signupLink = (TextView) findViewById(R.id.link_signup);
 
         LoginButton fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
 
@@ -84,15 +85,15 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
-//        _signupLink.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                // Start the Signup activity
-//                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-//                startActivityForResult(intent, REQUEST_SIGNUP);
-//            }
-//        });
+        _signupLink.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Start the Signup activity
+                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivityForResult(intent, REQUEST_SIGNUP);
+            }
+        });
     }
 
     @Override
@@ -136,9 +137,11 @@ public class LoginActivity extends AppCompatActivity {
                                                 String str_UserName = json.getString("name");
                                               //  String str_lastname = json.getString("last_name");
 
+                                                Log.e("fb id : ", ""+str_id);
                                                 Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
-                                                intent.putExtra("userName",str_UserName);
+                                                intent.putExtra("userId",str_UserName);
                                                 intent.putExtra("userFbId",str_id);
+                                                intent.putExtra("isFacebook",true);
                                                 startActivity(intent);
 
                                             } catch (JSONException e) {
@@ -159,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onError(FacebookException error) {
                         Log.d(TAG_ERROR,error.toString());
                     }
+
                 });
     }
 
@@ -220,7 +224,7 @@ public class LoginActivity extends AppCompatActivity {
                      //   try {
                       //     String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
                        // if(result!=null && result.contains("userName"))
-                          onLoginSuccess();
+                         // onLoginSuccess();
                        // else
                         {
                        //     onLoginFailed();
@@ -236,9 +240,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-                        progressDialog.dismiss();
+
                     }
                 }, 3000);
+        progressDialog.dismiss();
     }
 
 
@@ -250,11 +255,17 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess() {
-        _loginButton.setEnabled(true);
+    public void onLoginSuccess(SignUp signUp) {
+       // _loginButton.setEnabled(true);
 
-      //  Intent intent = new Intent(this, Main2Activity.class);
-      //  startActivity(intent);
+
+
+        Intent intent = new Intent(this, Main2Activity.class);
+        intent.putExtra("userId",signUp.getUserName());
+        intent.putExtra("DOB",signUp.getDOB());
+        intent.putExtra("isFacebook", false);
+        intent.putExtra("isEmail", false);
+        startActivity(intent);
         //finish();
     }
 
@@ -298,12 +309,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected SignUp doInBackground(String... strings) {
 
-
             User user = new User();
             user.setUsername(strings[0]);
             user.setPassword(strings[1]);
 
-            final String url = "http://192.168.0.5:8080/EventFy/webapi/login";
+            final String url = "https://eventfy.herokuapp.com/webapi/login";
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -317,6 +327,17 @@ public class LoginActivity extends AppCompatActivity {
 
             Log.e("return : ", ""+signUp.getUserName());
             return signUp;
+
+        }
+
+        @Override
+        protected void onPostExecute(SignUp signUp) {
+            super.onPostExecute(signUp);
+            _loginButton.setEnabled(true);
+            if(signUp !=null && signUp.getUserName().length()>0)
+                onLoginSuccess(signUp);
+            else
+                onLoginFailed();
 
         }
     }

@@ -67,7 +67,9 @@ public class VerifyAccount extends ActionBarActivity {
             String result;
 
             if(isEmail)
-            {}
+            {
+
+            }
             else {
                 result = senddataObj.execute(userName, password).get();
             }
