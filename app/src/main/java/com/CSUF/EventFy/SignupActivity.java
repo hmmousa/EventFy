@@ -46,7 +46,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
     @Bind(R.id.link_login) TextView _loginLink;
     private boolean isEmail;
 
-
+    ProgressDialog progressDialog=null;
     public static final String DATEPICKER_TAG = "datepicker";
 public  final  senddata senddataObj = new senddata(true);
 
@@ -113,13 +113,14 @@ public  final  senddata senddataObj = new senddata(true);
             return;
         }
 
-        _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
+        progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
+
+        _signupButton.setEnabled(false);
 
         String name = _nameText.getText().toString();
         String dob =  _dobtext.getText().toString();
@@ -149,9 +150,9 @@ public  final  senddata senddataObj = new senddata(true);
                         }
 
                         // onSignupFailed();
-                        progressDialog.dismiss();
+
                     }
-                    }, 3000);
+                    }, 500);
     }
 
 
@@ -169,7 +170,7 @@ public  final  senddata senddataObj = new senddata(true);
         intent.putExtra("DOB",_dobtext.getText().toString());
         intent.putExtra("isEmail",isEmail);
 
-
+        progressDialog.dismiss();
         startActivity(intent);
 
      //   setResult(RESULT_OK, null);
@@ -248,8 +249,11 @@ public  final  senddata senddataObj = new senddata(true);
             HttpResponse resp = null;
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost(
-                    "https://eventfy.herokuapp.com/webapi/signup/checkusernamevalid");
+                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkusernamevalid");
             post.setHeader("content-type", "application/json");
+
+            progressDialog.setProgress(0);
+
 
             JSONObject dato = new JSONObject();
             try {
@@ -282,6 +286,17 @@ public  final  senddata senddataObj = new senddata(true);
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            progressDialog.dismiss();
         }
     }
 }

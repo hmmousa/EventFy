@@ -1,7 +1,7 @@
 package com.CSUF.EventFy;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -10,11 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.Builder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -41,11 +36,7 @@ public class VerifyAccount extends ActionBarActivity {
     private boolean isEmail;
 
     public senddata senddataObj = new senddata(true);
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,22 +53,34 @@ public class VerifyAccount extends ActionBarActivity {
         DOB = in.getExtras().getString("DOB");
         isEmail = in.getExtras().getBoolean("isEmail");
 
-        try {
+        final ProgressDialog progressDialog = new ProgressDialog(VerifyAccount.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Generating Code...");
+        progressDialog.show();
 
-            String result;
 
-            if(isEmail)
-            {
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onSignupSuccess or onSignupFailed
+                        // depending on success
+                        try {
 
-            }
-            else {
-                result = senddataObj.execute(userName, password).get();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+                            String result;
+
+                            result = senddataObj.execute(userName, password).get();
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                        progressDialog.dismiss();
+
+                    }
+                }, 500);
+
 
 
         mCodeSendButton.setOnClickListener(new OnClickListener() {
@@ -87,13 +90,13 @@ public class VerifyAccount extends ActionBarActivity {
                     sendVcode sendVcodeObj = new sendVcode(true);
                     String result= null;
 
-                    if (isEmail) {
+                    //if (isEmail) {
 
 
-                    } else {
+                   /// } else {
 
                       result = sendVcodeObj.execute(userName, mCodeEditText.getText().toString()).get();
-                    }
+                   // }
 
                     if (result != null && result.equals("Success")) {
                         Intent intent = new Intent(VerifyAccount.this, Main2Activity.class);
@@ -115,47 +118,47 @@ public class VerifyAccount extends ActionBarActivity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new Builder(this).addApi(AppIndex.API).build();
+       // client = new Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "VerifyAccount Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        client.connect();
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "VerifyAccount Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "VerifyAccount Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "VerifyAccount Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.end(client, viewAction);
+//        client.disconnect();
     }
 
 
@@ -176,7 +179,7 @@ public class VerifyAccount extends ActionBarActivity {
             HttpResponse resp = null;
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost(
-                    "https://eventfy.herokuapp.com/webapi/signup/getverificationcode");
+                    "http://192.168.0.5:8080/EventFy/webapi/signup/getverificationcode");
             post.setHeader("content-type", "application/json");
 
             JSONObject dato = new JSONObject();
@@ -192,7 +195,7 @@ public class VerifyAccount extends ActionBarActivity {
 
                 String result = EntityUtils.toString(resp.getEntity());
 
-                Log.e("result : ", "" + result);
+                Log.e("get code : ", "" + result);
                 return result;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -224,7 +227,7 @@ public class VerifyAccount extends ActionBarActivity {
             HttpResponse resp = null;
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost(
-                    "https://eventfy.herokuapp.com/webapi/signup/checkverificationcode");
+                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkverificationcode");
             post.setHeader("content-type", "application/json");
 
             JSONObject dato = new JSONObject();
@@ -242,7 +245,7 @@ public class VerifyAccount extends ActionBarActivity {
 
                 String result = EntityUtils.toString(resp.getEntity());
 
-                Log.e("result : ", "" + result);
+                Log.e("check code : ", "" + result);
                 return result;
             } catch (JSONException e) {
                 e.printStackTrace();
