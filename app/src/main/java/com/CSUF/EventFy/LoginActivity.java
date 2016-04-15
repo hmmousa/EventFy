@@ -2,11 +2,16 @@ package com.CSUF.EventFy;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,14 +20,18 @@ import android.widget.Toast;
 import com.CSUF.EventFy_Beans.SignUp;
 import com.CSUF.EventFy_Beans.User;
 import com.facebook.CallbackManager;
+import com.facebook.CallbackManager.Factory;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequest.GraphJSONObjectCallback;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,63 +47,94 @@ import java.util.concurrent.ExecutionException;
 import butterknife.Bind;
 
 
-
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
     CallbackManager callbackManager;
     private EditText _emailText;
     private static String TAG_ERROR = "Error";
-    private static String  TAG_CANCEL = "Cancel";
-    @Bind(R.id.input_password) EditText _passwordText;
-    @Bind(R.id.btn_login) Button _loginButton;
-    @Bind(R.id.link_signup) TextView _signupLink;
-    
+    private static String TAG_CANCEL = "Cancel";
+    @Bind(R.id.input_password)
+    EditText _passwordText;
+    @Bind(R.id.btn_login)
+    Button _loginButton;
+    @Bind(R.id.link_signup)
+    TextView _signupLink;
+    SharedPreferences preferences;
+    ProgressDialog progressDialog;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        String signUpjson = preferences.getString("signUp", "");
+
+        Log.e("data in ca : ", signUpjson);
+        Log.e("data len : ", ""+signUpjson.length());
+
+//        if (signUpjson.length()>5 && signUpjson != null) {
+//
+//            Log.e("in else : ", signUpjson);
+//            Gson gson = new Gson();
+//            SignUp signUp = gson.fromJson(signUpjson, SignUp.class);
+//            onLoginSuccess(signUp, true);
+//        } else {
+
+
+
+            FacebookSdk.sdkInitialize(getApplicationContext());
+
+            progressDialog = new ProgressDialog(LoginActivity.this,
+                    R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Authenticating...");
+            progressDialog.show();
+            Log.e("in if state : ", signUpjson);
 //        ButterKnife.bind(this);
+            setContentView(R.layout.activity_login);
+            _emailText = (EditText) findViewById(R.id.input_email);
+            _loginButton = (Button) findViewById(R.id.btn_login);
+            _passwordText = (EditText) findViewById(R.id.input_password);
+            _signupLink = (TextView) findViewById(R.id.link_signup);
+            LoginButton fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
 
-        setContentView(R.layout.activity_login);
+            fbLoginButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onFblogin();
 
-        _emailText = (EditText) findViewById(R.id.input_email);
-        _loginButton = (Button) findViewById(R.id.btn_login);
-        _passwordText = (EditText) findViewById(R.id.input_password);
-        _signupLink = (TextView) findViewById(R.id.link_signup);
+                }
 
-        LoginButton fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+            });
 
+            _loginButton.setOnClickListener(new OnClickListener() {
 
-        fbLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onFblogin();
+                @Override
+                public void onClick(View v) {
+                    login();
+                }
+            });
+            _signupLink.setOnClickListener(new OnClickListener() {
 
-            }
-
-        });
-
-        _loginButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
-        _signupLink.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-            }
-        });
-    }
+                @Override
+                public void onClick(View v) {
+                    // Start the Signup activity
+                    Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                    startActivityForResult(intent, REQUEST_SIGNUP);
+                }
+            });
+        }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -103,11 +143,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     // Private method to handle Facebook login and callback
-    private void onFblogin()
-    {
-        callbackManager = CallbackManager.Factory.create();
+    private void onFblogin() {
+        callbackManager = Factory.create();
 
         // Set permissions
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "user_photos", "public_profile"));
@@ -119,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         System.out.println("Success");
                         GraphRequest.newMeRequest(
-                                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                                loginResult.getAccessToken(), new GraphJSONObjectCallback() {
                                     @Override
                                     public void onCompleted(JSONObject json, GraphResponse response) {
                                         if (response.getError() != null) {
@@ -132,17 +170,22 @@ public class LoginActivity extends AppCompatActivity {
                                                 String jsonresult = String.valueOf(json);
                                                 System.out.println("JSON Result" + jsonresult);
 
-                                              //  String str_email = json.getString("email");
+                                                //  String str_email = json.getString("email");
                                                 String str_id = json.getString("id");
                                                 String str_UserName = json.getString("name");
-                                              //  String str_lastname = json.getString("last_name");
+                                                //  String str_lastname = json.getString("last_name");
 
-                                                Log.e("fb id : ", ""+str_id);
-                                                Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
-                                                intent.putExtra("userId",str_UserName);
-                                                intent.putExtra("userFbId",str_id);
-                                                intent.putExtra("isFacebook",true);
-                                                startActivity(intent);
+                                                Log.e("fb id : ", "" + str_id);
+                                               SignUp signUp = new SignUp();
+                                                signUp.setUserName(""+str_UserName);
+                                                signUp.setIsFacebook("true");
+                                                onLoginSuccess(signUp, false);
+
+//                                                Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
+//                                                intent.putExtra("userId", str_UserName);
+//                                                intent.putExtra("userFbId", str_id);
+//                                                intent.putExtra("isFacebook", true);
+//                                                startActivity(intent);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -153,6 +196,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }).executeAsync();
                     }
 
+
                     @Override
                     public void onCancel() {
                         Log.d(TAG_CANCEL, "On cancel");
@@ -160,46 +204,23 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(FacebookException error) {
-                        Log.d(TAG_ERROR,error.toString());
+                        Log.d(TAG_ERROR, error.toString());
                     }
 
                 });
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        callbackmanager.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_SIGNUP) {
-//            if (resultCode == RESULT_OK) {
-//                this.finish();
-//            }
-//        }
-//
-//
-//    }
-
-
-
 
     public void login() {
-        //Log.d(TAG, "Login");
 
 
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
 
-        new android.os.Handler().postDelayed(
+        new Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         _loginButton.setEnabled(false);
@@ -208,8 +229,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (!validate()) {
                             onLoginFailed();
                             return;
-                        }
-                        else{
+                        } else {
                             senddata senddataObj = new senddata(true);
                             try {
                                 senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
@@ -219,34 +239,10 @@ public class LoginActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        // On complete call either onLoginSuccess or onLoginFailed
-                      //  senddata senddataObj = new senddata(true);
-                     //   try {
-                      //     String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
-                       // if(result!=null && result.contains("userName"))
-                         // onLoginSuccess();
-                       // else
-                        {
-                       //     onLoginFailed();
-                        }
-
-                   //     } catch (InterruptedException e) {
-                    //        e.printStackTrace();
-                   //     } catch (ExecutionException e) {
-                    //        e.printStackTrace();
-                   //     }
-                        //
-
-
-
-
-
                     }
-                }, 3000);
-        progressDialog.dismiss();
+                }, 500);
+
     }
-
-
 
 
     @Override
@@ -255,17 +251,17 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess(SignUp signUp) {
-       // _loginButton.setEnabled(true);
+    public void onLoginSuccess(SignUp signUp, boolean isSetAlready) {
+        // _loginButton.setEnabled(true);
+        finish();
+        progressDialog.dismiss();
+   //     if (!isSetAlready)
+    //        setsharedPref(signUp);
 
+     //   Intent intent = new Intent(this, Main2Activity.class);
+      //  intent.putExtra("signUp", signUp);
 
-
-        Intent intent = new Intent(this, Main2Activity.class);
-        intent.putExtra("userId",signUp.getUserName());
-        intent.putExtra("DOB",signUp.getDOB());
-        intent.putExtra("isFacebook", false);
-        intent.putExtra("isEmail", false);
-        startActivity(intent);
+    //    startActivity(intent);
         //finish();
     }
 
@@ -298,9 +294,21 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
 
-    public class senddata extends AsyncTask<String, String, SignUp>
-    {
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+
+    }
+
+
+    public class senddata extends AsyncTask<String, String, SignUp> {
         String responseText;
 
         public senddata(boolean b) {
@@ -313,9 +321,19 @@ public class LoginActivity extends AppCompatActivity {
             user.setUsername(strings[0]);
             user.setPassword(strings[1]);
 
-            final String url = "https://eventfy.herokuapp.com/webapi/login";
+           // MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+
+           // headers.add("Content-Type", "text/plain");
+
+            final String url = "http://192.168.0.5:8080/EventFy/webapi/login";
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+          //  List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+
+            //messageConverters.add(new MappingJackson2HttpMessageConverter());
+            //restTemplate.setMessageConverters(messageConverters);
+
 
             HttpEntity<User> request = new HttpEntity<>(user);
 
@@ -325,20 +343,47 @@ public class LoginActivity extends AppCompatActivity {
             SignUp signUp = rateResponse.getBody();
 
 
-            Log.e("return : ", ""+signUp.getUserName());
+            Log.e("return : ", "" + signUp.getUserName());
             return signUp;
 
+
+//            HttpEntity<String> request = new HttpEntity<String>("2", headers);
+//
+//            ResponseEntity<Events> rateResponse = restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
+//
+//
+//           Events event = rateResponse.getBody();
+//
+//            Log.e("String is ",""+event.getEventID());
         }
 
         @Override
         protected void onPostExecute(SignUp signUp) {
             super.onPostExecute(signUp);
             _loginButton.setEnabled(true);
-            if(signUp !=null && signUp.getUserName().length()>0)
-                onLoginSuccess(signUp);
+            if (signUp != null && signUp.getUserName().length() > 0)
+                onLoginSuccess(signUp, false);
             else
                 onLoginFailed();
 
         }
     }
+
+    public void setsharedPref(SignUp signUp) {
+
+        Editor prefsEditor = preferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(signUp);
+        Log.e("data shared 1 : ", ""+json);
+
+        prefsEditor.putString("signUp", json);
+
+        String signUpjson = preferences.getString("signUp", "");
+
+        Log.e("data shared 2 : ", ""+signUpjson);
+        prefsEditor.commit();
+    }
+
 }
+
+
