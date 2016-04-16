@@ -15,13 +15,13 @@ import android.widget.Toast;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+//import org.apache.http.HttpResponse;
+//import org.apache.http.client.ClientProtocolException;
+//import org.apache.http.client.HttpClient;
+//import org.apache.http.client.methods.HttpPost;
+//import org.apache.http.entity.StringEntity;
+//import org.apache.http.impl.client.DefaultHttpClient;
+//import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -246,45 +246,45 @@ public  final  senddata senddataObj = new senddata(true);
         @Override
         protected String doInBackground(String... strings) {
 
-            HttpResponse resp = null;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(
-                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkusernamevalid");
-            post.setHeader("content-type", "application/json");
-
-            progressDialog.setProgress(0);
-
-
-            JSONObject dato = new JSONObject();
-            try {
-
-                dato.put("username", strings[0]);
-
-                dato.put("password", strings[1]);
-
-               // dato.put("userName", strings[2]);
-
-              //  dato.put("DOB", strings[3]);
-
-
-                Log.e("json to send :: ", ""+dato);
-                StringEntity entity = new StringEntity(dato.toString());
-                post.setEntity(entity);
-                resp = httpClient.execute(post);
-
-                String result = EntityUtils.toString(resp.getEntity());
-
-                Log.e("result in sign up :: ", ""+result);
-                return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            HttpResponse resp = null;
+//            HttpClient httpClient = new DefaultHttpClient();
+//            HttpPost post = new HttpPost(
+//                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkusernamevalid");
+//            post.setHeader("content-type", "application/json");
+//
+//            progressDialog.setProgress(0);
+//
+//
+//            JSONObject dato = new JSONObject();
+//            try {
+//
+//                dato.put("username", strings[0]);
+//
+//                dato.put("password", strings[1]);
+//
+//               // dato.put("userName", strings[2]);
+//
+//              //  dato.put("DOB", strings[3]);
+//
+//
+//                Log.e("json to send :: ", ""+dato);
+//                StringEntity entity = new StringEntity(dato.toString());
+//                post.setEntity(entity);
+//                resp = httpClient.execute(post);
+//
+//                String result = EntityUtils.toString(resp.getEntity());
+//
+//                Log.e("result in sign up :: ", ""+result);
+//                return result;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } catch (ClientProtocolException e) {
+//                e.printStackTrace();
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             return null;
         }
 

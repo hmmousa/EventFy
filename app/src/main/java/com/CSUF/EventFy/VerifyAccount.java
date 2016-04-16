@@ -11,13 +11,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+//import org.apache.http.HttpResponse;
+//import org.apache.http.client.ClientProtocolException;
+//import org.apache.http.client.HttpClient;
+//import org.apache.http.client.methods.HttpPost;
+//import org.apache.http.entity.StringEntity;
+//import org.apache.http.impl.client.DefaultHttpClient;
+//import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -176,36 +176,36 @@ public class VerifyAccount extends ActionBarActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            HttpResponse resp = null;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(
-                    "http://192.168.0.5:8080/EventFy/webapi/signup/getverificationcode");
-            post.setHeader("content-type", "application/json");
-
-            JSONObject dato = new JSONObject();
-            try {
-                dato.put("username", strings[0]);
-
-                dato.put("password", strings[0]);
-
-                StringEntity entity = new StringEntity(dato.toString());
-
-                post.setEntity(entity);
-                resp = httpClient.execute(post);
-
-                String result = EntityUtils.toString(resp.getEntity());
-
-                Log.e("get code : ", "" + result);
-                return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            HttpResponse resp = null;
+//            HttpClient httpClient = new DefaultHttpClient();
+//            HttpPost post = new HttpPost(
+//                    "http://192.168.0.5:8080/EventFy/webapi/signup/getverificationcode");
+//            post.setHeader("content-type", "application/json");
+//
+//            JSONObject dato = new JSONObject();
+//            try {
+//                dato.put("username", strings[0]);
+//
+//                dato.put("password", strings[0]);
+//
+//                StringEntity entity = new StringEntity(dato.toString());
+//
+//                post.setEntity(entity);
+//                resp = httpClient.execute(post);
+//
+//                String result = EntityUtils.toString(resp.getEntity());
+//
+//                Log.e("get code : ", "" + result);
+//                return result;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } catch (ClientProtocolException e) {
+//                e.printStackTrace();
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             return null;
         }
     }
@@ -224,38 +224,38 @@ public class VerifyAccount extends ActionBarActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            HttpResponse resp = null;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(
-                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkverificationcode");
-            post.setHeader("content-type", "application/json");
-
-            JSONObject dato = new JSONObject();
-            try {
-                dato.put("userName", strings[0]);
-
-                dato.put("vCode", strings[1]);
-
-                Log.e("data : ", "" + dato);
-
-                StringEntity entity = new StringEntity(dato.toString());
-
-                post.setEntity(entity);
-                resp = httpClient.execute(post);
-
-                String result = EntityUtils.toString(resp.getEntity());
-
-                Log.e("check code : ", "" + result);
-                return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            HttpResponse resp = null;
+//            HttpClient httpClient = new DefaultHttpClient();
+//            HttpPost post = new HttpPost(
+//                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkverificationcode");
+//            post.setHeader("content-type", "application/json");
+//
+//            JSONObject dato = new JSONObject();
+//            try {
+//                dato.put("userName", strings[0]);
+//
+//                dato.put("vCode", strings[1]);
+//
+//                Log.e("data : ", "" + dato);
+//
+//                StringEntity entity = new StringEntity(dato.toString());
+//
+//                post.setEntity(entity);
+//                resp = httpClient.execute(post);
+//
+//                String result = EntityUtils.toString(resp.getEntity());
+//
+//                Log.e("check code : ", "" + result);
+//                return result;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } catch (ClientProtocolException e) {
+//                e.printStackTrace();
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             return null;
         }
 
