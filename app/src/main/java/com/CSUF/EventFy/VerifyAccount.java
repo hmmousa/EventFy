@@ -10,54 +10,53 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.CSUF.EventFy_Beans.SignUp;
+import com.CSUF.EventFy_Beans.VerificationCode;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.concurrent.ExecutionException;
 
 public class VerifyAccount extends ActionBarActivity {
 
-    private String userName;
-    private String password;
-    private String DOB;
-    private String fName;
     private TextView mCodeEditText;
     private Button mCodeSendButton;
     private boolean isEmail;
 
-    public senddata senddataObj = new senddata(true);
-
+    private GetVcode getVcode;
+    private CheckVcode checkVcode;
+    private ProgressDialog progressDialog;
+    private SignUp signUp;
+    private AddUser addUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_account);
 
+        Intent in = getIntent();
+        String UserFbId = null;
+        signUp = (SignUp) in.getSerializableExtra("signup");
+
         mCodeEditText = (TextView) findViewById(R.id.vcode_editText);
         mCodeSendButton = (Button) findViewById(R.id.vcode_button);
+        mCodeSendButton.setEnabled(false);
 
-        Intent in = getIntent();
-        userName = in.getExtras().getString("userId");
-        password = in.getExtras().getString("password");
-        fName = in.getExtras().getString("userName");
-        DOB = in.getExtras().getString("DOB");
-        isEmail = in.getExtras().getBoolean("isEmail");
+        getVcode = new GetVcode(true);
 
-        final ProgressDialog progressDialog = new ProgressDialog(VerifyAccount.this,
-                R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(VerifyAccount.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Generating Code...");
         progressDialog.show();
+
 
 
         new android.os.Handler().postDelayed(
@@ -67,9 +66,8 @@ public class VerifyAccount extends ActionBarActivity {
                         // depending on success
                         try {
 
-                            String result;
-
-                            result = senddataObj.execute(userName, password).get();
+                            if(mCodeSendButton.isEnabled()==false)
+                                  getVcode.execute(signUp.getUserId()).get();
 
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -82,30 +80,29 @@ public class VerifyAccount extends ActionBarActivity {
                 }, 500);
 
 
-
         mCodeSendButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
                 try {
-                    sendVcode sendVcodeObj = new sendVcode(true);
-                    String result= null;
 
-                    //if (isEmail) {
+                    String result = null;
 
-
-                   /// } else {
-
-                      result = sendVcodeObj.execute(userName, mCodeEditText.getText().toString()).get();
-                   // }
+                    if (mCodeEditText!=null && mCodeEditText.length()==4) {
+                        mCodeSendButton.setEnabled(false);
+                        progressDialog.show();
+                        progressDialog.setMessage("Verifying Code...");
+                        checkVcode = new CheckVcode(true);
+                        result = checkVcode.execute(signUp.getUserId(), mCodeEditText.getText().toString()).get();
+                    }
 
                     if (result != null && result.equals("Success")) {
-                        Intent intent = new Intent(VerifyAccount.this, Main2Activity.class);
-                        intent.putExtra("userId", userName);
-                        intent.putExtra("password", password);
-                        intent.putExtra("userName", fName);
-                        intent.putExtra("DOB", DOB);
 
-                        startActivity(intent);
+                        addUser = new AddUser(true);
+                        signUp = addUser.execute().get();
+                        if(signUp!= null)
+                            onVerifySuccess(signUp);
+                        else
+                            onVerifyFail();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -116,59 +113,34 @@ public class VerifyAccount extends ActionBarActivity {
 
         });
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-       // client = new Builder(this).addApi(AppIndex.API).build();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void onVerifySuccess(SignUp signUp)
+    {
+        finish();
+        Intent intent = new Intent(VerifyAccount.this, Main2Activity.class);
+        intent.putExtra("signup", signUp);
+        mCodeSendButton.setEnabled(true);
+        progressDialog.dismiss();
 
-//        // ATTENTION: This was auto-generated to implement the App Indexing API.
-//        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        client.connect();
-//        Action viewAction = Action.newAction(
-//                Action.TYPE_VIEW, // TODO: choose an action type.
-//                "VerifyAccount Page", // TODO: Define a title for the content shown.
-//                // TODO: If you have web page content that matches this app activity's content,
-//                // make sure this auto-generated web page URL is correct.
-//                // Otherwise, set the URL to null.
-//                Uri.parse("http://host/path"),
-//                // TODO: Make sure this auto-generated app deep link URI is correct.
-//                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
-//        );
-//        AppIndex.AppIndexApi.start(client, viewAction);
+        startActivity(intent);
+
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-//        // ATTENTION: This was auto-generated to implement the App Indexing API.
-//        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        Action viewAction = Action.newAction(
-//                Action.TYPE_VIEW, // TODO: choose an action type.
-//                "VerifyAccount Page", // TODO: Define a title for the content shown.
-//                // TODO: If you have web page content that matches this app activity's content,
-//                // make sure this auto-generated web page URL is correct.
-//                // Otherwise, set the URL to null.
-//                Uri.parse("http://host/path"),
-//                // TODO: Make sure this auto-generated app deep link URI is correct.
-//                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
-//        );
-//        AppIndex.AppIndexApi.end(client, viewAction);
-//        client.disconnect();
+    public void onVerifyFail()
+    {
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        mCodeSendButton.setEnabled(true);
+        progressDialog.dismiss();
     }
 
+    private class GetVcode extends AsyncTask<String, String, String> {
 
-    private class senddata extends AsyncTask<String, String, String> {
-
-        public senddata(String email) {
+        public GetVcode(String email) {
 
         }
 
-        public senddata(boolean b) {
+        public GetVcode(boolean b) {
             super();
 
         }
@@ -176,47 +148,46 @@ public class VerifyAccount extends ActionBarActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            HttpResponse resp = null;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(
-                    "http://192.168.0.5:8080/EventFy/webapi/signup/getverificationcode");
-            post.setHeader("content-type", "application/json");
+            final String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.verification_get);
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 
-            JSONObject dato = new JSONObject();
-            try {
-                dato.put("username", strings[0]);
+            headers.add("Content-Type", "text/plain");
 
-                dato.put("password", strings[0]);
+            Log.e("ing get vcode : ", ""+strings[0]);
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-                StringEntity entity = new StringEntity(dato.toString());
+            HttpEntity<String> request = new HttpEntity<>(strings[0], headers);
 
-                post.setEntity(entity);
-                resp = httpClient.execute(post);
+            ResponseEntity<String> rateResponse =
+                    restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+            String result = rateResponse.getBody();
 
-                String result = EntityUtils.toString(resp.getEntity());
+            return result;
 
-                Log.e("get code : ", "" + result);
-                return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            mCodeSendButton.setEnabled(true);
         }
     }
 
-    private class sendVcode extends AsyncTask<String, String, String> {
 
-        public sendVcode(String email) {
+    private class CheckVcode extends AsyncTask<String, String,String> {
+
+        public CheckVcode(String email) {
 
         }
 
-        public sendVcode(boolean b) {
+        public CheckVcode(boolean b) {
             super();
 
         }
@@ -224,46 +195,84 @@ public class VerifyAccount extends ActionBarActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            HttpResponse resp = null;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(
-                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkverificationcode");
-            post.setHeader("content-type", "application/json");
+             String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.verification_check);
 
-            JSONObject dato = new JSONObject();
-            try {
-                dato.put("userName", strings[0]);
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-                dato.put("vCode", strings[1]);
+            VerificationCode vCode = new VerificationCode();
+            vCode.setUserId(strings[0]);
+            vCode.setvCode(strings[1]);
 
-                Log.e("data : ", "" + dato);
+            HttpEntity<VerificationCode> request = new HttpEntity<>(vCode);
 
-                StringEntity entity = new StringEntity(dato.toString());
+            ResponseEntity<String> rateResponse =
+                    restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+            String result = rateResponse.getBody();
 
-                post.setEntity(entity);
-                resp = httpClient.execute(post);
+            return result;
 
-                String result = EntityUtils.toString(resp.getEntity());
-
-                Log.e("check code : ", "" + result);
-                return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPreExecute() {
 
         }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            mCodeSendButton.setEnabled(true);
+        }
     }
+
+    private class AddUser extends AsyncTask<String, String, SignUp> {
+
+        public AddUser(SignUp signUp) {
+
+        }
+
+        public AddUser(boolean b) {
+            super();
+
+        }
+
+        @Override
+        protected SignUp doInBackground(String... strings) {
+
+            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.signup_adduser);
+
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            signUp.setIsVerified("true");
+            HttpEntity<SignUp> request = new HttpEntity<>(signUp);
+
+            ResponseEntity<SignUp> rateResponse =
+                    restTemplate.exchange(url, HttpMethod.POST, request, SignUp.class);
+            SignUp result = rateResponse.getBody();
+
+            return result;
+
+        }
+
+
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onPostExecute(SignUp result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            mCodeSendButton.setEnabled(true);
+        }
+    }
+
 
 }
+
+

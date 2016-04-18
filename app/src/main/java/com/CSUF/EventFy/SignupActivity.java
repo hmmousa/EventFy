@@ -12,21 +12,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.CSUF.EventFy_Beans.SignUp;
+import com.CSUF.EventFy_Beans.User;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
@@ -48,8 +44,8 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
 
     ProgressDialog progressDialog=null;
     public static final String DATEPICKER_TAG = "datepicker";
-public  final  senddata senddataObj = new senddata(true);
 
+    private ValidateUserId validateUserId;
 
 @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,10 +118,6 @@ public  final  senddata senddataObj = new senddata(true);
 
         _signupButton.setEnabled(false);
 
-        String name = _nameText.getText().toString();
-        String dob =  _dobtext.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
 
         // TODO: Implement your own signup logic here.
 
@@ -135,10 +127,21 @@ public  final  senddata senddataObj = new senddata(true);
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
                         try {
-                            String result = senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
 
-                            if (result != null && result.equals("Success"))
-                                onSignupSuccess();
+                            validateUserId = new ValidateUserId(true);
+                            String result = validateUserId.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
+
+                            if (result != null && result.equals("Success")) {
+                                SignUp signUp = new SignUp();
+                                signUp.setUserId(_emailText.getText().toString());
+                                signUp.setPassword(_passwordText.getText().toString());
+                                signUp.setIsVerified("false");
+                                signUp.setIsFacebook("false");
+                                signUp.setImageUrl("default");
+                                signUp.setDob(_dobtext.getText().toString());
+                                signUp.setUserName(_nameText.getText().toString());
+                                    onSignupSuccess(signUp);
+                            }
                             else {
                                 onSignupFailed();
                             }
@@ -156,19 +159,12 @@ public  final  senddata senddataObj = new senddata(true);
     }
 
 
-    public void onSignupSuccess() {
+    public void onSignupSuccess(SignUp signUp) {
         _signupButton.setEnabled(true);
 
-
-
-        //  String str_lastname = json.getString("last_name");
-
+        finish();
         Intent intent = new Intent(SignupActivity.this, VerifyAccount.class);
-        intent.putExtra("userId",_emailText.getText().toString());
-        intent.putExtra("uassword",_passwordText.getText().toString());
-        intent.putExtra("userName", _nameText.getText().toString());
-        intent.putExtra("DOB",_dobtext.getText().toString());
-        intent.putExtra("isEmail",isEmail);
+        intent.putExtra("signup", signUp);
 
         progressDialog.dismiss();
         startActivity(intent);
@@ -231,61 +227,40 @@ public  final  senddata senddataObj = new senddata(true);
     }
 
 
-    public  class senddata extends AsyncTask<String, String, String>
+    class ValidateUserId extends AsyncTask<String, String, String>
     {
 
-        public senddata(String email, String password, String userName)
+        public ValidateUserId(String email, String password)
         {
 
         }
 
-        public senddata(boolean b) {
+        public ValidateUserId(boolean b) {
             super();
 
         }
         @Override
         protected String doInBackground(String... strings) {
 
-            HttpResponse resp = null;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(
-                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkusernamevalid");
-            post.setHeader("content-type", "application/json");
+            String url =  getResources().getString(R.string.ip_local)+getResources().getString(R.string.signup_checkuseridvalid);
 
-            progressDialog.setProgress(0);
+            Log.e("string : ", ""+strings[0]);
+            Log.e("string : ", ""+strings[1]);
 
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            User user = new User();
+            user.setUsername(strings[0]);
+            user.setPassword(strings[1]);
 
-            JSONObject dato = new JSONObject();
-            try {
+            HttpEntity<User> request = new HttpEntity<>(user);
 
-                dato.put("username", strings[0]);
+            ResponseEntity<String> rateResponse =
+                    restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+            String result = rateResponse.getBody();
 
-                dato.put("password", strings[1]);
+            return result;
 
-               // dato.put("userName", strings[2]);
-
-              //  dato.put("DOB", strings[3]);
-
-
-                Log.e("json to send :: ", ""+dato);
-                StringEntity entity = new StringEntity(dato.toString());
-                post.setEntity(entity);
-                resp = httpClient.execute(post);
-
-                String result = EntityUtils.toString(resp.getEntity());
-
-                Log.e("result in sign up :: ", ""+result);
-                return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
         }
 
         @Override
@@ -294,9 +269,10 @@ public  final  senddata senddataObj = new senddata(true);
         }
 
         @Override
-        protected void onPostExecute(String s) {
-
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
             progressDialog.dismiss();
         }
     }
+
 }

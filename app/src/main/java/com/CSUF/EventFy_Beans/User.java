@@ -1,9 +1,11 @@
 package com.CSUF.EventFy_Beans;
 
+import java.io.Serializable;
+
 /**
  * Created by swapnil on 3/4/16.
  */
-public class User {
+public class User implements Serializable {
 
     private String username;
     private String password;

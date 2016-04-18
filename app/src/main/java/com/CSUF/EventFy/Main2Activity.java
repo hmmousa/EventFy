@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.CSUF.EventFy_Beans.SignUp;
 import com.CSUF.customViews.ScrimInsetsFrameLayout;
 import com.CSUF.sliding.SlidingTabLayout;
 import com.CSUF.tabs.ViewPagerAdapter;
@@ -51,10 +53,10 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
     SlidingTabLayout tabs;
     CharSequence Titles[]={"NearBy","Interested", "Map"};
     int Numboftabs =3;
-    //ImageView profilePic;
     ProgressDialog pDialog;
     TextView userName;
     ImageView profilePic;
+    SignUp signUp;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private ScrimInsetsFrameLayout mScrimInsetsFrameLayout;
@@ -64,44 +66,23 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+
+        try {
         Intent in = getIntent();
-        String UserFbId = null;
-        isFacebook = in.getExtras().getBoolean("isFacebook");
-        String UserName= in.getExtras().getString("userId");
-        String DOB= in.getExtras().getString("DOB");
-
-        Log.e("ifFacebook : ", ""+isFacebook);
-        if(isFacebook)
-        {
-
-
-
-        }else{
-
-
-        }
-
-
-        userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
-        userName.setText(UserName);
-
+        signUp = (SignUp) in.getSerializableExtra("signup");
 
         init_slider();
 
         init_navigator();
 
+            set_loginData(signUp);
 
-        try {
-            if(isFacebook) {
-                UserFbId  = in.getExtras().getString("userFbId");
-                Log.e("user FB id : ", ""+UserFbId);
-                set_loginData(UserName, UserFbId);
-            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -115,8 +96,8 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setSearchableInfo(
+//                searchManager.getSearchableInfo(getComponentName()));
 
 
         return true;
@@ -218,13 +199,22 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
     }
 
 
-    private void set_loginData(String UserName, String userFbId) throws MalformedURLException, URISyntaxException {
+    private void set_loginData(SignUp signUp) throws MalformedURLException, URISyntaxException {
 
+        userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
+        userName.setText(signUp.getUserName());
         profilePic = (ImageView) findViewById(R.id.navigation_drawer_user_account_picture_profile);
         //String url = ""+R.string.profile_start_url+userFbId+""+R.string.profile_end_url;
-        String url = "https://graph.facebook.com/"+userFbId+"/picture?type=large";
-        new LoadImage().execute(url);
-
+        if(signUp.getIsFacebook().equals("true")) {
+            String url = "https://graph.facebook.com/" + signUp.getUserId() + "/picture?type=large";
+            new LoadImage().execute(url);
+        }
+       if(signUp.getImageUrl().equals("default")) {
+           Drawable myDrawable  = getResources().getDrawable(R.drawable.ic_account_circle_white_64dp);
+           profilePic.setImageDrawable(myDrawable);
+       }
+           else
+           new LoadImage().execute(signUp.getImageUrl());
     }
 
     @Override

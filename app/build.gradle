@@ -56,4 +56,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+    compile 'com.google.code.gson:gson:2.6.2'
+
+
 }

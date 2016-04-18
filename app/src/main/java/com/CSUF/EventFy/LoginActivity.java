@@ -44,8 +44,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-import butterknife.Bind;
-
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -54,18 +52,12 @@ public class LoginActivity extends AppCompatActivity {
     private EditText _emailText;
     private static String TAG_ERROR = "Error";
     private static String TAG_CANCEL = "Cancel";
-    @Bind(R.id.input_password)
     EditText _passwordText;
-    @Bind(R.id.btn_login)
     Button _loginButton;
-    @Bind(R.id.link_signup)
     TextView _signupLink;
     SharedPreferences preferences;
     ProgressDialog progressDialog;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client;
 
     @Override
@@ -96,9 +88,8 @@ public class LoginActivity extends AppCompatActivity {
                     R.style.AppTheme_Dark_Dialog);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Authenticating...");
-            progressDialog.show();
+
             Log.e("in if state : ", signUpjson);
-//        ButterKnife.bind(this);
             setContentView(R.layout.activity_login);
             _emailText = (EditText) findViewById(R.id.input_email);
             _loginButton = (Button) findViewById(R.id.btn_login);
@@ -127,14 +118,13 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Start the Signup activity
+                    progressDialog.show();
                     Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                     startActivityForResult(intent, REQUEST_SIGNUP);
                 }
             });
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -255,10 +245,10 @@ public class LoginActivity extends AppCompatActivity {
         // _loginButton.setEnabled(true);
         finish();
         progressDialog.dismiss();
-   //     if (!isSetAlready)
-    //        setsharedPref(signUp);
+        if (!isSetAlready)
+            setsharedPref(signUp);
 
-     //   Intent intent = new Intent(this, Main2Activity.class);
+      // Intent intent = new Intent(this, Main2Activity.class);
       //  intent.putExtra("signUp", signUp);
 
     //    startActivity(intent);
@@ -321,19 +311,9 @@ public class LoginActivity extends AppCompatActivity {
             user.setUsername(strings[0]);
             user.setPassword(strings[1]);
 
-           // MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-
-           // headers.add("Content-Type", "text/plain");
-
             final String url = "http://192.168.0.5:8080/EventFy/webapi/login";
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-          //  List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-
-            //messageConverters.add(new MappingJackson2HttpMessageConverter());
-            //restTemplate.setMessageConverters(messageConverters);
-
 
             HttpEntity<User> request = new HttpEntity<>(user);
 
@@ -344,17 +324,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
             Log.e("return : ", "" + signUp.getUserName());
+
             return signUp;
 
-
-//            HttpEntity<String> request = new HttpEntity<String>("2", headers);
-//
-//            ResponseEntity<Events> rateResponse = restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
-//
-//
-//           Events event = rateResponse.getBody();
-//
-//            Log.e("String is ",""+event.getEventID());
         }
 
         @Override
