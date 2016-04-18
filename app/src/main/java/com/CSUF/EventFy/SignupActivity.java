@@ -17,12 +17,27 @@ import com.CSUF.EventFy_Beans.User;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 
+<<<<<<< HEAD
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+=======
+//import org.apache.http.HttpResponse;
+//import org.apache.http.client.ClientProtocolException;
+//import org.apache.http.client.HttpClient;
+//import org.apache.http.client.methods.HttpPost;
+//import org.apache.http.entity.StringEntity;
+//import org.apache.http.impl.client.DefaultHttpClient;
+//import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+>>>>>>> origin/master
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
@@ -242,6 +257,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
         @Override
         protected String doInBackground(String... strings) {
 
+<<<<<<< HEAD
             String url =  getResources().getString(R.string.ip_local)+getResources().getString(R.string.signup_checkuseridvalid);
 
             Log.e("string : ", ""+strings[0]);
@@ -261,6 +277,48 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
 
             return result;
 
+=======
+//            HttpResponse resp = null;
+//            HttpClient httpClient = new DefaultHttpClient();
+//            HttpPost post = new HttpPost(
+//                    "http://192.168.0.5:8080/EventFy/webapi/signup/checkusernamevalid");
+//            post.setHeader("content-type", "application/json");
+//
+//            progressDialog.setProgress(0);
+//
+//
+//            JSONObject dato = new JSONObject();
+//            try {
+//
+//                dato.put("username", strings[0]);
+//
+//                dato.put("password", strings[1]);
+//
+//               // dato.put("userName", strings[2]);
+//
+//              //  dato.put("DOB", strings[3]);
+//
+//
+//                Log.e("json to send :: ", ""+dato);
+//                StringEntity entity = new StringEntity(dato.toString());
+//                post.setEntity(entity);
+//                resp = httpClient.execute(post);
+//
+//                String result = EntityUtils.toString(resp.getEntity());
+//
+//                Log.e("result in sign up :: ", ""+result);
+//                return result;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } catch (ClientProtocolException e) {
+//                e.printStackTrace();
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            return null;
+>>>>>>> origin/master
         }
 
         @Override

@@ -52,11 +52,15 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.facebook.android:facebook-android-sdk:4.8.+'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+<<<<<<< HEAD
     compile 'com.google.code.gson:gson:2.6.2'
 
+=======
+    compile 'com.google.code.gson:gson:1.7.2'
+>>>>>>> origin/master
 
 }
