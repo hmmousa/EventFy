@@ -169,6 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                                                SignUp signUp = new SignUp();
                                                 signUp.setUserName(""+str_UserName);
                                                 signUp.setIsFacebook("true");
+                                                signUp.setUserName(str_UserName);
                                                 onLoginSuccess(signUp, false);
 
 //                                                Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
@@ -245,14 +246,14 @@ public class LoginActivity extends AppCompatActivity {
         // _loginButton.setEnabled(true);
         finish();
         progressDialog.dismiss();
-        if (!isSetAlready)
-            setsharedPref(signUp);
+//        if (!isSetAlready)
+//            setsharedPref(signUp);
 
-      // Intent intent = new Intent(this, Main2Activity.class);
-      //  intent.putExtra("signUp", signUp);
+       Intent intent = new Intent(this, Main2Activity.class);
+        intent.putExtra("signup", signUp);
 
-    //    startActivity(intent);
-        //finish();
+        startActivity(intent);
+        finish();
     }
 
     public void onLoginFailed() {

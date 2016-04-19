@@ -67,7 +67,7 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
         setContentView(R.layout.activity_main2);
 
 
-        try {
+   //     try {
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("signup");
 
@@ -75,13 +75,13 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
         init_navigator();
 
-            set_loginData(signUp);
+          //  set_loginData(signUp);
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
 
 
     }

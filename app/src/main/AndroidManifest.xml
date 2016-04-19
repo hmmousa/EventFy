@@ -24,11 +24,12 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".MapFragments.MapsActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.Dark">
+            >
+
+            <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,21 +37,50 @@
             </intent-filter>
         </activity>
 
+
+        <!--<activity-->
+            <!--android:name=".MapFragments.MapsActivity"-->
+            <!--android:label="@string/app_name"-->
+            <!--android:theme="@style/AppTheme.Dark">-->
+
+        <!--</activity>-->
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
         <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name"
+            >
+            <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id" />
+
+        </activity>
+
+        <activity
             android:name=".SignupActivity"
             android:theme="@style/AppTheme.Dark" />
+
+
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="@string/google_maps_key" />
+
+        </activity>
+
+
         <activity
             android:name=".EventInfoActivity"
             android:label="@string/title_activity_event_info"
             android:theme="@style/AppTheme.NoActionBar" />
+
+
         <activity
             android:name=".CreatePublicEvent"
             android:label="@string/title_activity_create_public_event">
@@ -58,15 +88,19 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyBYGFaDhb-Ex-b3HxbtJCvO3Sq9NVhtkXY" />
         </activity>
+
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".VerifyAccount"
             android:label="@string/title_activity_verify_account" />
+
         <activity
             android:name=".SearchActivity"
             android:label="SearchActivity"></activity>
