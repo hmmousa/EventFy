@@ -12,7 +12,7 @@
         android:title="Search"
         android:icon="@drawable/action_search"
         app:showAsAction="collapseActionView|ifRoom"
-        android:actionViewClass="android.widget.SearchView" />
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 
 
 </menu>

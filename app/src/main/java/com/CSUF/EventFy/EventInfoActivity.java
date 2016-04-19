@@ -59,7 +59,7 @@ public class EventInfoActivity extends AppCompatActivity {
       //  Log.e("mdrawer", "" + findViewById(R.id.drawer_layout));
         mDrawer.setDrawerListener(mDrawerToggle);
 
-        final int arr []= new int[2];
+        final int arr []= new int[3];
         arr[0]=4;
         arr[1]=15;
 
@@ -74,16 +74,18 @@ public class EventInfoActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
-                switch (position % 2) {
+                switch (position % 3) {
                     case 0:
                         return "Comment";
                     case 1:
-                        return "Media";
+                        return "Images";
+                    case 2:
+                        return "Invitations";
 
                 }
                 return "";

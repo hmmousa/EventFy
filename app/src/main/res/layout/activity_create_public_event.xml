@@ -124,6 +124,8 @@
                             android:layout_weight="1" />
 
 
+
+
                         <com.github.siyamed.shapeimageview.CircularImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -235,6 +237,4 @@
         <include
             layout="@layout/navigation_drawer"/>
     </LinearLayout>
-    <include
-        layout="@layout/navigation_drawer"/>
 </android.support.v4.widget.DrawerLayout>
