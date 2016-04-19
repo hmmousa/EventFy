@@ -9,6 +9,8 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.CSUF.EventFy.MapFragments.MapsActivity;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        Intent intent = new Intent(this, CreatePublicEvent.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
