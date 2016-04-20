@@ -51,7 +51,7 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"NearBy","Interested", "Map"};
+    CharSequence Titles[]={"NearBy", "Map", "Trending"};
     int Numboftabs =3;
     ProgressDialog pDialog;
     TextView userName;

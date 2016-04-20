@@ -4,6 +4,7 @@ package com.CSUF.tabs;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 /**
  * Created by Edwin on 15/02/2015.
@@ -12,6 +13,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
+    Tab3 tab3;
+    Tab2 tab2;
+    Tab1 tab1;
 
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
@@ -27,19 +31,25 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
+        Log.e("position is ::: ", ""+position);
         if(position == 0) // if the position is 0 we are returning the First tab
         {
-            Tab1 tab1 = new Tab1();
+            if(tab1 == null)
+                tab1 = new Tab1();
             return tab1;
+
         }
         else if(position == 1)            // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
         {
-            Tab2 tab2 = new Tab2();
-            return tab2;
+            if(tab3 == null)
+                tab3 = new Tab3();
+            return tab3;
+
         }
         else{
-            Tab3 tab3 = new Tab3();
-            return tab3;
+            if(tab2 == null)
+                tab2 = new Tab2();
+            return tab2;
         }
 
     }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.CSUF.EventFy.R;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -19,12 +20,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * A simple {@link Fragment} subclass.
+ * http://joekarl.github.io/2013/11/01/android-map-view-inside-fragment/
  */
 public class Tab3 extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
     private MapView mapView;
     private boolean mapsSupported = true;
+    ObservableScrollView observableScrollView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
 
         if (mapView != null) {
             mapView.onCreate(savedInstanceState);
+
+
         }
         initializeMap();
     }
@@ -49,6 +54,7 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,6 +66,7 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         mapView.onSaveInstanceState(outState);
     }
 
@@ -70,11 +77,6 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
         initializeMap();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
 
     @Override
     public void onDestroy() {

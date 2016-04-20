@@ -2,6 +2,12 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"/>
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_tab"
