@@ -65,4 +65,10 @@
             android:layout_weight="1"/>
 
     </RadioGroup>
+
+    <include
+        layout="@layout/tool_bar"/>
+
+    <include
+        layout="@layout/navigation_drawer"/>
 </FrameLayout>

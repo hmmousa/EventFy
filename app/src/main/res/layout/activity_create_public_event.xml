@@ -101,6 +101,26 @@
                             />
                     </android.support.design.widget.TextInputLayout>
 
+                    <!--Time of event-->
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:focusable="false"
+                        android:clickable="true">
+                        <EditText android:id="@+id/public_event_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords|time"
+                            android:hint="Event Time"
+                            android:textColor="@color/black"
+                            android:focusable="false"
+                            android:clickable="true"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
@@ -124,6 +144,17 @@
                             android:layout_weight="1" />
 
 
+                        <Spinner
+                            android:id="@+id/spn_evntCpcty"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:drawable/btn_dropdown"
+                            android:spinnerMode="dropdown"
+                            android:color="@color/white"
+                            style="@style/spinner_style"
+                            />
+
+
 
 
                         <com.github.siyamed.shapeimageview.CircularImageView
@@ -137,13 +168,15 @@
                             />
                     </LinearLayout>
 
+
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
-                        android:text="Visiblity(miles) : "
+                        android:text="Visiblity (miles): "
                         android:textColor="@color/black"
-                        android:textSize="12dp"
+                        android:textSize="18dp"
                         android:id="@+id/public_event_visiblity_text"
                         />
 
@@ -166,12 +199,65 @@
                         android:layout_marginBottom="8dp"
                         />
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:text="Tenure  (Hours): "
+                        android:textColor="@color/black"
+                        android:textSize="18dp"
+                        android:id="@+id/public_event_Tenure_text"
+                        />
+
+                    <org.florescu.android.rangeseekbar.RangeSeekBar
+                        android:id="@+id/public_event_tenure_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:absoluteMaxValue="150"
+                        app:absoluteMinValue="00"
+                        app:singleThumb="true"
+                        app:textAboveThumbsColor="@color/primary_darker"
+                        app:thumbDisabled="@drawable/custom_slider_thumb"
+                        app:thumbNormal="@drawable/custom_slider_thumb"
+                        app:thumbPressed="@drawable/custom_slider_thumb"
+                        app:thumbShadow="true"
+                        app:thumbShadowBlur="3dp"
+                        app:thumbShadowColor="@color/black"
+                        app:thumbShadowXOffset="1dp"
+                        app:thumbShadowYOffset="2dp"
+                        android:layout_marginBottom="8dp"
+                        />
+
                     <Spinner
 
-                        android:id="@+id/public_event_type"
-
+                        android:id="@+id/spn_evnt_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/btn_dropdown"
+                        android:spinnerMode="dropdown"
+                        android:color="@color/white"
                         style="@style/spinner_style"
                         />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:focusable="false"
+                        android:clickable="true">
+                        <EditText android:id="@+id/txt_event_descr"
+                            android:inputType="textMultiLine"
+                            android:lines="8"
+                            android:minLines="6"
+                            android:gravity="top|left"
+                            android:maxLines="10"
+                            android:hint="Event Description"
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:scrollbars="vertical" />
+                    </android.support.design.widget.TextInputLayout>
+
 
 
                     <CheckBox

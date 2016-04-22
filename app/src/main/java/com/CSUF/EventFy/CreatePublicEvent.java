@@ -1,6 +1,7 @@
 package com.CSUF.EventFy;
 
 import android.app.SearchManager;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -21,9 +22,12 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
@@ -36,7 +40,6 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.soundcloud.android.crop.Crop;
-
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.io.File;
@@ -65,8 +68,12 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
  //   @Bind(R.id.public_event_visiblity_seekbar)
     RangeSeekBar rangeSeekBarTextColorWithCode;
     private TextView mEventDate;
+    private TextView mEventTime;
+
+
 
     public static final String DATEPICKER_TAG = "datepicker";
+    public static final String TIMEPICKER_TAG = "timepicker";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,10 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(CreatePublicEvent.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
 
 
+//        mEventTime = (TextView) findViewById(R.id.public_event_time);
+//        final Calendar calendar1 = Calendar.getInstance();
+//        final TimePickerDialog timePickerDialog = timePickerDialog.newInstance(CreatePublicEvent.this, calendar1.get(Calendar.HOUR_OF_DAY), calendar1.get(Calendar.MINUTE), isVibrate());
+
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -99,6 +110,26 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
                 actionBar.setHomeButtonEnabled(true);
             }
         }
+
+//        Spinner To Set Event CAPACITY
+
+        Spinner dropdown = (Spinner)findViewById(R.id.spn_evntCpcty);
+
+        assert dropdown != null;
+        dropdown.setPrompt("Event Capacity");
+        String[] items = new String[]{"5", "10", "20", "30 - 50", "50 - 80", "80 - 100", "100+"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        dropdown.setAdapter(adapter);
+
+        //        Spinner To Set Event TYPE
+        Spinner dropdown1 = (Spinner)findViewById(R.id.spn_evnt_type);
+
+        assert dropdown1 != null;
+        dropdown1.setPrompt("Event Type");
+        String[] items1 = new String[]{"Hang Out", "Meeting", "Wedding", "Concert", "Movie", "Study", "Other"};
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items1);
+        dropdown1.setAdapter(adapter1);
+
 
         getSupportActionBar().setTitle("Create Event");
         mActionBarDrawerToggle = new ActionBarDrawerToggle
@@ -164,6 +195,17 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
             }
 
         });
+
+//        mEventTime.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                // datePickerDialog.setVibrate(isVibrate());
+//                timePickerDialog.setYearRange(calendar.get(Calendar.YEAR) , calendar.get(Calendar.YEAR) + 10);
+//                datePickerDialog.setFirstDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK ));
+//                datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
+//                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+//            }
+//
+//        });
 
     }
 
