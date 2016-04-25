@@ -130,7 +130,7 @@ public class Events {
 	public void setEventIsVisible(String eventIsVisible) {
 		this.eventIsVisible = eventIsVisible;
 	}
-	public String getEventAdmin() {
+	public String getEventAdmin(String string) {
 		return eventAdmin;
 	}
 	public void setEventAdmin(String eventAdmin) {

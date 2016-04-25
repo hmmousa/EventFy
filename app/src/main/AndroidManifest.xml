@@ -19,6 +19,7 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
          />
 
+    <meta-data android:name="CLOUDINARY_URL" android:value="cloudinary://338234664624354:clA_O7equySs8LDK0hJNmmK62J8@eventfy"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"

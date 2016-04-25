@@ -1,15 +1,19 @@
 package com.CSUF.EventFy;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -22,14 +26,18 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.CSUF.EventFy_Beans.Events;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.github.florent37.materialviewpager.MaterialViewPager;
@@ -37,16 +45,34 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.Builder;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
+import com.sleepbot.datetimepicker.time.TimePickerDialog.OnTimeSetListener;
 import com.soundcloud.android.crop.Crop;
-import org.florescu.android.rangeseekbar.RangeSeekBar;
 
+import org.florescu.android.rangeseekbar.RangeSeekBar;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CreatePublicEvent extends ActionBarActivity implements ObservableScrollViewCallbacks, OnDateSetListener {
+
+public class CreatePublicEvent extends ActionBarActivity implements ObservableScrollViewCallbacks, OnDateSetListener, OnTimeSetListener {
 
     private Uri dest = null;
     private static final int PICK_IMAGE_ID = 234;
@@ -65,15 +91,37 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
     private Toolbar toolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private DrawerLayout mDrawerLayout;
- //   @Bind(R.id.public_event_visiblity_seekbar)
-    RangeSeekBar rangeSeekBarTextColorWithCode;
+    private Bitmap bm;
+    private RangeSeekBar rangeSeekBarTextColorWithCode;
     private TextView mEventDate;
     private TextView mEventTime;
-
+    private UploadImage uploadImage;
+    private String[] evenetCapacityItems = new String[]{"5", "10", "20", "30 - 50", "50 - 80", "80 - 100", "100+"};
+    private String[] eventTypeItems = new String[]{"Promotion", "Giveaway", "Meeting", "Concert", "Movie", "Study", "Other"};
+    private ProgressDialog progressDialog = null;
+    private Button mCreateEvent;
+    private AddEvent addEvent;
+    private Spinner eventCapacity;
+    private Spinner eventType;
+    private TextView eventDescription;
+    private TextView eventName;
+    private Events event;
+    private String imageUrl;
+    private String eventCapacityStr ;
+    private String mEventDateStr;
+    private String eventDescriptionStr;
+    private String eventNameStr;
+    private String mEventTimeStr;
+    private String eventTypeStr;
 
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +130,20 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
-       // mActionBarSize = getActionBarSize();
-        Log.e("action bar size : ", ""+mActionBarSize);
+//        Intent in = getIntent();
+//        SignUp signUp = (SignUp) in.getSerializableExtra("signup");
+
+        // mActionBarSize = getActionBarSize();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout1);
-
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+        mCreateEvent = (Button) findViewById(R.id.public_create_event);
 
+
+        eventDescription = (TextView) findViewById(R.id.txt_event_descr);
         mEventDate = (TextView) findViewById(R.id.public_event_date);
+        mEventTime = (TextView) findViewById(R.id.public_event_time);
+        eventName = (TextView) findViewById(R.id.public_event_name);
+
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(CreatePublicEvent.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
 
@@ -104,31 +159,33 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
             final ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setDisplayShowHomeEnabled(true);
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayUseLogoEnabled(false);
+//                actionBar.setDisplayShowHomeEnabled(true);
+//                actionBar.setDisplayShowTitleEnabled(true);
+//                actionBar.setDisplayUseLogoEnabled(false);
                 actionBar.setHomeButtonEnabled(true);
+
             }
         }
 
 //        Spinner To Set Event CAPACITY
 
-        Spinner dropdown = (Spinner)findViewById(R.id.spn_evntCpcty);
+        eventCapacity = (Spinner) findViewById(R.id.spn_evntCpcty);
 
-        assert dropdown != null;
-        dropdown.setPrompt("Event Capacity");
-        String[] items = new String[]{"5", "10", "20", "30 - 50", "50 - 80", "80 - 100", "100+"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        dropdown.setAdapter(adapter);
+        assert eventCapacity != null;
+        eventCapacity.setPrompt("Event Capacity");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, evenetCapacityItems);
+        eventCapacity.setAdapter(adapter);
+
 
         //        Spinner To Set Event TYPE
-        Spinner dropdown1 = (Spinner)findViewById(R.id.spn_evnt_type);
+        eventType = (Spinner) findViewById(R.id.spn_evnt_type);
 
-        assert dropdown1 != null;
-        dropdown1.setPrompt("Event Type");
-        String[] items1 = new String[]{"Hang Out", "Meeting", "Wedding", "Concert", "Movie", "Study", "Other"};
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items1);
-        dropdown1.setAdapter(adapter1);
+        assert eventType != null;
+        eventType.setPrompt("Event Type");
+
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, eventTypeItems);
+        eventType.setAdapter(adapter1);
 
 
         getSupportActionBar().setTitle("Create Event");
@@ -144,69 +201,112 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         mActionBarDrawerToggle.syncState();
 
 
-            mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-            mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
+        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
 
-            mImageView = (ImageView) findViewById(R.id.eventImage);
-            mOverlayView = findViewById(R.id.overlay);
-            mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
-            mScrollView.setScrollViewCallbacks(this);
-            mTitleView = (TextView) findViewById(R.id.title);
-            mTitleView.setText(getTitle());
-            setTitle(null);
-            mFab = findViewById(R.id.fab);
-            mFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(CreatePublicEvent.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
-                    Intent chooseImageIntent = ImagePicker.getPickImageIntent(v.getContext());
-                    startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
-                }
-            });
-            mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
-            ViewHelper.setScaleX(mFab, 0);
-            ViewHelper.setScaleY(mFab, 0);
+        mImageView = (ImageView) findViewById(R.id.eventImage);
+        mOverlayView = findViewById(R.id.overlay);
+        mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
+        mScrollView.setScrollViewCallbacks(this);
+        mTitleView = (TextView) findViewById(R.id.title);
+        mTitleView.setText(getTitle());
+        setTitle(null);
+        mFab = findViewById(R.id.fab);
+        mFab.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(CreatePublicEvent.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+                Intent chooseImageIntent = ImagePicker.getPickImageIntent(v.getContext());
+                startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+            }
+        });
+        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
+        ViewHelper.setScaleX(mFab, 0);
+        ViewHelper.setScaleY(mFab, 0);
 
-            ScrollUtils.addOnGlobalLayoutListener(mScrollView, new Runnable() {
-                @Override
-                public void run() {
-                    mScrollView.scrollTo(0, mFlexibleSpaceImageHeight - mActionBarSize);
+        ScrollUtils.addOnGlobalLayoutListener(mScrollView, new Runnable() {
+            @Override
+            public void run() {
+                mScrollView.scrollTo(0, mFlexibleSpaceImageHeight - mActionBarSize);
+            }
+        });
 
-                    // If you'd like to start from scrollY == 0, don't write like this:
-                    //mScrollView.scrollTo(0, 0);
-                    // The initial scrollY is 0, so it won't invoke onScrollChanged().
-                    // To do this, use the following:
-                    // onScrollChanged(0, false, false);
-
-                    // You can also achieve it with the following codes.
-                    // This causes scroll change from 1 to 0.
-                    //mScrollView.scrollTo(0, 1);
-                  //  mScrollView.scrollTo(0, 0);
-                }
-            });
-
-        mEventDate.setOnClickListener(new View.OnClickListener() {
+        mEventDate.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
-                datePickerDialog.setYearRange(calendar.get(Calendar.YEAR) , calendar.get(Calendar.YEAR) + 10);
-                datePickerDialog.setFirstDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK ));
+                datePickerDialog.setYearRange(calendar.get(Calendar.YEAR), calendar.get(Calendar.YEAR) + 10);
+                datePickerDialog.setFirstDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK));
                 datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
                 datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
 
         });
 
-//        mEventTime.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // datePickerDialog.setVibrate(isVibrate());
-//                timePickerDialog.setYearRange(calendar.get(Calendar.YEAR) , calendar.get(Calendar.YEAR) + 10);
-//                datePickerDialog.setFirstDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK ));
-//                datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
-//                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
-//            }
-//
-//        });
+        mEventTime.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
 
+                TimePickerDialog tpd = TimePickerDialog.newInstance(
+                        CreatePublicEvent.this,
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        false
+                );
+                datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
+
+        });
+
+
+        mCreateEvent.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            mCreateEvent.setEnabled(false);
+
+                progressDialog = new ProgressDialog(CreatePublicEvent.this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(false);
+               // progressDialog.setCancelable(false);
+                progressDialog.setMessage("Creating Event...");
+                progressDialog.show();
+
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                if(!mCreateEvent.isEnabled()) {
+
+                                    uploadImage = new UploadImage(true);
+
+                                    uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                                    eventCapacityStr= eventCapacity.getSelectedItem().toString();
+                                    mEventDateStr= mEventDate.getText().toString();
+                                    eventDescriptionStr= eventDescription.getText().toString();
+                                    eventNameStr= eventName.getText().toString();
+                                    mEventTimeStr= mEventTime.getText().toString();
+                                    eventTypeStr= eventType.getSelectedItem().toString();
+
+
+//                                    if(imageUrl!=null) {
+//                                        Log.e("iamge url : ", imageUrl);
+//
+//                                    }
+                                    mCreateEvent.setEnabled(true);
+                                }
+
+                            }
+                        }, 100);
+
+            }
+
+
+        });
+
+
+
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new Builder(this).addApi(AppIndex.API).build();
     }
 
     protected int getActionBarSize() {
@@ -272,10 +372,10 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
                 -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight() / 2,
                 mActionBarSize - mFab.getHeight() / 2,
                 maxFabTranslationY);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+        if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
             // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
             // which causes FAB's OnClickListener not working.
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
+            LayoutParams lp = (LayoutParams) mFab.getLayoutParams();
             lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
             lp.topMargin = (int) fabTranslationY;
             mFab.requestLayout();
@@ -301,6 +401,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -327,15 +428,15 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.e("request code  : ", ""+requestCode);
-        Log.e("request code crop : ", ""+Crop.REQUEST_CROP);
+        Log.e("request code  : ", "" + requestCode);
+        Log.e("request code crop : ", "" + Crop.REQUEST_CROP);
 
         if (requestCode == PICK_IMAGE_ID) {
             Uri selectedImage = ImagePicker.getImageFromResult(this, resultCode, data);
             dest = beginCrop(selectedImage);
-            Log.e("request code dest : ", ""+dest);
+            Log.e("request code dest : ", "" + dest);
         } else if (requestCode == Crop.REQUEST_CROP) {
-            Log.e("request code dest h : ", ""+dest);
+            Log.e("request code dest h : ", "" + dest);
             handleCrop(resultCode, data, dest);
         }
 
@@ -348,7 +449,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         Crop.of(source, destination).withAspect(250, 240).start(this);
 
 
-       return destination;
+        return destination;
     }
 
 
@@ -356,9 +457,9 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
 
 
         if (resultCode == RESULT_OK) {
-            Log.e("crop : ", "" +getCacheDir());
+            Log.e("crop : ", "" + getCacheDir());
 
-            Bitmap bm = decodeBitmap(this,destination,3);
+            bm = decodeBitmap(this, destination, 3);
             mImageView.setImageBitmap(bm);
 
             //   mImageView.setImageURI(Crop.getOutput(result));
@@ -369,7 +470,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
 
 
     private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        Options options = new Options();
         options.inSampleSize = sampleSize;
 
 
@@ -392,5 +493,147 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         mEventDate.setText(year + "-" + month + "-" + day);
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+        String minuteString = minute < 10 ? "0" + minute : "" + minute;
+        String time = "" + hourString + "h" + minuteString + "m";
+        mEventTime.setText(time);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "CreatePublicEvent Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "CreatePublicEvent Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.CSUF.EventFy/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
+
+    private class AddEvent extends AsyncTask<Void, Void, Void> {
+
+        public AddEvent(String str) {
+
+        }
+
+        public AddEvent(boolean b) {
+            super();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_event);
+
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            event = new Events();
+            event.getEventAdmin("admin");
+            event.setEventCapacity(eventCapacityStr);
+            event.setEventDate(mEventDateStr);
+            event.setEventDescription(eventDescriptionStr);
+            event.setEventImageUrl( imageUrl);
+            event.setEventIsVisible("true");
+            event.setEventName(eventNameStr);
+            event.setEventLocation(null);
+            event.setEventTime(mEventTimeStr);
+            event.setEventType(eventTypeStr);
+
+
+            HttpEntity<Events> request = new HttpEntity<>(event);
+
+            ResponseEntity<Events> rateResponse =
+                    restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
+            event = rateResponse.getBody();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.e("event : ", ""+event.getEventID() );
+
+            progressDialog.dismiss();
+        }
+    }
+
+
+    private class UploadImage extends AsyncTask<Void, Void, Void> {
+
+        public UploadImage(String url) {
+
+        }
+
+        public UploadImage(boolean b) {
+            super();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Map config = new HashMap();
+            config.put("cloud_name", "eventfy");
+            config.put("api_key", "338234664624354");
+            config.put("api_secret", "clA_O7equySs8LDK0hJNmmK62J8");
+            Cloudinary cloudinary = new Cloudinary(config);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bm.compress(CompressFormat.PNG, 100, stream);
+            byte[] imageBytes = stream.toByteArray();
+
+            try {
+                Map uploadResult = cloudinary.uploader().upload(imageBytes, ObjectUtils.emptyMap());
+                imageUrl = (String) uploadResult.get("secure_url");
+
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+           return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            addEvent = new AddEvent(true);
+            addEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        }
     }
 }

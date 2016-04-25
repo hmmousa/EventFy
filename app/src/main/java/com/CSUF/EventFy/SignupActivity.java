@@ -24,7 +24,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,6 +38,9 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
     @Bind(R.id.btn_signup) Button _signupButton;
     @Bind(R.id.link_login) TextView _loginLink;
     private boolean isEmail;
+    private String emailStr;
+    private String passwordStr;
+    private String result;
 
     ProgressDialog progressDialog=null;
     public static final String DATEPICKER_TAG = "datepicker";
@@ -113,41 +115,31 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
-
         _signupButton.setEnabled(false);
-
 
         // TODO: Implement your own signup logic here.
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        try {
 
-                            validateUserId = new ValidateUserId(true);
-                            String result = validateUserId.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
+                        emailStr = _emailText.getText().toString();
+                        validateUserId = new ValidateUserId(true);
+                        validateUserId.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-                            if (result != null && result.equals("Success")) {
-                                SignUp signUp = new SignUp();
-                                signUp.setUserId(_emailText.getText().toString());
-                                signUp.setPassword(_passwordText.getText().toString());
-                                signUp.setIsVerified("false");
-                                signUp.setIsFacebook("false");
-                                signUp.setImageUrl("default");
-                                signUp.setDob(_dobtext.getText().toString());
-                                signUp.setUserName(_nameText.getText().toString());
-                                    onSignupSuccess(signUp);
-                            }
-                            else {
-                                onSignupFailed();
-                            }
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
+                        if (result != null && result.equals("Success")) {
+                            SignUp signUp = new SignUp();
+                            signUp.setUserId(_emailText.getText().toString());
+                            signUp.setPassword(_passwordText.getText().toString());
+                            signUp.setIsVerified("false");
+                            signUp.setIsFacebook("false");
+                            signUp.setImageUrl("default");
+                            signUp.setDob(_dobtext.getText().toString());
+                            signUp.setUserName(_nameText.getText().toString());
+                                onSignupSuccess(signUp);
+                        }
+                        else {
+                            onSignupFailed();
                         }
 
                         // onSignupFailed();
@@ -225,7 +217,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
     }
 
 
-    class ValidateUserId extends AsyncTask<String, String, String>
+    class ValidateUserId extends AsyncTask<Void, Void, Void>
     {
 
         public ValidateUserId(String email, String password)
@@ -237,39 +229,30 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
             super();
 
         }
+
         @Override
-        protected String doInBackground(String... strings) {
-
+        protected Void doInBackground(Void... params) {
             String url =  getResources().getString(R.string.ip_local)+getResources().getString(R.string.signup_checkuseridvalid);
-
-            Log.e("string : ", ""+strings[0]);
-            Log.e("string : ", ""+strings[1]);
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             User user = new User();
-            user.setUsername(strings[0]);
-            user.setPassword(strings[1]);
+            user.setUsername(emailStr);
+            user.setPassword(emailStr);
 
             HttpEntity<User> request = new HttpEntity<>(user);
 
             ResponseEntity<String> rateResponse =
                     restTemplate.exchange(url, HttpMethod.POST, request, String.class);
-            String result = rateResponse.getBody();
+            result = rateResponse.getBody();
 
-            return result;
-
-
-        }
-
-        @Override
-        protected void onPreExecute() {
+            return null;
 
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             progressDialog.dismiss();
         }
     }
