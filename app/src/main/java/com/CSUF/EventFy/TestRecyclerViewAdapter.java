@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.CSUF.EventFy_Beans.Comments;
+
 import java.util.List;
 
 /**
@@ -12,12 +14,12 @@ import java.util.List;
  */
 public class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<Object> contents;
+    List<Comments> contents;
 
     static final int TYPE_HEADER = 0;
     static final int TYPE_CELL = 1;
 
-    public TestRecyclerViewAdapter(List<Object> contents) {
+    public TestRecyclerViewAdapter(List<Comments> contents) {
         this.contents = contents;
     }
 
@@ -66,5 +68,11 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             case TYPE_CELL:
                 break;
         }
+    }
+
+    public void add(List<Comments> items) {
+        int previousDataSize = this.contents.size();
+        this.contents.addAll(items);
+        notifyItemRangeInserted(previousDataSize, items.size());
     }
 }

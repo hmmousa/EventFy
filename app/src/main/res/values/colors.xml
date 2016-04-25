@@ -73,4 +73,6 @@
   <color name="navigationBarColor">@android:color/black</color>
   <color name="drawerArrowColor">@android:color/white</color>
 
+
+  <color name="cpb_default_color">@color/primary_dark</color>
 </resources>

@@ -44,11 +44,7 @@
             <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
                 android:value="@string/facebook_app_id" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
 
@@ -92,7 +88,9 @@
         <activity
             android:name=".EventInfoActivity"
             android:label="@string/title_activity_event_info"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
 
 
         <activity
@@ -101,6 +99,11 @@
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyBYGFaDhb-Ex-b3HxbtJCvO3Sq9NVhtkXY" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />

@@ -1,9 +1,13 @@
-package com.CSUF.EventFy.fragment;
+package com.CSUF.EventFy;
 
+/**
+ * Created by swapnil on 4/25/16.
+ */
+
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -14,90 +18,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.CSUF.EventFy.R;
-import com.CSUF.EventFy.TestRecyclerViewAdapter;
-import com.CSUF.EventFy_Beans.Comments;
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.paginate.Paginate;
 import com.paginate.recycler.LoadingListItemCreator;
 import com.paginate.recycler.LoadingListItemSpanLookup;
 
-import java.util.ArrayList;
-import java.util.List;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
-/**
- * Created by florentchampigny on 24/04/15.
- */
-public class RecyclerViewFragment extends Fragment implements Paginate.Callbacks{
+public class RecyclerViewExampleActivity extends Fragment implements Paginate.Callbacks {
 
     private static final int GRID_SPAN = 3;
-    //private RecyclerEventCommentAdapter adapter;
+
+    private RecyclerView recyclerView;
     private boolean loading = false;
     private int page = 0;
     private Handler handler;
     private Paginate paginate;
-    List<Comments> lst;
     protected int threshold = 4;
-    protected int totalPages = 5;
-    protected int itemsPerPage = 3;
+    protected int totalPages = 3;
+    protected int itemsPerPage = 10;
     protected boolean reverseLayout = false;
     protected boolean addLoadingRow = true;
-    protected long networkDelay = 10000;
+    protected long networkDelay = 2000;
     protected boolean customLoadingListItem = false;
-    TestRecyclerViewAdapter adapter;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
 
-    private   int ITEM_COUNT = 0;
+    public static RecyclerViewExampleActivity newInstance(int count) {
+        RecyclerViewExampleActivity r = new RecyclerViewExampleActivity();
 
-    private List<Comments> mContentItems = new ArrayList<>();
-
-    public static RecyclerViewFragment newInstance(int count) {
-        RecyclerViewFragment r = new RecyclerViewFragment();
-        r.setITEM_COUNT(count);
         return r;
     }
-public void setITEM_COUNT(int count)
-{
-   this.ITEM_COUNT = count;
-}
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recyclerview, container, false);
-    }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
         handler = new Handler();
-        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(mContentItems));
-        mRecyclerView.setAdapter(mAdapter);
-
-        {
-            ITEM_COUNT=3;
-            Log.e("count in ", "" + ITEM_COUNT);
-
-            for (int i = 0; i < ITEM_COUNT; ++i)
-            {
-
-                Comments c = new Comments();
-                c.setCommentText("ddddddd");
-                mContentItems.add(c);
-                Log.e("item len ", ""+mContentItems.size() );
-            }
-            mAdapter.notifyDataSetChanged();
-        }
 
         setupPagination();
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+        return inflater.inflate(R.layout.fragment_recyclerview, container, false);
     }
-
 
     protected void setupPagination() {
         // If RecyclerView was recently bound, unbind
@@ -105,7 +63,7 @@ public void setITEM_COUNT(int count)
             paginate.unbind();
         }
         handler.removeCallbacks(fakeCallback);
-        //adapter = new (lst);
+       // adapter = new RecyclerEventCommentAdapter(lst);
         loading = false;
         page = 0;
         int layoutOrientation;
@@ -118,7 +76,11 @@ public void setITEM_COUNT(int count)
         ((LinearLayoutManager) layoutManager).setReverseLayout(reverseLayout);
 
 
-        paginate = Paginate.with(mRecyclerView, this)
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new SlideInUpAnimator());
+        //recyclerView.setAdapter(adapter);
+
+        paginate = Paginate.with(recyclerView, this)
                 .setLoadingTriggerThreshold(threshold)
                 .addLoadingListItem(addLoadingRow)
                 .setLoadingListItemCreator(customLoadingListItem ? new CustomLoadingListItemCreator() : null)
@@ -153,12 +115,8 @@ public void setITEM_COUNT(int count)
         @Override
         public void run() {
             page++;
-            for (int i = 0; i < 3; i++) {
-                Comments c = new Comments();
-                c.setUserName("abc " + i);
-                mContentItems.add(c);
-                mAdapter.notifyDataSetChanged();
-            }
+
+            //adapter.add(lst);
             loading = false;
         }
     };
@@ -174,10 +132,10 @@ public void setITEM_COUNT(int count)
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             VH vh = (VH) holder;
-            vh.tvLoading.setText(String.format("Total items loaded: %d.\nLoading more...", mAdapter.getItemCount()));
+            //vh.tvLoading.setText(String.format("Total items loaded: %d.\nLoading more...", m.getItemCount()));
 
             // This is how you can make full span if you are using StaggeredGridLayoutManager
-            if (mRecyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
+            if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
                 StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) vh.itemView.getLayoutParams();
                 params.setFullSpan(true);
             }
@@ -192,4 +150,5 @@ public void setITEM_COUNT(int count)
             tvLoading = (TextView) itemView.findViewById(R.id.tv_loading_text);
         }
     }
+
 }

@@ -154,18 +154,6 @@
                             style="@style/spinner_style"
                             />
 
-
-
-
-                        <com.github.siyamed.shapeimageview.CircularImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/ic_location_on_black_18dp"
-                            app:siBorderWidth="6dp"
-                            app:siBorderColor="@color/primary_darker"
-                            android:paddingLeft="20dp"
-                            android:id="@+id/public_event_current_location"
-                            />
                     </LinearLayout>
 
 
