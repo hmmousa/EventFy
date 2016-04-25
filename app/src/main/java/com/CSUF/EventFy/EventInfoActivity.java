@@ -81,11 +81,11 @@ public class EventInfoActivity extends AppCompatActivity {
             public CharSequence getPageTitle(int position) {
                 switch (position % 3) {
                     case 0:
-                        return "Comment";
+                        return "Comments";
                     case 1:
-                        return "Images";
+                        return "Attendance";
                     case 2:
-                        return "Invitations";
+                        return "Event Info.";
 
                 }
                 return "";
