@@ -12,11 +12,40 @@
 
         <include layout="@layout/material_view_pager_placeholder"/>
 
-        <ImageView android:id="@+id/ImageView03"
-            android:src="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="Event Name:"
+                android:layout_gravity="left"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="Event Created By:"
+                android:layout_gravity="left"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="Event Location:"
+                android:layout_gravity="left"
+                android:layout_margin="5dp" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
