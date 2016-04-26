@@ -6,9 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.CSUF.EventFy.R;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -32,7 +30,7 @@ public class GCMNotificationIntentService extends IntentService {
 
 		String messageType = gcm.getMessageType(intent);
 
-		if (!extras.isEmpty()) {
+		//if (!extras.isEmpty()) {
 			if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR
 					.equals(messageType)) {
 				sendNotification("Send error: " + extras.toString());
@@ -44,27 +42,25 @@ public class GCMNotificationIntentService extends IntentService {
 					.equals(messageType)) {
 
 				for (int i = 0; i < 3; i++) {
-					Log.i(TAG,
-							"Working... " + (i + 1) + "/5 @ "
-									+ SystemClock.elapsedRealtime());
+					//Log.i(TAG, "Working. " +(i+1)+"/5 @ ");
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
 					}
 
-				}
-				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+		//		}
+			//	Log.i(TAG, "Cop work ");
 
 				sendNotification(""
 						+ extras.get(Config.MESSAGE_KEY));
-				Log.i(TAG, "Received: " + extras.toString());
+			//	Log.i(TAG, "Received: " + extras.toString());
 			}
 		}
 	//	GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 
 	private void sendNotification(String msg) {
-		Log.d(TAG, "Preparing to send notification...: " + msg);
+	//	Log.d(TAG, "Preparing to send notification...: " + msg);
 		mNotificationManager = (NotificationManager) this
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -79,6 +75,6 @@ public class GCMNotificationIntentService extends IntentService {
 
 		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-		Log.d(TAG, "Notification sent successfully.");
+	//	Log.d(TAG, "Noti sent s");
 	}
 }

@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.CSUF.EventFy_Beans.Events;
+import com.CSUF.Notifications.GCMNotificationIntentService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
@@ -129,6 +130,11 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
         setContentView(R.layout.activity_create_public_event);
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
+
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
+        Intent intent1 = new Intent(this, GCMNotificationIntentService.class);
+        startService(intent1);
 
 //        Intent in = getIntent();
 //        SignUp signUp = (SignUp) in.getSerializableExtra("signup");

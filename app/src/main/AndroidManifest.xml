@@ -18,6 +18,10 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
          />
+    <permission android:name="com.CSUF.EventFy.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+    <uses-permission android:name="com.CSUF.EventFy.permission.C2D_MESSAGE" />
+
 
     <meta-data android:name="CLOUDINARY_URL" android:value="cloudinary://338234664624354:clA_O7equySs8LDK0hJNmmK62J8@eventfy"/>
 
@@ -133,6 +137,33 @@
         android:name="com.google.android.geo.API_KEY"
         android:value="@string/google_maps_key" />
 
+
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+
+
+
+        <service android:name=".RegistrationIntentService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.CSUF.Notifications.GCMNotificationIntentService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
 
         <!--<activity-->
             <!--android:name=".MapFragments.MapsActivity"-->
