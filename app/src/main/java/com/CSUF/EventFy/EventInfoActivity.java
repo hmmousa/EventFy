@@ -13,6 +13,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebViewFragment;
 
 import com.CSUF.EventFy.fragment.RecyclerViewFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
@@ -67,8 +68,7 @@ public class EventInfoActivity extends AppCompatActivity {
 
             @Override
             public Fragment getItem(int position) {
-
-                //       return RecyclerViewExampleActivity.newInstance(position);
+//                       return RecyclerViewExampleActivity.newInstance(position);
                 return RecyclerViewFragment.newInstance(arr[position]);
 
             }

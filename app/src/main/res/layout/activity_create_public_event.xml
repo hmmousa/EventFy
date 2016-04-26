@@ -136,7 +136,7 @@
                             android:id="@+id/public_event_location"
 
                             android:inputType="textCapWords|date"
-                            android:hint="Event Place"
+                            android:hint="Event Location"
                             android:textColor="@color/black"
                             android:focusable="false"
                             android:clickable="true"

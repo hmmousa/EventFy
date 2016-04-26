@@ -167,7 +167,7 @@ public void setITEM_COUNT(int count)
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.custom_loading_list_item, parent, false);
+            View view = inflater.inflate(R.layout.tab_images_comments, parent, false);
             return new VH(view);
         }
 
