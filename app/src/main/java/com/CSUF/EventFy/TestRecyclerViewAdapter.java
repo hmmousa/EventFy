@@ -21,9 +21,10 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
 
     List<Comments> contents;
 
-    static final int TYPE_HEADER = 0;
-    static final int TYPE_CELL = 1;
+    static final int TYPE_IMAGE = 0;
+    static final int TYPE_COMMENT = 1;
     private Context context;
+    private int position1;
 
     private final String android_image_urls[] = {
             "http://api.learn2crack.com/android/images/donut.png",
@@ -40,19 +41,22 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
 
 
 
-    public TestRecyclerViewAdapter(Context context ,List<Comments> contents) {
+    public TestRecyclerViewAdapter(Context context ,List<Comments> contents, int position) {
         this.contents = contents;
         this.context = context;
+        this.position1 = position;
 
     }
 
     @Override
     public int getItemViewType(int position) {
-        switch (position) {
+
+        Log.e("Position :**** ", ""+position1);
+        switch (position1) {
             case 0:
-                return TYPE_HEADER;
+                return TYPE_IMAGE;
             default:
-                return TYPE_CELL;
+                return TYPE_COMMENT;
         }
     }
 
@@ -64,20 +68,24 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
     @Override
     public TestRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.custom_loading_list_item, parent, false);
 
-//        switch (viewType) {
-//            case TYPE_HEADER: {
-//                view = LayoutInflater.from(parent.getContext())
-//                        .inflate(R.layout.list_item_card_big, parent, false);
-//
-//            }
-//            case TYPE_CELL: {
-//                view = LayoutInflater.from(parent.getContext())
-//                        .inflate(R.layout.list_item_card_small, parent, false);
-//
-//            }
-//        }
+        View view = null;
+
+        Log.e("view type ::::: ",""+viewType);
+        switch (viewType)
+        {
+           // for image
+            case 0:
+                view = inflater.inflate(R.layout.list_item_card_big, parent, false);
+                break;
+            case 1:
+                view = inflater.inflate(R.layout.custom_loading_list_item, parent, false);
+                break;
+
+            case 2:
+                view = inflater.inflate(R.layout.list_item_card_big, parent, false);
+                break;
+        }
 
         return new ViewHolder(view) {
         };
@@ -99,7 +107,7 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
 //        }
 
         holder.tv_android.setText("xyz");
-        Picasso.with(context).load("http://api.learn2crack.com/android/images/donut.png").resize(120, 60).into(holder.img_android);
+        Picasso.with(context).load("https://res.cloudinary.com/eventfy/image/upload/v1461550414/yfg5zs58jd709arktqgn.png").into(holder.img_android);
 
     }
 
@@ -116,8 +124,15 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
         public ViewHolder(View view) {
             super(view);
 
-            tv_android = (TextView)view.findViewById(R.id.tv_android);
-            img_android = (ImageView)view.findViewById(R.id.img_android);
+            if(position1 == 0) {
+                tv_android = (TextView) view.findViewById(R.id.comment_img_username);
+                img_android = (ImageView) view.findViewById(R.id.comment_img);
+            }
+            else{
+                tv_android = (TextView) view.findViewById(R.id.event_user_name);
+                img_android = (ImageView) view.findViewById(R.id.event_user);
+
+            }
 
             Log.e("tv text **** : ", ""+tv_android);
             Log.e("imf **** : ", ""+img_android);

@@ -1,14 +1,25 @@
 package com.CSUF.EventFy;
 
 import android.app.IntentService;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.CSUF.EventFy_Beans.Notification;
+import com.CSUF.EventFy_Beans.SignUp;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
@@ -18,6 +29,10 @@ import java.io.IOException;
 public class RegistrationIntentService extends IntentService {
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
+    private SignUp signUp;
+    private String token;
+    private  ProgressDialog progressDialog;
+    SharedPreferences preferences;
 
     public RegistrationIntentService() {
         super(TAG);
@@ -36,16 +51,20 @@ public class RegistrationIntentService extends IntentService {
             // See https://developers.google.com/cloud-messaging/android/start for details on this file.
             // [START get_token]
             InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+            token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             // [END get_token]
             Log.e(TAG, "GCM Registration Token: " + token);
 
             // TODO: Implement this method to send any registration to your app's servers.
+            if(token!=null)
             sendRegistrationToServer(token);
 
             // Subscribe to topic channels
-            subscribeTopics(token);
+         //   subscribeTopics(token);
+
+
+
 
             // You should store a boolean that indicates whether the generated token has been
             // sent to your server. If the boolean is false, send the token to your server,
@@ -71,8 +90,60 @@ public class RegistrationIntentService extends IntentService {
      *
      * @param token The new token.
      */
-    private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
+
+    public void sendRegistrationToServer(String token)
+    {
+        PreferenceManager.getDefaultSharedPreferences(this);
+        AddUserId addUserId = new AddUserId(true);
+        addUserId.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
+    private class AddUserId extends AsyncTask<Void, Void, Void> {
+private String response;
+        public AddUserId(String str) {
+
+        }
+
+        public AddUserId(boolean b) {
+            super();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.reg_gcm_userid);
+
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+
+            Notification notification = new Notification();
+
+            notification.setRegId(token);
+            notification.setSignup(signUp);
+
+            HttpEntity<Notification> request = new HttpEntity<>(notification);
+
+            ResponseEntity<String> result =
+                    restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+
+            response = result.getBody();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if(response.equals("Success"))
+            {
+                Editor prefsEditor = preferences.edit();
+
+                prefsEditor.putString("isGcmRegistered", response);
+                prefsEditor.commit();
+            }
+        }
     }
 
 
@@ -91,5 +162,8 @@ public class RegistrationIntentService extends IntentService {
         }
     }
     // [END subscribe_topics]
+
+
+
 
 }

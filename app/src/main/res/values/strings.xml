@@ -67,6 +67,7 @@
 
     <string name="add_event">/EventFy/webapi/events/add</string>
 
+    <string name="reg_gcm_userid">/EventFy/webapi/notifications/registeruser</string>
 
 
 

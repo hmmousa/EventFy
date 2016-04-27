@@ -48,19 +48,20 @@ public class RecyclerViewFragment extends Fragment implements Paginate.Callbacks
     protected boolean addLoadingRow = true;
     protected long networkDelay = 10000;
     protected boolean customLoadingListItem = false;
-    TestRecyclerViewAdapter adapter;
+    private TestRecyclerViewAdapter adapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-
+private int position;
     private   int ITEM_COUNT = 0;
 
     private List<Comments> mContentItems = new ArrayList<>();
     private Context context;
 
-    public static RecyclerViewFragment newInstance(int count, Context context) {
+    public static RecyclerViewFragment newInstance(int count, Context context, int position) {
         RecyclerViewFragment r = new RecyclerViewFragment();
         r.setITEM_COUNT(count);
         r.context = context;
+        r.position = position;
         return r;
     }
 public void setITEM_COUNT(int count)
@@ -83,7 +84,7 @@ public void setITEM_COUNT(int count)
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         handler = new Handler();
-        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(context, mContentItems));
+        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(context, mContentItems, position));
         mRecyclerView.setAdapter(mAdapter);
 
         {
@@ -202,8 +203,8 @@ public void setITEM_COUNT(int count)
         public ViewHolder(View view) {
             super(view);
 
-            tv_android = (TextView)view.findViewById(R.id.tv_android);
-            img_android = (ImageView)view.findViewById(R.id.img_android);
+          //  tv_android = (TextView)view.findViewById(R.id.tv_android);
+          //  img_android = (ImageView)view.findViewById(R.id.img_android);
         }
     }
 }

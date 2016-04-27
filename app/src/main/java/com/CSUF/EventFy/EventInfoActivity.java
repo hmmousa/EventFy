@@ -68,7 +68,7 @@ public class EventInfoActivity extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
 //                       return RecyclerViewExampleActivity.newInstance(position);
-                return RecyclerViewFragment.newInstance(arr[position], getApplicationContext());
+                return RecyclerViewFragment.newInstance(arr[position], getApplicationContext(), position );
 
             }
 
