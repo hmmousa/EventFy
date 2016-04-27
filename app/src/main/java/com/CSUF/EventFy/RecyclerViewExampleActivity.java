@@ -38,7 +38,7 @@ public class RecyclerViewExampleActivity extends Fragment implements Paginate.Ca
     protected int itemsPerPage = 10;
     protected boolean reverseLayout = false;
     protected boolean addLoadingRow = true;
-    protected long networkDelay = 2000;
+    protected long networkDelay = 1000;
     protected boolean customLoadingListItem = false;
 
     public static RecyclerViewExampleActivity newInstance(int count) {
@@ -147,7 +147,7 @@ public class RecyclerViewExampleActivity extends Fragment implements Paginate.Ca
 
         public VH(View itemView) {
             super(itemView);
-            tvLoading = (TextView) itemView.findViewById(R.id.tv_loading_text);
+            //tvLoading = (TextView) itemView.findViewById(R.id.tv_loading_text);
         }
     }
 

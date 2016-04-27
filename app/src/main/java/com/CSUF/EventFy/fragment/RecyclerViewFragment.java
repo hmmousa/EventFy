@@ -1,5 +1,6 @@
 package com.CSUF.EventFy.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.CSUF.EventFy.R;
@@ -22,6 +24,7 @@ import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapte
 import com.paginate.Paginate;
 import com.paginate.recycler.LoadingListItemCreator;
 import com.paginate.recycler.LoadingListItemSpanLookup;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,16 +55,20 @@ public class RecyclerViewFragment extends Fragment implements Paginate.Callbacks
     private   int ITEM_COUNT = 0;
 
     private List<Comments> mContentItems = new ArrayList<>();
+    private Context context;
 
-    public static RecyclerViewFragment newInstance(int count) {
+    public static RecyclerViewFragment newInstance(int count, Context context) {
         RecyclerViewFragment r = new RecyclerViewFragment();
         r.setITEM_COUNT(count);
+        r.context = context;
         return r;
     }
 public void setITEM_COUNT(int count)
 {
    this.ITEM_COUNT = count;
 }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,7 +83,7 @@ public void setITEM_COUNT(int count)
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         handler = new Handler();
-        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(mContentItems));
+        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(context, mContentItems));
         mRecyclerView.setAdapter(mAdapter);
 
         {
@@ -96,6 +103,8 @@ public void setITEM_COUNT(int count)
 
         setupPagination();
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+
+
     }
 
 
@@ -168,13 +177,16 @@ public void setITEM_COUNT(int count)
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             View view = inflater.inflate(R.layout.tab_images_comments, parent, false);
-            return new VH(view);
+            return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            VH vh = (VH) holder;
-            vh.tvLoading.setText(String.format("Total items loaded: %d.\nLoading more...", mAdapter.getItemCount()));
+            ViewHolder vh = (ViewHolder) holder;
+         //   vh.tvLoading.setText(String.format("Total items loaded: %d.\nLoading more...", mAdapter.getItemCount()));
+
+            vh.tv_android.setText("xyz");
+            Picasso.with(context).load("http://api.learn2crack.com/android/images/donut.png").resize(120, 60).into(vh.img_android);
 
             // This is how you can make full span if you are using StaggeredGridLayoutManager
             if (mRecyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
@@ -184,12 +196,14 @@ public void setITEM_COUNT(int count)
         }
     }
 
-    static class VH extends RecyclerView.ViewHolder {
-        TextView tvLoading;
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        TextView tv_android;
+        ImageView img_android;
+        public ViewHolder(View view) {
+            super(view);
 
-        public VH(View itemView) {
-            super(itemView);
-            tvLoading = (TextView) itemView.findViewById(R.id.tv_loading_text);
+            tv_android = (TextView)view.findViewById(R.id.tv_android);
+            img_android = (ImageView)view.findViewById(R.id.img_android);
         }
     }
 }
