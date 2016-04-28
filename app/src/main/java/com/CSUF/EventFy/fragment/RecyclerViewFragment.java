@@ -46,7 +46,7 @@ public class RecyclerViewFragment extends Fragment implements Paginate.Callbacks
     protected int itemsPerPage = 3;
     protected boolean reverseLayout = false;
     protected boolean addLoadingRow = true;
-    protected long networkDelay = 10000;
+    protected long networkDelay = 1000;
     protected boolean customLoadingListItem = false;
     private TestRecyclerViewAdapter adapter;
     private RecyclerView mRecyclerView;
@@ -177,7 +177,7 @@ public void setITEM_COUNT(int count)
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.tab_images_comments, parent, false);
+            View view = inflater.inflate(R.layout.tab_text_comments, parent, false);
             return new ViewHolder(view);
         }
 

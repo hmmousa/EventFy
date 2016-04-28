@@ -8,6 +8,7 @@
                                     android:layout_marginRight="5dp"
                                     card_view:cardCornerRadius="5dp"
 
+
     >
 
     <LinearLayout
@@ -16,29 +17,33 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
 
-        <com.github.siyamed.shapeimageview.CircularImageView
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_location_on_black_18dp"
-            app:siBorderWidth="2dp"
-            app:siBorderColor="@color/primary_darker"
-            android:paddingLeft="20dp"
-            android:id="@+id/event_user"
+        >
 
-            />
         <TextView
             android:layout_marginLeft="10dp"
             android:textSize="18sp"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/event_user_name"
+            android:layout_height="wrap_content"
+            android:id="@+id/comment_user_name"
             android:textStyle="bold"
 
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/img_android" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:id="@+id/comment_comment_text"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/img_android"
+            />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

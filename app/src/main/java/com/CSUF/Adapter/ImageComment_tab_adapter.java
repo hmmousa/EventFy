@@ -1,4 +1,4 @@
-package com.CSUF.EventFy;
+package com.CSUF.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,17 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.CSUF.EventFy.R;
 import com.CSUF.EventFy_Beans.Comments;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
- * Created by florentchampigny on 24/04/15.
+ * Created by swapnil on 4/28/16.
  */
-public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerViewAdapter.ViewHolder> {
+public class ImageComment_tab_adapter extends RecyclerView.Adapter<ImageComment_tab_adapter.ViewHolder> {
 
-    List<Comments> contents;
+    List<Comments> commentes;
 
     static final int TYPE_IMAGE = 0;
     static final int TYPE_COMMENT = 1;
@@ -41,8 +42,8 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
 
 
 
-    public TestRecyclerViewAdapter(Context context ,List<Comments> contents, int position) {
-        this.contents = contents;
+    public ImageComment_tab_adapter(Context context ,List<Comments> contents, int position) {
+        this.commentes = contents;
         this.context = context;
         this.position1 = position;
 
@@ -51,91 +52,80 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
     @Override
     public int getItemViewType(int position) {
 
-        Log.e("Position :**** ", ""+position1);
-        switch (position1) {
-            case 0:
-                return TYPE_IMAGE;
-            default:
-                return TYPE_COMMENT;
-        }
+        if(commentes.get(position).getIsImage().equals("true"))
+            return TYPE_IMAGE;
+        else
+            return TYPE_COMMENT;
     }
 
     @Override
     public int getItemCount() {
-        return contents.size();
+        return commentes.size();
     }
 
     @Override
-    public TestRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ImageComment_tab_adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         View view = null;
 
-        Log.e("view type ::::: ",""+viewType);
         switch (viewType)
         {
-           // for image
             case 0:
-                view = inflater.inflate(R.layout.tab_text_comments, parent, false);
+                view = inflater.inflate(R.layout.tab_image_comments, parent, false);
                 break;
             case 1:
-                view = inflater.inflate(R.layout.custom_loading_list_item, parent, false);
-                break;
-
-            case 2:
                 view = inflater.inflate(R.layout.tab_text_comments, parent, false);
                 break;
         }
 
-        return new ViewHolder(view) {
+        return new ViewHolder(view, viewType) {
         };
     }
 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        switch (getItemViewType(position)) {
-//            case TYPE_HEADER:
-//                holder.tv_android.setText("xyz");
-//                Picasso.with(context).load("xyz").resize(120, 60).into(holder.img_android);
-//                break;
-//
-//            case TYPE_CELL:
-//                holder.tv_android.setText("xyz");
-//                Picasso.with(context).load("xyz").resize(120, 60).into(holder.img_android);
-//                break;
-//        }
 
-        holder.tv_android.setText("xyz");
-        Picasso.with(context).load("https://res.cloudinary.com/eventfy/image/upload/v1461550414/yfg5zs58jd709arktqgn.png").into(holder.img_android);
+        holder.commentUserName.setText(commentes.get(position).getUserName());
+        if(commentes.get(position).getIsImage().equals("true")) {
 
+            Picasso.with(context).load("https://res.cloudinary.com/eventfy/image/upload/v1461550414/yfg5zs58jd709arktqgn.png").into(holder.img_android);
+        }
+        else
+        {
+            holder.commentUserText.setText(commentes.get(position).getCommentText());
+        }
     }
 
     public void add(List<Comments> items) {
-        int previousDataSize = this.contents.size();
-        this.contents.addAll(items);
+        int previousDataSize = this.commentes.size();
+        this.commentes.addAll(items);
         notifyItemRangeInserted(previousDataSize, items.size());
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView tv_android;
+        TextView commentUserName;
         ImageView img_android;
-        public ViewHolder(View view) {
+        TextView commentUserText;
+        public ViewHolder(View view, int viewType) {
             super(view);
 
-            if(position1 == 0) {
-                tv_android = (TextView) view.findViewById(R.id.comment_img_username);
+            if(viewType == 0) {
+                commentUserName = (TextView) view.findViewById(R.id.comment_img_username);
                 img_android = (ImageView) view.findViewById(R.id.comment_img);
             }
             else{
-                tv_android = (TextView) view.findViewById(R.id.event_user_name);
-                img_android = (ImageView) view.findViewById(R.id.event_user);
+                commentUserName = (TextView) view.findViewById(R.id.comment_user_name);
+                commentUserText = (TextView) view.findViewById(R.id.comment_comment_text);
 
             }
 
-            Log.e("tv text **** : ", ""+tv_android);
+            Log.e("tv text **** : ", ""+commentUserName);
             Log.e("imf **** : ", ""+img_android);
         }
     }
+
+
 }

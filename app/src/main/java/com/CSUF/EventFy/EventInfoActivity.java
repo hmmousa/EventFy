@@ -14,7 +14,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.CSUF.EventFy.fragment.RecyclerViewFragment;
+import com.CSUF.EventFy.fragment.Attendance_tab;
+import com.CSUF.EventFy.fragment.Eventinfo_tab;
+import com.CSUF.EventFy.fragment.ImageComment_tab;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
@@ -61,15 +63,25 @@ public class EventInfoActivity extends AppCompatActivity {
 
         final int arr []= new int[3];
         arr[0]=4;
-        arr[1]=15;
+        arr[1]=8;
 
         mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
 
             @Override
             public Fragment getItem(int position) {
 //                       return RecyclerViewExampleActivity.newInstance(position);
-                return RecyclerViewFragment.newInstance(arr[position], getApplicationContext(), position );
 
+                switch (position) {
+                    case 0:
+                        return ImageComment_tab.newInstance(arr[position], getApplicationContext(), position);
+
+                    case 1:
+                        return Attendance_tab.newInstance(arr[position], getApplicationContext(), position);
+
+                    default:
+                        return new Eventinfo_tab();
+
+                }
             }
 
             @Override
