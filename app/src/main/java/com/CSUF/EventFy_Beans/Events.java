@@ -39,18 +39,52 @@ public class Events {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private String eventAdmin;
 
+
+	public String getEventAdmin() {
+		return eventAdmin;
+	}
+
+	public int getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(int eventId) {
+		this.eventId = eventId;
+	}
+
+	public double getEventLocationLatitude() {
+		return eventLocationLatitude;
+	}
+
+	public void setEventLocationLatitude(double eventLocationLatitude) {
+		this.eventLocationLatitude = eventLocationLatitude;
+	}
+
+	public double getEventLocationLongitude() {
+		return eventLocationLongitude;
+	}
+
+	public void setEventLocationLongitude(double eventLocationLongitude) {
+		this.eventLocationLongitude = eventLocationLongitude;
+	}
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	private double eventLocationLongitude;
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	private double eventLocationLatitude;
+
 	@JsonView(SignUp.class)
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	// mapping for signUp - Events (users in events and  events by user)
 	@JsonBackReference
     	private List<SignUp> userDetail = new ArrayList<SignUp>();
 
-
+//	@JsonView(Comments.class)
 //	@JsonIgnoreProperties(ignoreUnknown = true)
 //	// mapping for events - comments (users in events and  events by user)
 //	@JsonBackReference
 //     private List<Comments> comments = new ArrayList<Comments>();
-	
+//
 	
 	public int getEventID() {
 		return eventId;

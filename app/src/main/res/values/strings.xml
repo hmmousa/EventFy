@@ -54,7 +54,7 @@
 
     <!-- Web servises url -->
 
-    <string name="ip_local">http://192.168.0.2:5137</string>
+    <string name="ip_local">http://192.168.0.2:8080</string>
 
     <string name="signup_checkuseridvalid">/EventFy/webapi/signup/checkuseridvalid</string>
 
@@ -66,6 +66,8 @@
     <string name="title_activity_maps">Map</string>
 
     <string name="add_event">/EventFy/webapi/events/add</string>
+
+    <string name="get_nearby_event">/EventFy/webapi/events/getnearbyevents</string>
 
     <string name="reg_gcm_userid">/EventFy/webapi/notifications/registeruser</string>
 
