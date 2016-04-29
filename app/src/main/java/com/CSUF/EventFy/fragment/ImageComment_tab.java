@@ -44,7 +44,7 @@ public class ImageComment_tab extends Fragment implements Paginate.Callbacks{
     protected int itemsPerPage = 3;
     protected boolean reverseLayout = false;
     protected boolean addLoadingRow = true;
-    protected long networkDelay = 10000;
+    protected long networkDelay = 2000;
     protected boolean customLoadingListItem = false;
     private TestRecyclerViewAdapter adapter;
     private RecyclerView mRecyclerView;
@@ -142,6 +142,7 @@ public class ImageComment_tab extends Fragment implements Paginate.Callbacks{
         Log.d("Paginate", "onLoadMore");
         loading = true;
         // Fake asynchronous loading that will generate page of random data after some delay
+        Log.e("in paginate :::: ", ""+page);
         handler.postDelayed(fakeCallback, networkDelay);
     }
 
@@ -164,6 +165,7 @@ public class ImageComment_tab extends Fragment implements Paginate.Callbacks{
                 c.setUserName("abc " + i);
                 c.setIsImage("false");
                 c.setCommentText("text "+i);
+                Log.e("adding element : ", "****");
                 mContentItems.add(c);
                 mAdapter.notifyDataSetChanged();
             }

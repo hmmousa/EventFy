@@ -76,7 +76,7 @@ public class EventInfoActivity extends AppCompatActivity {
                         return ImageComment_tab.newInstance(arr[position], getApplicationContext(), position);
 
                     case 1:
-                        return Attendance_tab.newInstance(arr[position], getApplicationContext(), position);
+                        return Attendance_tab.newInstance(arr[position], getApplicationContext(), position, "1");
 
                     default:
                         return new Eventinfo_tab();

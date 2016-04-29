@@ -71,6 +71,7 @@
 
     <string name="reg_gcm_userid">/EventFy/webapi/notifications/registeruser</string>
 
+    <string name="get_user_for_event">/EventFy/webapi/comments/getuserforevent</string>
 
 
 </resources>

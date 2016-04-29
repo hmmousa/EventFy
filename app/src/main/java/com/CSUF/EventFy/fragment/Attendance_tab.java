@@ -1,6 +1,7 @@
 package com.CSUF.EventFy.fragment;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -28,7 +29,15 @@ import com.paginate.recycler.LoadingListItemCreator;
 import com.paginate.recycler.LoadingListItemSpanLookup;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -45,22 +54,24 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
     protected int totalPages = 5;
     protected boolean reverseLayout = false;
     protected boolean addLoadingRow = true;
-    protected long networkDelay = 10000;
+    protected long networkDelay = 10;
     protected boolean customLoadingListItem = false;
     private TestRecyclerViewAdapter adapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private int position;
     private   int ITEM_COUNT = 0;
-
-    private List<SignUp> mContentItems = new ArrayList<>();
+    private String eventId;
+    private List<SignUp> mContentItems;
     private Context context;
+    private GetUsersForEvent getUsersForEvent;
 
-    public static Attendance_tab newInstance(int count, Context context, int position) {
+    public static Attendance_tab newInstance(int count, Context context, int position, String eventId) {
         Attendance_tab r = new Attendance_tab();
         r.setITEM_COUNT(count);
          r.context = context;
         r.position = position;
+        r.eventId = eventId;
         return r;
     }
     public void setITEM_COUNT(int count)
@@ -87,18 +98,9 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
             ITEM_COUNT=3;
             Log.e("count in ", "" + ITEM_COUNT);
 
-            for (int i = 0; i < ITEM_COUNT; i++) {
-                SignUp signUp = new SignUp();
-                signUp.setUserName("xxx "+i);
-                mContentItems.add(signUp);
-            }
-            mAdapter = new RecyclerViewMaterialAdapter(new Attendance_tab_adapter(context, mContentItems, position));
-            mRecyclerView.setAdapter(mAdapter);
+        getUsersForEvent = new GetUsersForEvent(true);
+        getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-            mAdapter.notifyDataSetChanged();
-
-
-        setupPagination();
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
 
 
@@ -106,6 +108,7 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
 
 
     protected void setupPagination() {
+
         // If RecyclerView was recently bound, unbind
         if (paginate != null) {
             paginate.unbind();
@@ -135,13 +138,16 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
                     }
                 })
                 .build();
+
     }
+
 
     @Override
     public synchronized void onLoadMore() {
         Log.d("Paginate", "onLoadMore");
         loading = true;
         // Fake asynchronous loading that will generate page of random data after some delay
+        Log.e("in paginate :::: ", ""+page);
         handler.postDelayed(fakeCallback, networkDelay);
     }
 
@@ -159,15 +165,12 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
         @Override
         public void run() {
             page++;
-            for (int i = 0; i < 3; i++) {
-                SignUp signUp = new SignUp();
-                signUp.setUserName("xxx "+i);
-                mContentItems.add(signUp);
-                mAdapter.notifyDataSetChanged();
-            }
+            getUsersForEvent = new GetUsersForEvent(true);
+            getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             loading = false;
         }
     };
+
 
     private class CustomLoadingListItemCreator implements LoadingListItemCreator {
         @Override
@@ -201,6 +204,57 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
 
             //  tv_android = (TextView)view.findViewById(R.id.tv_android);
             //  img_android = (ImageView)view.findViewById(R.id.img_android);
+        }
+    }
+
+    private class GetUsersForEvent extends AsyncTask<Void, Void, Void> {
+
+        public GetUsersForEvent(String str) {
+
+        }
+
+        public GetUsersForEvent(boolean b) {
+            super();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_user_for_event);
+
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+
+            headers.add("Content-Type", "text/plain");
+
+            Log.e("ing event id : ", ""+eventId);
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            HttpEntity<String> request = new HttpEntity<>(eventId, headers);
+
+
+            ResponseEntity<SignUp []> response = restTemplate.exchange(url, HttpMethod.POST, request, SignUp[].class);
+
+            SignUp [] signUp = response.getBody();
+
+            mContentItems =  Arrays.asList(signUp);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+
+            if(mContentItems!=null) {
+                Log.e("data loaded :::  ", ""+mContentItems.size());
+               if(mAdapter==null) {
+                   mAdapter = new RecyclerViewMaterialAdapter(new Attendance_tab_adapter(context, mContentItems, position));
+                   mRecyclerView.setAdapter(mAdapter);
+                   setupPagination();
+               }
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

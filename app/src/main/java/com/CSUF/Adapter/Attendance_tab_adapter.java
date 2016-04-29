@@ -47,7 +47,9 @@ public class Attendance_tab_adapter  extends RecyclerView.Adapter<Attendance_tab
 
     @Override
     public int getItemCount() {
+        if(signUpLst!=null)
         return signUpLst.size();
+      return 0;
     }
 
     @Override
@@ -91,4 +93,6 @@ public class Attendance_tab_adapter  extends RecyclerView.Adapter<Attendance_tab
             Log.e("imf **** : ", ""+img_android);
         }
     }
+
+
 }

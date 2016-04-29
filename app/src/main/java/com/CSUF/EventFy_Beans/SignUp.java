@@ -78,9 +78,11 @@ public class SignUp implements Serializable{
 	public void setIsVerified(String isVerified) {
 		this.isVerified = isVerified;
 	}
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public List<Events> getEvents() {
 		return events;
 	}
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public void setEvents(List<Events> events) {
 		this.events = events;
 	}
