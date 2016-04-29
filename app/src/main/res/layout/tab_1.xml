@@ -47,6 +47,30 @@
 
             />
 
+        <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+            android:layout_width="match_parent"
+            android:layout_height="223dp"
+            android:id="@+id/scrollView2"
+            android:layout_gravity="center_horizontal">
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="204dp"
+                android:layout_margin="15dp">
+
+                <include
+                    layout="@layout/tab_event_info">
+
+                </include>
+
+
+
+            </LinearLayout>
+
+        </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
     </LinearLayout>
 
 </RelativeLayout>
