@@ -90,7 +90,10 @@ public class ImageComment_tab_adapter extends RecyclerView.Adapter<ImageComment_
         holder.commentUserName.setText(commentes.get(position).getUserName());
         if(commentes.get(position).getIsImage().equals("true")) {
 
+            if(position%2==0)
             Picasso.with(context).load("https://res.cloudinary.com/eventfy/image/upload/v1461550414/yfg5zs58jd709arktqgn.png").into(holder.img_android);
+         else
+            Picasso.with(context).load("http://tvfiles.alphacoders.com/100/hdclearart-10.png").into(holder.img_android);
         }
         else
         {

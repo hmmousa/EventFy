@@ -187,7 +187,11 @@ public class ImageComment_tab extends Fragment implements Paginate.Callbacks{
             //   vh.tvLoading.setText(String.format("Total items loaded: %d.\nLoading more...", mAdapter.getItemCount()));
 
             vh.tv_android.setText("xyz");
-            Picasso.with(context).load("http://api.learn2crack.com/android/images/donut.png").resize(120, 60).into(vh.img_android);
+
+            if (position%2==0)
+            Picasso.with(context).load("http://api.learn2crack.com/android/images/donut.png").into(vh.img_android);
+            else
+                Picasso.with(context).load("http://tvfiles.alphacoders.com/100/hdclearart-10.png").into(vh.img_android);
 
             // This is how you can make full span if you are using StaggeredGridLayoutManager
             if (mRecyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
