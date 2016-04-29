@@ -98,8 +98,8 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
             ITEM_COUNT=3;
             Log.e("count in ", "" + ITEM_COUNT);
 
-        getUsersForEvent = new GetUsersForEvent(true);
-        getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+      //  getUsersForEvent = new GetUsersForEvent(true);
+      //  getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
 
@@ -165,8 +165,8 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
         @Override
         public void run() {
             page++;
-            getUsersForEvent = new GetUsersForEvent(true);
-            getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+           // getUsersForEvent = new GetUsersForEvent(true);
+           // getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             loading = false;
         }
     };

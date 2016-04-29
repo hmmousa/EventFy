@@ -89,8 +89,8 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
 
 
 
-        getNearbyEvent = new GetNearbyEvent(true);
-        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        getNearbyEvent = new GetNearbyEvent(true);
+//        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
     }

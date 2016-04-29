@@ -260,6 +260,10 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
             }
         }
     }
+    public static void distanceBetween (double startLatitude, double startLongitude, double endLatitude, double endLongitude, float[] results)
+    {
+
+    }
 
 }
 
