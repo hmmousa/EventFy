@@ -80,6 +80,15 @@
         <item name="android:layout_marginLeft">@dimen/nav_drawer_vertical_keyline_text_left</item>
     </style>
 
+    <style name="EventInfoDetails">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textColor">@color/nav_drawer_item_icon_normal</item>
+        <item name="android:layout_gravity">start|center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/EventInfoDetailsText</item>
+    </style>
+
     <style name="NavDrawerSectionSubheaderText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/nav_drawer_subheader_height</item>

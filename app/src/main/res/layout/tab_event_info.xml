@@ -1,236 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:custom="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
-<LinearLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-    android:weightSum="1">
+        android:weightSum="1"
+        android:layout_margin="10dp"
+        android:id="@+id/linearLayout">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15dp"
-                android:text="Event Name:"
-                android:layout_gravity="left"
-                android:layout_margin="5dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15dp"
-                android:text="Event Created By:"
-                android:layout_gravity="left"
-                android:layout_margin="5dp" />
+        <FrameLayout
+            android:id="@+id/event_info_details_name"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15dp"
-                android:text="Event Location:"
-                android:layout_gravity="left"
-                android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+                android:id="@+id/txt_event_info_details_name"
+                style="@style/EventInfoDetails"
+                android:text="Event Name"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        <FrameLayout
+            android:id="@+id/event_info_details_date"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+            <TextView
+                android:id="@+id/txt_event_info_details_date"
+                style="@style/EventInfoDetails"
+                android:text="Event Date"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        <FrameLayout
+            android:id="@+id/event_info_details_time"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+            <TextView
+                android:id="@+id/txt_event_info_details_time"
+                style="@style/EventInfoDetails"
+                android:text="Event Time"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        <FrameLayout
+            android:id="@+id/event_info_details_location"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+            <TextView
+                android:id="@+id/txt_event_info_details_location"
+                style="@style/EventInfoDetails"
+                android:text="Event Location"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        </FrameLayout>
 
-    <TextView
+        <FrameLayout
+            android:id="@+id/event_info_details_distance"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
+
+            <TextView
+                android:id="@+id/txt_event_info_details_distance"
+                style="@style/EventInfoDetails"
+                android:text="Event Distance"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" /><TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="15dp"
-    android:text="Event Date:"
-    android:layout_gravity="left"
-    android:layout_margin="5dp" />
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_toRightOf="@+id/linearLayout"
+        android:layout_toEndOf="@+id/linearLayout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Date:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Event Time:"
-        android:layout_gravity="left"
-        android:layout_margin="5dp" />
+        <FrameLayout
+            android:id="@+id/event_info_details_name_input"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/txt_input_event_info_details_name"
+                style="@style/EventInfoDetails"
+                android:text="Event Name ABC"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
 
-    </RelativeLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/event_info_details_date_input"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
+
+            <TextView
+                android:id="@+id/txt_input_event_info_details_date"
+                style="@style/EventInfoDetails"
+                android:text="MM-DD-YYYY"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/event_info_details_time_input"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
+
+            <TextView
+                android:id="@+id/txt_input_event_info_details_time"
+                style="@style/EventInfoDetails"
+                android:text="Event Time"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/event_info_details_location_input"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
+
+            <TextView
+                android:id="@+id/txt_input_event_info_details_location"
+                style="@style/EventInfoDetails"
+                android:text="Event Location"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/event_info_details_distance_input"
+            style="@style/NavDrawerRowLayout.Main"
+            android:layout_width="130dp">
+
+            <TextView
+                android:id="@+id/txt_input_event_info_details_distance"
+                style="@style/EventInfoDetails"
+                android:text="Event Distance"
+                tools:fontFamily="sans-serif-medium"
+                android:layout_gravity="left|center_vertical" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
