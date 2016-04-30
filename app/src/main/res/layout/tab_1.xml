@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:custom="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -47,30 +48,10 @@
 
             />
 
-        <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
-            android:layout_width="match_parent"
-            android:layout_height="223dp"
-            android:id="@+id/scrollView2"
-            android:layout_gravity="center_horizontal">
-
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="204dp"
-                android:layout_margin="15dp">
-
                 <include
                     layout="@layout/tab_event_info">
-
                 </include>
-
-
-
-            </LinearLayout>
-
-        </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
 
     </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

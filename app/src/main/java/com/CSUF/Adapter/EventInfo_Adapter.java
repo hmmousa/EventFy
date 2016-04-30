@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.CSUF.EventFy.R;
 import com.CSUF.EventFy_Beans.Events;
 
 /**
@@ -51,12 +50,13 @@ public class EventInfo_Adapter extends RecyclerView.Adapter<EventInfo_Adapter.Vi
     public EventInfo_Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View view = null;
+        return null;
+       // View view = null;
 
-        view = inflater.inflate(R.layout.tab_event_info, parent, false);
+       // view = inflater.inflate(R.layout.tab_event_info, parent, false);
 
-        return new ViewHolder(view) {
-        };
+//        return new ViewHolder(view) {
+//        };
     }
 
 

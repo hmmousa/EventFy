@@ -102,7 +102,7 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
 
 
             location = new Location();
-            location.setDistance(22);
+            location.setDistance(2);
             location.setUserId("xyz1");
 
             int zoomVal = (int) Math.round(10+ (location.getDistance()/3));
