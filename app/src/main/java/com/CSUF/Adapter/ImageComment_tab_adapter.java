@@ -27,21 +27,6 @@ public class ImageComment_tab_adapter extends RecyclerView.Adapter<ImageComment_
     private Context context;
     private int position1;
 
-    private final String android_image_urls[] = {
-            "http://api.learn2crack.com/android/images/donut.png",
-            "http://api.learn2crack.com/android/images/eclair.png",
-            "http://api.learn2crack.com/android/images/froyo.png",
-            "http://api.learn2crack.com/android/images/ginger.png",
-            "http://api.learn2crack.com/android/images/honey.png",
-            "http://api.learn2crack.com/android/images/icecream.png",
-            "http://api.learn2crack.com/android/images/jellybean.png",
-            "http://api.learn2crack.com/android/images/kitkat.png",
-            "http://api.learn2crack.com/android/images/lollipop.png",
-            "http://api.learn2crack.com/android/images/marshmallow.png"
-    };
-
-
-
     public ImageComment_tab_adapter(Context context ,List<Comments> contents, int position) {
         this.commentes = contents;
         this.context = context;

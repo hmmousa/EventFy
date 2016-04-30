@@ -66,8 +66,6 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-
-   //     try {
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("signup");
 
@@ -75,21 +73,14 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
         init_navigator();
 
-          //  set_loginData(signUp);
-
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager =
@@ -105,19 +96,18 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        // call ActionBarDrawerToggle.onOptionsItemSelected(), if it returns true
+        // then it has handled the app icon touch event
+        Log.e("in select item : ", "above");
+
+        if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
+
+            Log.e("in select item : ", ""+item.getItemId());
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 
     private void init_slider() {
         // Creating The Toolbar and setting it as the Toolbar for the activity
@@ -144,12 +134,9 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
                 return getResources().getColor(R.color.tabsScrollColor);
             }
         });
-
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
-
     }
-
 
 
     private void init_navigator(){
@@ -167,15 +154,46 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
                         R.string.navigation_drawer_closed
                 )
         {
+
+            @Override
+            public boolean onOptionsItemSelected(MenuItem item) {
+                // Pass the event to ActionBarDrawerToggle, if it returns
+                // true, then it has handled the app icon touch event
+                if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
+                    return true;
+                }
+                // Handle your other action bar items...
+
+                return super.onOptionsItemSelected(item);
+            }
+
+
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset)
             {
                 // Disables the burger/arrow animation by default
+
+                Log.e("in item :: ", "");
                 super.onDrawerSlide(drawerView, 0);
             }
+
+            public void onDrawerClosed(View view) {
+              Log.e("drawer open ", " ***");
+               // getSupportActionBar().setTitle(mTitle);
+                supportInvalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View view) {
+                Log.e("drawer close ", " ***");
+                supportInvalidateOptionsMenu();
+            }
+
         };
 
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
+
+
 
         if (getSupportActionBar() != null)
         {
@@ -194,7 +212,6 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
         mScrimInsetsFrameLayout.getLayoutParams().width = Math.min(possibleMinDrawerWidth, maxDrawerWidth);
         // Set the first item as selected for the first time
         getSupportActionBar().setTitle(R.string.toolbar_title_home);
-
 
     }
 
@@ -219,6 +236,7 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
     @Override
     public void onSliderClick(BaseSliderView baseSliderView) {
+
 
     }
 
@@ -264,7 +282,6 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
     {
 
     }
-
 }
 
 

@@ -52,14 +52,6 @@
 
         </activity>
 
-
-        <!--<activity-->
-            <!--android:name=".MapFragments.MapsActivity"-->
-            <!--android:label="@string/app_name"-->
-            <!--android:theme="@style/AppTheme.Dark">-->
-
-        <!--</activity>-->
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -86,20 +78,14 @@
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="@string/google_maps_key" />
-
         </activity>
-
 
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_event_info"
             android:theme="@style/AppTheme.NoActionBar" >
 
-
-
         </activity>
-
-
 
         <activity
             android:name=".SplashActivity"
@@ -112,7 +98,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-
         </activity>
 
 
@@ -122,6 +107,11 @@
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyBYGFaDhb-Ex-b3HxbtJCvO3Sq9NVhtkXY" />
+
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
 
         </activity>
 
@@ -139,7 +129,9 @@
 
         <activity
             android:name=".SearchActivity"
-            android:label="SearchActivity"></activity>
+            android:label="SearchActivity">
+
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -158,10 +150,7 @@
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.example.gcm" />
-            </intent-filter>
+
         </receiver>
 
 

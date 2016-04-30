@@ -128,7 +128,7 @@
                     layout="@layout/navigation_drawer_divider"/>
 
                 <FrameLayout
-                    android:id="@+id/navigation_drawer_items_list_linearLayout_help_and_addpevent"
+                    android:id="@+id/create_public_event"
                     style="@style/NavDrawerRowLayout.Secondary">
 
                     <com.CSUF.customViews.TintOnStateImageView

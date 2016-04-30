@@ -59,7 +59,7 @@ public class EventInfoActivity extends AppCompatActivity {
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, 0, 0);
       //  Log.e("mdrawer", "" + findViewById(R.id.drawer_layout));
-        mDrawer.setDrawerListener(mDrawerToggle);
+        mDrawer.addDrawerListener(mDrawerToggle);
 
         final int arr []= new int[3];
         arr[0]=4;
@@ -148,7 +148,6 @@ public class EventInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
 
         return mDrawerToggle.onOptionsItemSelected(item) ||
                super.onOptionsItemSelected(item);
