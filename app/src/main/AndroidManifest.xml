@@ -81,7 +81,7 @@
 
         <activity
             android:name=".EventInfoActivity"
-            android:label="@string/title_activity_main2"
+            android:label="Event Info Activity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
@@ -93,6 +93,17 @@
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_event_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+
+
+
+        </activity>
+
+
+
+        <activity
+            android:name=".SplashActivity"
+            android:label="SplashActivity"
             android:theme="@style/AppTheme.NoActionBar" >
 
             <intent-filter>

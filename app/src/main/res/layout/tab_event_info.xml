@@ -24,6 +24,7 @@
                 android:id="@+id/txt_event_info_details_name"
                 style="@style/EventInfoDetails"
                 android:text="Event Name"
+                android:textStyle="bold|italic"
                 tools:fontFamily="sans-serif-medium"
                 android:layout_gravity="left|center_vertical" />
 
@@ -38,6 +39,7 @@
                 android:id="@+id/txt_event_info_details_date"
                 style="@style/EventInfoDetails"
                 android:text="Event Date"
+                android:textStyle="bold|italic"
                 tools:fontFamily="sans-serif-medium"
                 android:layout_gravity="left|center_vertical" />
 
@@ -53,6 +55,7 @@
                 android:id="@+id/txt_event_info_details_time"
                 style="@style/EventInfoDetails"
                 android:text="Event Time"
+                android:textStyle="bold|italic"
                 tools:fontFamily="sans-serif-medium"
                 android:layout_gravity="left|center_vertical" />
 
@@ -67,6 +70,7 @@
                 android:id="@+id/txt_event_info_details_location"
                 style="@style/EventInfoDetails"
                 android:text="Event Location"
+                android:textStyle="bold|italic"
                 tools:fontFamily="sans-serif-medium"
                 android:layout_gravity="left|center_vertical" />
 
@@ -81,6 +85,7 @@
                 android:id="@+id/txt_event_info_details_distance"
                 style="@style/EventInfoDetails"
                 android:text="Event Distance"
+                android:textStyle="bold|italic"
                 tools:fontFamily="sans-serif-medium"
                 android:layout_gravity="left|center_vertical" />
 
