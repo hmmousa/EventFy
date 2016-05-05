@@ -1,4 +1,4 @@
-package com.CSUF;
+package com.CSUF.Adapter;
 
 import android.view.View;
 

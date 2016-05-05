@@ -37,7 +37,7 @@ public class Transition {
 
     public Transition(RectF srcRect, RectF dstRect, long duration, Interpolator interpolator) {
         if (!MathUtils.haveSameAspectRatio(srcRect, dstRect)) {
-            throw new com.CSUF.EventFy.IncompatibleRatioException();
+            throw new IncompatibleRatioException();
         }
         mSrcRect = srcRect;
         mDstRect = dstRect;

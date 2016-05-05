@@ -14,13 +14,10 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.CSUF.EventFy.R;
-import com.CSUF.EventFy.KenBurnsView;
-
 public class SplashActivity extends Activity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 20000;
+    private static int SPLASH_TIME_OUT = 10000;
     private KenBurnsView mKenBurns;
 
     @Override

@@ -84,4 +84,6 @@
   <color name="global_color_green_accent">#ffc107</color>
   <color name="global_color_green_control_activated">#ffc107</color>
 
+  <color name="darkred">#b71c1c</color>
+
 </resources>

@@ -54,24 +54,26 @@
 
     <!-- Web servises url -->
 
-    <string name="ip_local">http://192.168.0.2:8080</string>
+    <string name="ip_local">https://eventfy.herokuapp.com</string>
 
-    <string name="signup_checkuseridvalid">/EventFy/webapi/signup/checkuseridvalid</string>
+    <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
 
-    <string name="signup_adduser">/EventFy/webapi/signup/adduser</string>
+    <string name="signup_adduser">/webapi/signup/adduser</string>
 
-    <string name="verification_get">/EventFy/webapi/signup/getverificationcode</string>
+    <string name="verification_get">/webapi/signup/getverificationcode</string>
 
-    <string name="verification_check">/EventFy/webapi/signup/checkverificationcode</string>
+    <string name="verification_check">/webapi/signup/checkverificationcode</string>
     <string name="title_activity_maps">Map</string>
 
-    <string name="add_event">/EventFy/webapi/events/add</string>
+    <string name="add_event">/webapi/events/add</string>
 
-    <string name="get_nearby_event">/EventFy/webapi/events/getnearbyevents</string>
+    <string name="get_nearby_event">/webapi/events/getnearbyevents</string>
 
-    <string name="reg_gcm_userid">/EventFy/webapi/notifications/registeruser</string>
+    <string name="reg_gcm_userid">/webapi/notifications/registeruser</string>
 
-    <string name="get_user_for_event">/EventFy/webapi/comments/getuserforevent</string>
+    <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
+
+
 
 
 </resources>
