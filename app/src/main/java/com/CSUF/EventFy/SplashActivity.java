@@ -17,7 +17,7 @@ import android.view.animation.AnimationUtils;
 public class SplashActivity extends Activity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 10000;
+    private static int SPLASH_TIME_OUT = 2000;
     private KenBurnsView mKenBurns;
 
     @Override
@@ -35,7 +35,7 @@ public class SplashActivity extends Activity {
 
             @Override
             public void run() {
-                Intent i = new Intent(SplashActivity.this, Main2Activity.class);
+                Intent i = new Intent(SplashActivity.this, EventInfoActivity.class);
                 startActivity(i);
 
                 finish();

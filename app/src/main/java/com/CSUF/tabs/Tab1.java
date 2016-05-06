@@ -51,8 +51,8 @@ public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListen
         Log.e("tab1","");
         mDemoSlider = (SliderLayout)v.findViewById(R.id.slider);
 
-        getNearbyEventForTab1 = new GetNearbyEventForTab1(true);
-        getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        getNearbyEventForTab1 = new GetNearbyEventForTab1(true);
+//        getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         url_maps = new HashMap<String, String>();
 
 

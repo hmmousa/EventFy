@@ -126,7 +126,8 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
             // Handle the home action
         } else if (id == R.id.nav_item_create_event_public)
         {
-            // Handle the public events action
+            Intent intent = new Intent(this, CreatePublicEvent.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_item_create_event_private)
         {

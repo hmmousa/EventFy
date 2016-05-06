@@ -2,6 +2,7 @@ package com.CSUF.EventFy;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -57,9 +58,6 @@ public class EventInfoActivity extends AppCompatActivity {
             }
         }
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, 0, 0);
-      //  Log.e("mdrawer", "" + findViewById(R.id.drawer_layout));
-        mDrawer.addDrawerListener(mDrawerToggle);
 
         final int arr []= new int[3];
         arr[0]=4;
@@ -125,11 +123,7 @@ public class EventInfoActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -149,8 +143,16 @@ public class EventInfoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        return mDrawerToggle.onOptionsItemSelected(item) ||
-               super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+               this.finish();
+                Intent intent = new Intent(this, Main2Activity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 
     }
+}
 }
