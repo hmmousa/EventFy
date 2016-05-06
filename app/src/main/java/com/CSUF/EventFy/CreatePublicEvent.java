@@ -19,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -73,7 +74,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CreatePublicEvent extends ActionBarActivity implements ObservableScrollViewCallbacks, OnDateSetListener, OnTimeSetListener {
+public class CreatePublicEvent extends AppCompatActivity implements ObservableScrollViewCallbacks, OnDateSetListener, OnTimeSetListener {
 
     private Uri dest = null;
     private static final int PICK_IMAGE_ID = 234;
@@ -140,8 +141,7 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
 //        SignUp signUp = (SignUp) in.getSerializableExtra("signup");
 
         // mActionBarSize = getActionBarSize();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout1);
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
         mCreateEvent = (Button) findViewById(R.id.public_create_event);
 
 
@@ -165,9 +165,9 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
             final ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-//                actionBar.setDisplayShowHomeEnabled(true);
-//                actionBar.setDisplayShowTitleEnabled(true);
-//                actionBar.setDisplayUseLogoEnabled(false);
+                actionBar.setDisplayShowHomeEnabled(true);
+               actionBar.setDisplayShowTitleEnabled(true);
+               actionBar.setDisplayUseLogoEnabled(false);
                 actionBar.setHomeButtonEnabled(true);
 
             }
@@ -195,16 +195,6 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
 
 
         getSupportActionBar().setTitle("Create Event");
-        mActionBarDrawerToggle = new ActionBarDrawerToggle
-                (
-                        this,
-                        mDrawerLayout,
-                        toolbar,
-                        R.string.navigation_drawer_opened,
-                        R.string.navigation_drawer_closed
-                );        //  Log.e("mdrawer", "" + findViewById(R.id.drawer_layout));
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
-        mActionBarDrawerToggle.syncState();
 
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
@@ -424,11 +414,18 @@ public class CreatePublicEvent extends ActionBarActivity implements ObservableSc
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
 
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+                this.finish();
+                Intent intent = new Intent(this, Main2Activity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     @Override

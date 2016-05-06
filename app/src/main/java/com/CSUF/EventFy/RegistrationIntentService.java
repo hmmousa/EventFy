@@ -94,8 +94,8 @@ public class RegistrationIntentService extends IntentService {
     public void sendRegistrationToServer(String token)
     {
         PreferenceManager.getDefaultSharedPreferences(this);
-        AddUserId addUserId = new AddUserId(true);
-        addUserId.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        AddUserId addUserId = new AddUserId(true);
+//        addUserId.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
