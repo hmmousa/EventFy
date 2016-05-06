@@ -32,18 +32,18 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         Log.e("position is ::: ", ""+position);
         if(position == 0) // if the position is 0 we are returning the First tab
         {
-                NearbyTab tab1 = new NearbyTab();
+                Tab1 tab1 = new Tab1();
             return tab1;
 
         }
         else if(position == 1)            // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
         {
-             MapTab tab3 = new MapTab();
+             Tab3  tab3 = new Tab3();
             return tab3;
 
         }
         else{
-               NotificationTab tab2 = new NotificationTab();
+               Tab2 tab2 = new Tab2();
             return tab2;
         }
 
