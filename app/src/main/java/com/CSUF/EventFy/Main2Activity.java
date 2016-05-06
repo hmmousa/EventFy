@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -43,9 +45,10 @@ import utils.UtilsMiscellaneous;
 /**
  * Created by Edwin on 15/02/2015.
  */
-public class Main2Activity extends ActionBarActivity implements OnSliderClickListener {
+public class Main2Activity extends ActionBarActivity implements NavigationView.OnNavigationItemSelectedListener, OnSliderClickListener {
 
     // Declaring Your View and Variables
+
 
     Toolbar toolbar;
     ViewPager pager;
@@ -76,38 +79,86 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
     }
 
 
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-//        searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(getComponentName()));
-
-
+        getMenuInflater().inflate(R.menu.main2, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        // call ActionBarDrawerToggle.onOptionsItemSelected(), if it returns true
-        // then it has handled the app icon touch event
-        Log.e("in select item : ", "above");
-
-        if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
-
-            Log.e("in select item : ", ""+item.getItemId());
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        Log.e("item clicked : ",""+item);
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_item_home)
+        {
+            // Handle the home action
+        } else if (id == R.id.nav_item_create_event_public)
+        {
+            // Handle the public events action
+
+        } else if (id == R.id.nav_item_create_event_private)
+        {
+            // Handle the Private event action
+
+        } else if (id == R.id.nav_item_event_history)
+        {
+            // Handle the Event History action
+
+        } else if (id == R.id.nav_item_about)
+        {
+            // Handle the About action
+
+        } else if (id == R.id.nav_item_myacc)
+        {
+            // Handle the MyAccount action
+
+        } else if (id == R.id.nav_item_setting)
+        {
+            // Handle the Setting action
+
+        } else if (id == R.id.nav_item_logout)
+        {
+            // Handle Log out Action
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
 
     private void init_slider() {
         // Creating The Toolbar and setting it as the Toolbar for the activity
@@ -141,76 +192,20 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
     private void init_navigator(){
         // Navigation Drawer
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_activity_DrawerLayout);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
-        mScrimInsetsFrameLayout = (ScrimInsetsFrameLayout) findViewById(R.id.main_activity_navigation_drawer_rootLayout);
 
-        mActionBarDrawerToggle = new ActionBarDrawerToggle
-                (
-                        this,
-                        mDrawerLayout,
-                        toolbar,
-                        R.string.navigation_drawer_opened,
-                        R.string.navigation_drawer_closed
-                )
-        {
-
-            @Override
-            public boolean onOptionsItemSelected(MenuItem item) {
-                // Pass the event to ActionBarDrawerToggle, if it returns
-                // true, then it has handled the app icon touch event
-                if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
-                    return true;
-                }
-                // Handle your other action bar items...
-
-                return super.onOptionsItemSelected(item);
-            }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset)
-            {
-                // Disables the burger/arrow animation by default
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-                Log.e("in item :: ", "");
-                super.onDrawerSlide(drawerView, 0);
-            }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-            public void onDrawerClosed(View view) {
-              Log.e("drawer open ", " ***");
-               // getSupportActionBar().setTitle(mTitle);
-                supportInvalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View view) {
-                Log.e("drawer close ", " ***");
-                supportInvalidateOptionsMenu();
-            }
-
-        };
-
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
-
-
-
-
-        if (getSupportActionBar() != null)
-        {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }
-
-        mActionBarDrawerToggle.syncState();
-
-        // Navigation Drawer layout width
-        int possibleMinDrawerWidth = UtilsDevice.getScreenWidth(this) -
-                UtilsMiscellaneous.getThemeAttributeDimensionSize(this, android.R.attr.actionBarSize);
-        int maxDrawerWidth = getResources().getDimensionPixelSize(R.dimen.navigation_drawer_max_width);
-
-        mScrimInsetsFrameLayout.getLayoutParams().width = Math.min(possibleMinDrawerWidth, maxDrawerWidth);
-        // Set the first item as selected for the first time
         getSupportActionBar().setTitle(R.string.toolbar_title_home);
 
     }
@@ -220,31 +215,28 @@ public class Main2Activity extends ActionBarActivity implements OnSliderClickLis
 
         userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
         userName.setText(signUp.getUserName());
-        profilePic = (ImageView) findViewById(R.id.navigation_drawer_user_account_picture_profile);
+        profilePic = (ImageView) findViewById(R.id.imageView_user);
         //String url = ""+R.string.profile_start_url+userFbId+""+R.string.profile_end_url;
         if(signUp.getIsFacebook().equals("true")) {
             String url = "https://graph.facebook.com/" + signUp.getUserId() + "/picture?type=large";
             new LoadImage().execute(url);
         }
-       if(signUp.getImageUrl().equals("default")) {
-           Drawable myDrawable  = getResources().getDrawable(R.drawable.ic_account_circle_white_64dp);
-           profilePic.setImageDrawable(myDrawable);
-       }
-           else
-           new LoadImage().execute(signUp.getImageUrl());
+        if(signUp.getImageUrl().equals("default")) {
+            Drawable myDrawable  = getResources().getDrawable(R.drawable.ic_account_circle_white_64dp);
+            profilePic.setImageDrawable(myDrawable);
+        }
+        else
+            new LoadImage().execute(signUp.getImageUrl());
     }
 
     @Override
-    public void onSliderClick(BaseSliderView baseSliderView) {
-
+    public void onSliderClick(BaseSliderView slider) {
 
     }
 
 
-
-
     private class LoadImage extends AsyncTask<String, String, Bitmap> {
-      Bitmap bitmap;
+        Bitmap bitmap;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
