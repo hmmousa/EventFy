@@ -57,7 +57,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".AccountsActivities.LoginActivity"
             android:label="@string/app_name"
             >
             <meta-data
@@ -67,7 +67,7 @@
         </activity>
 
         <activity
-            android:name=".SignupActivity"
+            android:name=".AccountsActivities.SignupActivity"
             android:theme="@style/AppTheme.Dark" />
 
 
@@ -88,7 +88,7 @@
         </activity>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".Splash.SplashActivity"
             android:label="SplashActivity"
             android:theme="@style/AppTheme.NoActionBar" >
 
@@ -124,7 +124,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
-            android:name=".VerifyAccount"
+            android:name=".AccountsActivities.VerifyAccount"
             android:label="@string/title_activity_verify_account" />
 
         <activity
