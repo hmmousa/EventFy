@@ -4,7 +4,17 @@ public class Notification {
 
 	String regId;
 
-	SignUp signup;
+	String userId;
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+
 
 	public String getRegId() {
 		return regId;
@@ -14,11 +24,5 @@ public class Notification {
 		this.regId = regId;
 	}
 
-	public SignUp getSignup() {
-		return signup;
-	}
 
-	public void setSignup(SignUp signup) {
-		this.signup = signup;
-	}
 }

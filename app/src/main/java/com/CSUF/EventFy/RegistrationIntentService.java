@@ -37,11 +37,19 @@ public class RegistrationIntentService extends IntentService {
     public RegistrationIntentService() {
         super(TAG);
         Log.e(TAG, "GCM up: " );
+
+
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+
+        signUp = (SignUp) intent.getSerializableExtra("signup");
+
+
+Log.e("sign up is:  ",""+signUp);
 
         try {
             // [START register_for_gcm]
@@ -94,8 +102,8 @@ public class RegistrationIntentService extends IntentService {
     public void sendRegistrationToServer(String token)
     {
         PreferenceManager.getDefaultSharedPreferences(this);
-//        AddUserId addUserId = new AddUserId(true);
-//        addUserId.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        AddUserId addUserId = new AddUserId(true);
+        addUserId.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -121,7 +129,7 @@ private String response;
             Notification notification = new Notification();
 
             notification.setRegId(token);
-            notification.setSignup(signUp);
+            notification.setUserId(signUp.getUserId());
 
             HttpEntity<Notification> request = new HttpEntity<>(notification);
 
@@ -129,6 +137,7 @@ private String response;
                     restTemplate.exchange(url, HttpMethod.POST, request, String.class);
 
             response = result.getBody();
+
             return null;
         }
 
@@ -136,6 +145,7 @@ private String response;
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
+            Log.e("resp : ", ""+response);
             if(response.equals("Success"))
             {
                 Editor prefsEditor = preferences.edit();

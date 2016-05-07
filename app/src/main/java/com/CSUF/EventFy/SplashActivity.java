@@ -14,6 +14,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.CSUF.Notifications.GCMNotificationIntentService;
+
 public class SplashActivity extends Activity {
 
     // Splash screen timer
@@ -30,6 +32,8 @@ public class SplashActivity extends Activity {
 
         mKenBurns = (KenBurnsView) findViewById(R.id.ken_burns_images);
         mKenBurns.setImageResource(R.drawable.splash);
+
+
 
         new Handler().postDelayed(new Runnable() {
 
@@ -62,4 +66,5 @@ public class SplashActivity extends Activity {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.translate_top_to_center);
         findViewById(R.id.imagelogo).startAnimation(anim);
     }
+
 }
