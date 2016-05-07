@@ -37,6 +37,7 @@
             android:id="@+id/navigation_drawer_account_information_display_name"
             style="@style/NavDrawerAccountInfoText"
             android:text="@string/tools_text_account_information_username"
+            android:layout_marginTop="15dp"
             tools:fontFamily="sans-serif-medium"/>
 
     </LinearLayout>

@@ -31,7 +31,7 @@ public class SplashActivity extends Activity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         mKenBurns = (KenBurnsView) findViewById(R.id.ken_burns_images);
-        mKenBurns.setImageResource(R.drawable.splash);
+        mKenBurns.setImageResource(R.drawable.image_splash);
 
 
 
