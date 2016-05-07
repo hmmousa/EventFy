@@ -120,12 +120,15 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
     private String eventNameStr;
     private String mEventTimeStr;
     private String eventTypeStr;
+    private String eventVisiblity;
+    private String eventTenure;
     private LocationManager locationManager;
     private SignUp signUp;
     private android.location.Location cLocation;
     private double latitude;
     private double longitude;
-
+    private RangeSeekBar rangeSeekBarVisiblity;
+    private RangeSeekBar rangeSeekBarTenure;
 
     GPSTracker gps;
 
@@ -141,6 +144,7 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_public_event);
+
 
 
         ImageView imgLocation = (ImageView) findViewById(R.id.public_event_current_location);
@@ -195,10 +199,11 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
         mEventDate = (TextView) findViewById(R.id.public_event_date);
         mEventTime = (TextView) findViewById(R.id.public_event_time);
         eventName = (TextView) findViewById(R.id.public_event_name);
-
+        rangeSeekBarVisiblity = (RangeSeekBar) findViewById(R.id.public_event_visiblity_seekbar);
+        rangeSeekBarTenure = (RangeSeekBar) findViewById(R.id.public_event_tenure_seekbar);
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(CreatePublicEvent.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
-
+        final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY) ,calendar.get(Calendar.MINUTE), false, false);
 
 //        mEventTime = (TextView) findViewById(R.id.public_event_time);
 //        final Calendar calendar1 = Calendar.getInstance();
@@ -286,15 +291,10 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
 
         mEventTime.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
+                timePickerDialog.setVibrate(isVibrate());
+                timePickerDialog.setCloseOnSingleTapMinute(isCloseOnSingleTapDay());
+                timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
 
-                TimePickerDialog tpd = TimePickerDialog.newInstance(
-                        CreatePublicEvent.this,
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        false
-                );
-                datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
-                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
 
         });
@@ -322,8 +322,9 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
                                     eventNameStr= eventName.getText().toString();
                                     mEventTimeStr= mEventTime.getText().toString();
                                     eventTypeStr= eventType.getSelectedItem().toString();
-
-
+                                    eventVisiblity = String.valueOf(rangeSeekBarVisiblity.getSelectedMaxValue());
+                                    eventTenure = String.valueOf(rangeSeekBarTenure.getSelectedMaxValue());
+                                    
                                     uploadImage = new UploadImage(true);
 
                                     uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -568,7 +569,7 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
         String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
         String minuteString = minute < 10 ? "0" + minute : "" + minute;
-        String time = "" + hourString + "h" + minuteString + "m";
+        String time = "" + hourString + ":" + minuteString + "";
         mEventTime.setText(time);
     }
 
@@ -654,6 +655,8 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
             event.setEventType(eventTypeStr);
             event.setEventLocationLatitude(latitude);
             event.setEventLocationLongitude(longitude);
+            event.setEventVisiblityMile(eventVisiblity);
+            event.setEventVisiblityTenure(eventTenure);
 
             HttpEntity<Events> request = new HttpEntity<>(event);
 
