@@ -10,14 +10,14 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.CSUF.EventFy.R;
 import com.CSUF.EventFy_Beans.Events;
 import com.CSUF.EventFy_Beans.Location;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,12 +31,12 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.florescu.android.rangeseekbar.RangeSeekBar;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,10 +51,14 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
     private boolean mapsSupported = true;
     private List<Events> eventLst;
-    private ObservableScrollView observableScrollView;
+    private RangeSeekBar rangeSeekBar;
     private GetNearbyEvent getNearbyEvent;
     private com.CSUF.EventFy_Beans.Location location;
-
+    private Button filter;
+    CircleOptions circleOptions;
+    private double radious;
+    LatLng myLaLn;
+    Circle mapCircle;
 
   private android.location.Location cLocation;
     @Override
@@ -88,12 +92,6 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
         initializeMap();
 
 
-
-
-        getNearbyEvent = new GetNearbyEvent(true);
-        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
     }
 
     private void initializeMap() {
@@ -109,7 +107,7 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
             int zoomVal = (int) Math.round(10+ (location.getDistance()/3));
 
 //TODO adjust zoom vaue with radious
-            LatLng myLaLn = new LatLng(cLocation.getLatitude(), cLocation.getLongitude());
+             myLaLn = new LatLng(cLocation.getLatitude(), cLocation.getLongitude());
 
             CameraPosition camPos = new CameraPosition.Builder().target(myLaLn)
                     .zoom(zoomVal)
@@ -124,12 +122,6 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
             markerOptions.position(myLaLn);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             googleMap.addMarker(markerOptions);
-            Circle circle = googleMap.addCircle(new CircleOptions()
-                    .center(myLaLn)
-                    .radius(location.getDistance()*1000)
-                    .strokeColor(Color.CYAN)
-                    .fillColor(Color.YELLOW));
-
 
             //setup markers etc...
         }
@@ -141,8 +133,25 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         final RelativeLayout parent = (RelativeLayout) inflater.inflate(R.layout.tab_3, container, false);
         mapView = (MapView) parent.findViewById(R.id.map_tab);
+        rangeSeekBar = (RangeSeekBar) parent.findViewById(R.id.map_seekbar);
+        filter = (Button) parent.findViewById(R.id.button_map_find);
+
+
+        filter.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            radious = Double.parseDouble(String.valueOf(rangeSeekBar.getSelectedMaxValue()));
+
+                getNearbyEvent = new GetNearbyEvent(true);
+                getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
+
         return parent;
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -213,8 +222,7 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
                 Log.d("activity", "LOC by Network");
                 location.setLatitude(cLocation.getLatitude());
                 location.setLongitude(cLocation.getLongitude());
-                Log.e("long : ", "" + location.getLongitude());
-                Log.e("lati : ", "" + location.getLatitude());
+                location.setDistance(radious);
 
                 HttpEntity<Location> request = new HttpEntity<>(location);
 
@@ -232,18 +240,48 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Log.e("done :: ", "****  "+eventLst.size());
-            if(eventLst!=null)
-                for(Events obj : eventLst) {
-                    LatLng temp = new LatLng(obj.getEventLocationLatitude(), obj.getEventLocationLongitude());
+            LatLng temp = null;
 
-                    Log.e("setting :: ", "****  "+obj.getEventName());
-                    Log.e("lat :: ", "****  "+obj.getEventLocationLatitude());
+
+            Log.e("lot :: ", "****  " + myLaLn.longitude);
+            Log.e("lat :: ", "****  " + myLaLn.latitude);
+
+
+            ///googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLaLn));
+
+
+            if(eventLst!=null) {
+                for (Events obj : eventLst) {
+                    temp = new LatLng(obj.getEventLocationLatitude(), obj.getEventLocationLongitude());
+
+
                     googleMap.addMarker(new MarkerOptions().position(temp).title(obj.getEventName()));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
+                  //  googleMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
 
                 }
 
-        }
+                googleMap.addMarker(new MarkerOptions().position(myLaLn).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+                if(mapCircle!=null)
+                   mapCircle.remove();
+
+                     circleOptions = new CircleOptions()
+                            .center(myLaLn)   //set center
+                            .radius(radious * 1000)   //set radius in meters
+                            .fillColor(0x5500ff00)  //default
+                            .strokeColor(Color.BLACK)
+                            .strokeWidth(2);
+
+                    mapCircle =  googleMap.addCircle (circleOptions);
+                }
+
+            CameraPosition camPos = new CameraPosition.Builder().target(myLaLn)
+                    .zoom((float) Math.abs(20-Math.abs(radious)))
+                    .bearing(20)
+                    .tilt(0)
+                    .build();
+
+            }
     }
 
 }

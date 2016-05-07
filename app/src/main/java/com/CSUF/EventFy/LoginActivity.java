@@ -126,8 +126,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.e("callback manager : ", ""+callbackManager);
-        Log.e("request code : ",""+requestCode);
         if(callbackManager!=null)
             callbackManager.onActivityResult(requestCode, resultCode, data);
     }

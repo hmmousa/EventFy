@@ -366,7 +366,7 @@ public class ImageComment_tab extends Fragment implements Paginate.Callbacks {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String url = getResources().getString(R.string.ip_localhost) + getResources().getString(R.string.add_comment_in_event);
+            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_comment_in_event);
 
 
             RestTemplate restTemplate = new RestTemplate(true);

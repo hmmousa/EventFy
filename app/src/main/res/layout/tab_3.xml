@@ -19,20 +19,20 @@
         android:id="@+id/map_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:absoluteMaxValue="150"
-        app:absoluteMinValue="00"
+        app:absoluteMaxValue="50.0"
+        app:absoluteMinValue="0.0"
         app:singleThumb="true"
         app:textAboveThumbsColor="@color/primary_darker"
         app:thumbDisabled="@drawable/custom_slider_thumb"
         app:thumbNormal="@drawable/custom_slider_thumb"
         app:thumbPressed="@drawable/custom_slider_thumb"
         app:thumbShadow="true"
-        app:thumbShadowBlur="3dp"
+        app:thumbShadowBlur="2dp"
         app:thumbShadowColor="@color/black"
         app:thumbShadowXOffset="1dp"
         app:thumbShadowYOffset="2dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="150dp"
+        android:layout_marginRight="80dp"
         android:layout_marginTop="20dp" />
 
     <Button
@@ -41,11 +41,11 @@
         android:layout_height="wrap_content"
         android:text="Filter"
         android:id="@+id/button_map_find"
-        android:layout_marginRight="41dp"
+        android:layout_marginRight="5dp"
         android:layout_alignTop="@+id/map_seekbar"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="41dp" />
+         />
 
     <LinearLayout
         android:layout_width="match_parent"

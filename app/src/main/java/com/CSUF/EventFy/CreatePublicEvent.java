@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -16,9 +18,9 @@ import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -53,6 +55,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.Builder;
+import com.google.gson.Gson;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
@@ -172,9 +175,17 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
         Intent intent1 = new Intent(this, GCMNotificationIntentService.class);
         startService(intent1);
 
-        Intent in = getIntent();
-        signUp = (SignUp) in.getSerializableExtra("signup");
+        SharedPreferences preferences;
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Editor prefsEditor = preferences.edit();
+        Gson gson = new Gson();
 
+        String signUpjson = preferences.getString("signUp", "");
+        Log.e("sign up str ", ""+signUpjson);
+
+       signUp = gson.fromJson(signUpjson, SignUp.class);
+
+        Log.e("sign pojo ", ""+signUp);
         // mActionBarSize = getActionBarSize();
 
         mCreateEvent = (Button) findViewById(R.id.public_create_event);
@@ -305,17 +316,18 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
                             public void run() {
                                 if(!mCreateEvent.isEnabled()) {
 
-
-                                    uploadImage = new UploadImage(true);
-
-                                    uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
                                     eventCapacityStr= eventCapacity.getSelectedItem().toString();
                                     mEventDateStr= mEventDate.getText().toString();
                                     eventDescriptionStr= eventDescription.getText().toString();
                                     eventNameStr= eventName.getText().toString();
                                     mEventTimeStr= mEventTime.getText().toString();
                                     eventTypeStr= eventType.getSelectedItem().toString();
+
+
+                                    uploadImage = new UploadImage(true);
+
+                                    uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
 
 //                                    if(imageUrl!=null) {
@@ -702,6 +714,7 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            Log.e("return success" , imageUrl);
             addEvent = new AddEvent(true);
             addEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
