@@ -34,6 +34,7 @@ public class EventInfoActivity extends AppCompatActivity {
     private Events event;
     private SignUp signUp;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

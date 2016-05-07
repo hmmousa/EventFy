@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -53,43 +54,38 @@ public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListen
 
         getNearbyEventForTab1 = new GetNearbyEventForTab1(true);
         getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        url_maps = new HashMap<String, String>();
 
-
-        initView();
         return v;
     }
 
 
-public void initView()
-{
+    public void initView()
+    {
 
-    for(String name : url_maps.keySet()){
-        Log.e("in view load :: ", "  "+url_maps.get(name));
-        TextSliderView textSliderView = new TextSliderView(getContext());
-        // initialize a SliderLayout
-        textSliderView
-                .description(name)
-                .image(url_maps.get(name))
-                .setScaleType(BaseSliderView.ScaleType.Fit)
-                .setOnSliderClickListener(this);
+        for(Events event : eventLst){
+            TextSliderView textSliderView = new TextSliderView(getContext());
+            // initialize a SliderLayout
+            textSliderView
+                    .description(event.getEventName())
+                    .image(event.getEventImageUrl())
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
 
-        //add your extra information
-        textSliderView.bundle(new Bundle());
-        textSliderView.getBundle()
-                .putString("extra", name);
+            //add your extra information
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle().putSerializable("CurrentEvent", event);
 
-        mDemoSlider.addSlider(textSliderView);
+            mDemoSlider.addSlider(textSliderView);
+
+        }
+        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+        mDemoSlider.setDuration(2000);
+        mDemoSlider.addOnPageChangeListener(this);
+
 
     }
-    mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
-    mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-    mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-    mDemoSlider.setDuration(2000);
-    mDemoSlider.addOnPageChangeListener(this);
-
-
-}
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
@@ -115,9 +111,14 @@ public void initView()
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(getContext(), slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
+
+        Events event = (Events) slider.getBundle().getSerializable("CurrentEvent");
+
+        Toast.makeText(getContext(), event.getEventId() + "", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity().getApplicationContext(), EventInfoActivity.class);
+        intent.putExtra("CurrentEvent", (Serializable) event);
         startActivity(intent);
+
     }
 
     private class GetNearbyEventForTab1 extends AsyncTask<Void, Void, Void> {
@@ -164,19 +165,14 @@ public void initView()
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.e("in first load :: ", "");
+            Log.e("in first load :: ", ""+eventLst.size());
 
             if(eventLst!=null)
                 for(Events obj : eventLst) {
-                    Log.e("in first load :: ", "  "+obj.getEventImageUrl());
                     if(obj.getEventImageUrl().equals("default"))
-                        url_maps.put(obj.getEventName(),"http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
-                    else
-                        url_maps.put(obj.getEventName(),obj.getEventImageUrl());
-
-
-                    initView();
+                        obj.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
                 }
+            initView();
         }
     }
 

@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +29,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.github.siyamed.shapeimageview.CircularImageView;
 import com.paginate.Paginate;
 import com.paginate.recycler.LoadingListItemCreator;
 import com.paginate.recycler.LoadingListItemSpanLookup;
@@ -55,7 +55,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class ImageComment_tab extends Fragment implements Paginate.Callbacks {
 
-private static final int GRID_SPAN = 3;
+    private static final int GRID_SPAN = 3;
     protected int threshold = 4;
     protected int totalPages = 3;
     protected long networkDelay =1000;
@@ -69,19 +69,19 @@ private static final int GRID_SPAN = 3;
     private int ITEM_COUNT;
     private ProgressDialog progressDialog;
     private TextView commentTxtView;
-    private Button commentTextButton;
-    private Button commentImageButton;
     private SignUp signUp;
     private String imageUrl;
     private Events event;
     private String commentTxt;
-private PostUsersComment postUsersComment;
-private RecyclerView recyclerView;
-private boolean loading = false;
-private int page = 0;
-private Handler handler;
-private Paginate paginate;
+    private PostUsersComment postUsersComment;
+    private RecyclerView recyclerView;
+    private boolean loading = false;
+    private int page = 0;
+    private Handler handler;
+    private Paginate paginate;
     private RecyclerView.Adapter adapter;
+    CircularImageView commentTextButton;
+    CircularImageView commentImageButton;
     public enum Orientation {
         VERTICAL,
         HORIZONTAL
@@ -110,8 +110,8 @@ private Paginate paginate;
 
         View v = inflater.inflate(R.layout.fragment_recyclerview, container, false);
         commentTxtView = (TextView) v.findViewById(R.id.comment_txt);
-        commentTextButton = (Button) v.findViewById(R.id.comment_text_post_button);
-        commentImageButton = (Button) v.findViewById(R.id.comment_image_post_button);
+        commentTextButton = (CircularImageView) v.findViewById(R.id.comment_text_post_button);
+        commentImageButton = (CircularImageView) v.findViewById(R.id.comment_image_post_button);
 
         commentTextButton.setOnClickListener(new OnClickListener() {
 
@@ -175,12 +175,12 @@ private Paginate paginate;
 
 
 
-protected void setupPagination() {
+    protected void setupPagination() {
         // If RecyclerView was recently bound, unbind
 
 
         if (paginate != null) {
-        paginate.unbind();
+            paginate.unbind();
         }
         handler.removeCallbacks(fakeCallback);
         adapter  = new RecyclerViewMaterialAdapter(new ImageComment_tab_adapter(context, commentList, position));
@@ -202,56 +202,56 @@ protected void setupPagination() {
         RecyclerView.LayoutManager layoutManager = null;
         layoutManager = new LinearLayoutManager(getActivity(), layoutOrientation, false);
 
-    ((LinearLayoutManager) layoutManager).setReverseLayout(reverseLayout);
+        ((LinearLayoutManager) layoutManager).setReverseLayout(reverseLayout);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new SlideInUpAnimator());
         recyclerView.setAdapter(adapter);
 
         paginate = Paginate.with(recyclerView, this)
-        .setLoadingTriggerThreshold(threshold)
-        .addLoadingListItem(addLoadingRow)
-        .setLoadingListItemCreator(customLoadingListItem ? new CustomLoadingListItemCreator() : null)
-        .setLoadingListItemSpanSizeLookup(new LoadingListItemSpanLookup() {
-@Override
-public int getSpanSize() {
-        return GRID_SPAN;
-        }
-        })
-        .build();
+                .setLoadingTriggerThreshold(threshold)
+                .addLoadingListItem(addLoadingRow)
+                .setLoadingListItemCreator(customLoadingListItem ? new CustomLoadingListItemCreator() : null)
+                .setLoadingListItemSpanSizeLookup(new LoadingListItemSpanLookup() {
+                    @Override
+                    public int getSpanSize() {
+                        return GRID_SPAN;
+                    }
+                })
+                .build();
 
-    adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
-        }
+    }
 
-@Override
-public synchronized void onLoadMore() {
+    @Override
+    public synchronized void onLoadMore() {
         Log.d("Paginate", "onLoadMore");
         loading = true;
         // Fake asynchronous loading that will generate page of random data after some delay
         handler.postDelayed(fakeCallback, networkDelay);
-        }
+    }
 
-@Override
-public synchronized boolean isLoading() {
+    @Override
+    public synchronized boolean isLoading() {
         return loading; // Return boolean weather data is already loading or not
-        }
+    }
 
-@Override
-public boolean hasLoadedAllItems() {
+    @Override
+    public boolean hasLoadedAllItems() {
         return page == totalPages; // If all pages are loaded return true
-        }
+    }
 
-private Runnable fakeCallback = new Runnable() {
-@Override
-public void run() {
-        page++;
+    private Runnable fakeCallback = new Runnable() {
+        @Override
+        public void run() {
+            page++;
 
-        getUsersForEvent = new GetUsersForEvent(true);
-        getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        loading = false;
+            getUsersForEvent = new GetUsersForEvent(true);
+            getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            loading = false;
         }
-        };
+    };
     private class CustomLoadingListItemCreator implements LoadingListItemCreator {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -317,7 +317,6 @@ public void run() {
                 commentList = new ArrayList<Comments>();
 
 
-
             commentList = Arrays.asList(comments);
 
             Log.e("comment size is : ", ""+commentList.size());
@@ -331,7 +330,7 @@ public void run() {
             page = totalPages;
             if(commentList!=null && commentList.size()<=0) {
 
-
+                commentList = new ArrayList<Comments>();
                 Comments c = new Comments();
                 c.setCommentText("No Comments so far");
                 c.setIsImage("false");
@@ -343,8 +342,8 @@ public void run() {
 //                page = 0;
 //            }
 
-                adapter = new RecyclerViewMaterialAdapter(new ImageComment_tab_adapter(context, commentList, position));
-                recyclerView.setAdapter(adapter);
+            adapter = new RecyclerViewMaterialAdapter(new ImageComment_tab_adapter(context, commentList, position));
+            recyclerView.setAdapter(adapter);
 
             adapter.notifyDataSetChanged();
 
@@ -367,7 +366,7 @@ public void run() {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_comment_in_event);
+            String url = getResources().getString(R.string.ip_localhost) + getResources().getString(R.string.add_comment_in_event);
 
 
             RestTemplate restTemplate = new RestTemplate(true);
