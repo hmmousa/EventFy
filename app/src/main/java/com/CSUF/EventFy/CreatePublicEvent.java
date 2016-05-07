@@ -120,7 +120,11 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
     private LocationManager locationManager;
     private SignUp signUp;
     private android.location.Location cLocation;
+    private double latitude;
+    private double longitude;
 
+
+    GPSTracker gps;
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
@@ -134,6 +138,32 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_public_event);
+
+
+        ImageView imgLocation = (ImageView) findViewById(R.id.public_event_current_location);
+
+        if (imgLocation != null) {
+            imgLocation.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    gps = new GPSTracker(CreatePublicEvent.this);
+
+                    if(gps.canGetLocation()) {
+                        latitude = gps.getLatitude();
+                        longitude = gps.getLongitude();
+
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Your Location is -\nLat: " + latitude + "\nLong: "
+                                        + longitude, Toast.LENGTH_LONG).show();
+                    } else {
+                        gps.showSettingsAlert();
+                    }
+                }
+            });
+        }
+
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
@@ -171,8 +201,8 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowHomeEnabled(true);
-               actionBar.setDisplayShowTitleEnabled(true);
-               actionBar.setDisplayUseLogoEnabled(false);
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayUseLogoEnabled(false);
                 actionBar.setHomeButtonEnabled(true);
 
             }
@@ -261,12 +291,12 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
 
         mCreateEvent.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-            mCreateEvent.setEnabled(false);
+                mCreateEvent.setEnabled(false);
 
                 progressDialog = new ProgressDialog(CreatePublicEvent.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(false);
-               // progressDialog.setCancelable(false);
+                // progressDialog.setCancelable(false);
                 progressDialog.setMessage("Creating Event...");
                 progressDialog.show();
 
@@ -569,15 +599,15 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-public void loadNextActivity()
-{
-    Intent intent = new Intent(this, EventInfoActivity.class);
-    intent.putExtra("CurrentEvent", event);
-    intent.putExtra("signup", signUp);
-    finish();
-    startActivity(intent);
+    public void loadNextActivity()
+    {
+        Intent intent = new Intent(this, EventInfoActivity.class);
+        intent.putExtra("CurrentEvent", event);
+        intent.putExtra("signup", signUp);
+        finish();
+        startActivity(intent);
 
-}
+    }
 
 
     private class AddEvent extends AsyncTask<Void, Void, Void> {
@@ -610,8 +640,8 @@ public void loadNextActivity()
             event.setEventLocation(null);
             event.setEventTime(mEventTimeStr);
             event.setEventType(eventTypeStr);
-            event.setEventLocationLatitude(cLocation.getLatitude());
-            event.setEventLocationLongitude(cLocation.getLongitude());
+            event.setEventLocationLatitude(latitude);
+            event.setEventLocationLongitude(longitude);
 
             HttpEntity<Events> request = new HttpEntity<>(event);
 
@@ -666,7 +696,7 @@ public void loadNextActivity()
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-           return null;
+            return null;
         }
 
         @Override
