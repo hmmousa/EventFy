@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.CSUF.Adapter.Attendance_tab_adapter;
 import com.CSUF.EventFy.R;
-import com.CSUF.EventFy.TestRecyclerViewAdapter;
 import com.CSUF.EventFy_Beans.Comments;
 import com.CSUF.EventFy_Beans.SignUp;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
@@ -29,15 +28,7 @@ import com.paginate.recycler.LoadingListItemCreator;
 import com.paginate.recycler.LoadingListItemSpanLookup;
 import com.squareup.picasso.Picasso;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,7 +47,6 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
     protected boolean addLoadingRow = true;
     protected long networkDelay = 10;
     protected boolean customLoadingListItem = false;
-    private TestRecyclerViewAdapter adapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private int position;
@@ -95,15 +85,12 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
         mRecyclerView.setHasFixedSize(true);
         handler = new Handler();
 
-            ITEM_COUNT=3;
-            Log.e("count in ", "" + ITEM_COUNT);
-
-      //  getUsersForEvent = new GetUsersForEvent(true);
-      //  getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        loading = false;
+        getUsersForEvent = new GetUsersForEvent(true);
+        getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
-
-
+       // setupPagination();
     }
 
 
@@ -113,10 +100,10 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
         if (paginate != null) {
             paginate.unbind();
         }
+
         handler.removeCallbacks(fakeCallback);
         //adapter = new (lst);
-        loading = false;
-        page = 0;
+
         int layoutOrientation;
         layoutOrientation = OrientationHelper.VERTICAL;
 
@@ -139,16 +126,21 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
                 })
                 .build();
 
+       // getUsersForEvent = new GetUsersForEvent(true);
+      //  getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
 
     @Override
     public synchronized void onLoadMore() {
         Log.d("Paginate", "onLoadMore");
-        loading = true;
+
         // Fake asynchronous loading that will generate page of random data after some delay
-        Log.e("in paginate :::: ", ""+page);
-        handler.postDelayed(fakeCallback, networkDelay);
+      if(!hasLoadedAllItems()) {
+          loading = true;
+          handler.postDelayed(fakeCallback, networkDelay);
+      }
     }
 
     @Override
@@ -158,16 +150,19 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
 
     @Override
     public boolean hasLoadedAllItems() {
-        return page == totalPages; // If all pages are loaded return true
+        return page >= totalPages; // If all pages are loaded return true
     }
 
     private Runnable fakeCallback = new Runnable() {
         @Override
         public void run() {
-            page++;
-           // getUsersForEvent = new GetUsersForEvent(true);
-           // getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            loading = false;
+
+            if(!hasLoadedAllItems())
+            {    loading = true;
+
+                getUsersForEvent = new GetUsersForEvent(true);
+                getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     };
 
@@ -220,41 +215,58 @@ public class Attendance_tab extends Fragment implements Paginate.Callbacks{
 
         @Override
         protected Void doInBackground(Void... params) {
-            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_user_for_event);
-
-            MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-
-            headers.add("Content-Type", "text/plain");
-
-            Log.e("ing event id : ", ""+eventId);
-            RestTemplate restTemplate = new RestTemplate(true);
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-            HttpEntity<String> request = new HttpEntity<>(eventId, headers);
-
-
-            ResponseEntity<SignUp []> response = restTemplate.exchange(url, HttpMethod.POST, request, SignUp[].class);
-
-            SignUp [] signUp = response.getBody();
-
-            mContentItems =  Arrays.asList(signUp);
+//            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_user_for_event);
+//
+//            MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+//
+//            headers.add("Content-Type", "text/plain");
+//
+//            Log.e("page count  : ", ""+page);
+//            RestTemplate restTemplate = new RestTemplate(true);
+//            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+//
+//            HttpEntity<String> request = new HttpEntity<>(eventId, headers);
+//
+//
+//            ResponseEntity<SignUp []> response = restTemplate.exchange(url, HttpMethod.POST, request, SignUp[].class);
+//
+//            SignUp [] signUp = response.getBody();
+//
+//            mContentItems =  Arrays.asList(signUp);
 
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            mContentItems = new ArrayList<SignUp>();
+            Log.e("data loading ", ""+mContentItems);
+            if(mContentItems != null && mContentItems.size()<=0) {
 
+                SignUp s = new SignUp();
+                s.setUserName("Be the first to enroll");
+                mContentItems.add(s);
+                page = totalPages;
+                loading = false;
+                Log.e("after result page ", ""+page);
 
-            if(mContentItems!=null) {
-                Log.e("data loaded :::  ", ""+mContentItems.size());
-               if(mAdapter==null) {
-                   mAdapter = new RecyclerViewMaterialAdapter(new Attendance_tab_adapter(context, mContentItems, position));
-                   mRecyclerView.setAdapter(mAdapter);
-                   setupPagination();
-               }
-                mAdapter.notifyDataSetChanged();
             }
+            else{
+                page =0;
+            }
+
+            Log.e("after adding object:  ", ""+mContentItems.size());
+
+            ITEM_COUNT = mContentItems.size();
+
+            if(mAdapter==null) {
+                mAdapter = new RecyclerViewMaterialAdapter(new Attendance_tab_adapter(context, mContentItems, position));
+            }
+
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+
+
         }
     }
 }

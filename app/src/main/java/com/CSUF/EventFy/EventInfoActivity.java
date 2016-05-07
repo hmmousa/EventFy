@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import com.CSUF.EventFy.fragment.Attendance_tab;
 import com.CSUF.EventFy.fragment.Eventinfo_tab;
 import com.CSUF.EventFy.fragment.ImageComment_tab;
+import com.CSUF.EventFy_Beans.Events;
+import com.CSUF.EventFy_Beans.SignUp;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
@@ -29,16 +31,21 @@ public class EventInfoActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar toolbar;
+    private Events event;
+    private SignUp signUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_info);
 
-       // if (!BuildConfig.DEBUG)
-       //     Fabric.with(this, new Crashlytics());
+        Intent in = getIntent();
+        event = (Events) in.getSerializableExtra("CurrentEvent");
+        signUp = (SignUp) in.getSerializableExtra("signup");
+        setTitle(event.getEventName());
 
-        setTitle("");
+        if(event.getEventImageUrl().equals("default"))
+           event.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
 
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
 
@@ -71,13 +78,12 @@ public class EventInfoActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
-                        return ImageComment_tab.newInstance(arr[position], getApplicationContext(), position);
-
+                        return ImageComment_tab.newInstance(arr[position], getApplicationContext(), position, event);
                     case 1:
-                        return Attendance_tab.newInstance(arr[position], getApplicationContext(), position, "2");
+                        return Attendance_tab.newInstance(arr[position], getApplicationContext(), position, ""+event.getEventId());
 
                     default:
-                        return new Eventinfo_tab();
+                        return new Eventinfo_tab().newInstance(getApplicationContext(),event, signUp);
 
                 }
             }
@@ -109,7 +115,7 @@ public class EventInfoActivity extends AppCompatActivity {
                     default:
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.red,
-                                "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+                                event.getEventImageUrl());
                 }
 
                 //execute others actions if needed (ex : modify your header logo)

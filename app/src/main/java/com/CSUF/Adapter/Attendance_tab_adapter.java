@@ -25,7 +25,7 @@ public class Attendance_tab_adapter  extends RecyclerView.Adapter<Attendance_tab
     static final int TYPE_IMAGE = 0;
     static final int TYPE_COMMENT = 1;
     private Context context;
-    private int position1;
+    private int position;
 
 
 
@@ -33,23 +33,20 @@ public class Attendance_tab_adapter  extends RecyclerView.Adapter<Attendance_tab
     public Attendance_tab_adapter(Context context ,List<SignUp> contents, int position) {
         this.signUpLst = contents;
         this.context = context;
-        this.position1 = position;
+        this.position = position;
 
     }
 
     @Override
     public int getItemViewType(int position) {
-
-        Log.e("position is : ", ""+position);
-        return 0;
-
+        return position;
     }
 
     @Override
     public int getItemCount() {
-        if(signUpLst!=null)
+if(signUpLst!=null)
         return signUpLst.size();
-      return 0;
+     return 0;
     }
 
     @Override

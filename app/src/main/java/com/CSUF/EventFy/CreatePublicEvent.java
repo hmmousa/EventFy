@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.CSUF.EventFy_Beans.Events;
+import com.CSUF.EventFy_Beans.SignUp;
 import com.CSUF.Notifications.GCMNotificationIntentService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -115,6 +117,9 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
     private String eventNameStr;
     private String mEventTimeStr;
     private String eventTypeStr;
+    private LocationManager locationManager;
+    private SignUp signUp;
+    private android.location.Location cLocation;
 
 
     public static final String DATEPICKER_TAG = "datepicker";
@@ -137,8 +142,8 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
         Intent intent1 = new Intent(this, GCMNotificationIntentService.class);
         startService(intent1);
 
-//        Intent in = getIntent();
-//        SignUp signUp = (SignUp) in.getSerializableExtra("signup");
+        Intent in = getIntent();
+        signUp = (SignUp) in.getSerializableExtra("signup");
 
         // mActionBarSize = getActionBarSize();
 
@@ -270,6 +275,7 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
                             public void run() {
                                 if(!mCreateEvent.isEnabled()) {
 
+
                                     uploadImage = new UploadImage(true);
 
                                     uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -304,6 +310,29 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new Builder(this).addApi(AppIndex.API).build();
     }
+
+    public void intiGpsLocation()
+    {
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // getting GPS status
+        Boolean isGPSEnabled = locationManager
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        // getting network status
+        Boolean isNetworkEnabled = locationManager
+                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!isGPSEnabled && !isNetworkEnabled) {
+            // no network provider is enabled
+        } else {
+
+            cLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        }
+
+    }
+
 
     protected int getActionBarSize() {
         TypedValue typedValue = new TypedValue();
@@ -431,15 +460,10 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.e("request code  : ", "" + requestCode);
-        Log.e("request code crop : ", "" + Crop.REQUEST_CROP);
-
         if (requestCode == PICK_IMAGE_ID) {
             Uri selectedImage = ImagePicker.getImageFromResult(this, resultCode, data);
             dest = beginCrop(selectedImage);
-            Log.e("request code dest : ", "" + dest);
         } else if (requestCode == Crop.REQUEST_CROP) {
-            Log.e("request code dest h : ", "" + dest);
             handleCrop(resultCode, data, dest);
         }
 
@@ -545,6 +569,15 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+public void loadNextActivity()
+{
+    Intent intent = new Intent(this, EventInfoActivity.class);
+    intent.putExtra("CurrentEvent", event);
+    intent.putExtra("signup", signUp);
+    finish();
+    startActivity(intent);
+
+}
 
 
     private class AddEvent extends AsyncTask<Void, Void, Void> {
@@ -565,8 +598,9 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
+
             event = new Events();
-            event.getEventAdmin("admin");
+            event.getEventAdmin(signUp.getUserId());
             event.setEventCapacity(eventCapacityStr);
             event.setEventDate(mEventDateStr);
             event.setEventDescription(eventDescriptionStr);
@@ -576,7 +610,8 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
             event.setEventLocation(null);
             event.setEventTime(mEventTimeStr);
             event.setEventType(eventTypeStr);
-
+            event.setEventLocationLatitude(cLocation.getLatitude());
+            event.setEventLocationLongitude(cLocation.getLongitude());
 
             HttpEntity<Events> request = new HttpEntity<>(event);
 
@@ -592,6 +627,9 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
             Log.e("event : ", ""+event.getEventID() );
 
             progressDialog.dismiss();
+
+            loadNextActivity();
+
         }
     }
 

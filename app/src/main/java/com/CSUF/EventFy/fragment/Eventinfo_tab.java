@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.CSUF.Adapter.EventInfo_Adapter;
 import com.CSUF.EventFy.R;
 import com.CSUF.EventFy_Beans.Events;
+import com.CSUF.EventFy_Beans.SignUp;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
@@ -24,12 +25,14 @@ public class Eventinfo_tab extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private Events event;
     private Context context;
+    private SignUp signUp;
 
 
-    public static Eventinfo_tab newInstance(Context context, Events event) {
+    public static Eventinfo_tab newInstance(Context context, Events event, SignUp signUp) {
         Eventinfo_tab r = new Eventinfo_tab();
         r.context = context;
         r.event = event;
+        r.signUp = signUp;
         return r;
     }
 
@@ -49,7 +52,7 @@ public class Eventinfo_tab extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewMaterialAdapter(new EventInfo_Adapter(context, event));
+        mAdapter = new RecyclerViewMaterialAdapter(new EventInfo_Adapter(context, event, signUp));
         mRecyclerView.setAdapter(mAdapter);
 
         mAdapter.notifyDataSetChanged();

@@ -102,8 +102,6 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
 
 
     public void signup() {
-        Log.d(TAG, "Signup");
-
         if (!validate()) {
             onSignupFailed();
             return;
@@ -126,22 +124,6 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
                         emailStr = _emailText.getText().toString();
                         validateUserId = new ValidateUserId(true);
                         validateUserId.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                        if (result != null && result.equals("Success")) {
-                            SignUp signUp = new SignUp();
-                            signUp.setUserId(_emailText.getText().toString());
-                            signUp.setPassword(_passwordText.getText().toString());
-                            signUp.setIsVerified("false");
-                            signUp.setIsFacebook("false");
-                            signUp.setImageUrl("default");
-                            signUp.setDob(_dobtext.getText().toString());
-                            signUp.setUserName(_nameText.getText().toString());
-                                onSignupSuccess(signUp);
-                        }
-                        else {
-                            onSignupFailed();
-                        }
-
                         // onSignupFailed();
 
                     }
@@ -160,7 +142,7 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
         startActivity(intent);
 
      //   setResult(RESULT_OK, null);
-   //     finish();
+        finish();
     }
 
     public void onSignupFailed() {
@@ -253,6 +235,22 @@ public class SignupActivity extends AppCompatActivity implements OnDateSetListen
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            Log.e("resturn String ", ""+result);
+            if (result != null && result.equals("Success")) {
+                SignUp signUp = new SignUp();
+                signUp.setUserId(_emailText.getText().toString());
+                signUp.setPassword(_passwordText.getText().toString());
+                signUp.setIsVerified("false");
+                signUp.setIsFacebook("false");
+                signUp.setImageUrl("default");
+                signUp.setDob(_dobtext.getText().toString());
+                signUp.setUserName(_nameText.getText().toString());
+                onSignupSuccess(signUp);
+            }
+            else {
+                onSignupFailed();
+            }
+
             progressDialog.dismiss();
         }
     }

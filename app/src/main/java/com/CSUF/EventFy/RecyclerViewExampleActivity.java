@@ -22,8 +22,6 @@ import com.paginate.Paginate;
 import com.paginate.recycler.LoadingListItemCreator;
 import com.paginate.recycler.LoadingListItemSpanLookup;
 
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
-
 public class RecyclerViewExampleActivity extends Fragment implements Paginate.Callbacks {
 
     private static final int GRID_SPAN = 3;
@@ -77,7 +75,7 @@ public class RecyclerViewExampleActivity extends Fragment implements Paginate.Ca
 
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new SlideInUpAnimator());
+       // recyclerView.setItemAnimator(new SlideInUpAnimator());
         //recyclerView.setAdapter(adapter);
 
         paginate = Paginate.with(recyclerView, this)

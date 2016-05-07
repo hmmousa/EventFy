@@ -13,6 +13,7 @@ import com.CSUF.EventFy.R;
 import com.CSUF.EventFy_Beans.Comments;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class ImageComment_tab_adapter extends RecyclerView.Adapter<ImageComment_tab_adapter.ViewHolder> {
 
-    List<Comments> commentes;
+    List<Comments> commentes = new ArrayList<Comments>();
 
     static final int TYPE_IMAGE = 0;
     static final int TYPE_COMMENT = 1;
@@ -73,12 +74,11 @@ public class ImageComment_tab_adapter extends RecyclerView.Adapter<ImageComment_
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.commentUserName.setText(commentes.get(position).getUserName());
+        Log.e("holder data : ", ""+commentes.size());
+        Log.e("holder data : ", ""+commentes.get(0));
         if(commentes.get(position).getIsImage().equals("true")) {
 
-            if(position%2==0)
-            Picasso.with(context).load("https://res.cloudinary.com/eventfy/image/upload/v1461550414/yfg5zs58jd709arktqgn.png").into(holder.img_android);
-         else
-            Picasso.with(context).load("http://tvfiles.alphacoders.com/100/hdclearart-10.png").into(holder.img_android);
+            Picasso.with(context).load(commentes.get(position).getCommentText()).into(holder.img_android);
         }
         else
         {
@@ -109,9 +109,6 @@ public class ImageComment_tab_adapter extends RecyclerView.Adapter<ImageComment_
                 commentUserText = (TextView) view.findViewById(R.id.comment_comment_text);
 
             }
-
-            Log.e("tv text **** : ", ""+commentUserName);
-            Log.e("imf **** : ", ""+img_android);
         }
     }
 

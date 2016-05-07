@@ -89,8 +89,8 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
 
 
 
-//        getNearbyEvent = new GetNearbyEvent(true);
-//        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        getNearbyEvent = new GetNearbyEvent(true);
+        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
     }
@@ -206,24 +206,23 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-
+            Log.e("url tab3 : ", url);
 
             if (cLocation != null) {
                 Log.d("activity", "LOC by Network");
                 location.setLatitude(cLocation.getLatitude());
                 location.setLongitude(cLocation.getLongitude());
-                Log.e("long : ", ""+location.getLongitude());
-                Log.e("lati : ", ""+location.getLatitude());
+                Log.e("long : ", "" + location.getLongitude());
+                Log.e("lati : ", "" + location.getLatitude());
+
+                HttpEntity<Location> request = new HttpEntity<>(location);
+
+                ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
+
+                Events[] event = response.getBody();
+
+                eventLst = Arrays.asList(event);
             }
-
-
-            HttpEntity<Location> request = new HttpEntity<>(location);
-
-            ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
-
-            Events [] event = response.getBody();
-
-             eventLst =  Arrays.asList(event);
 
             return null;
         }

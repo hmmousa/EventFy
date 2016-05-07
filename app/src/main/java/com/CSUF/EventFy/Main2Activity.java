@@ -1,9 +1,6 @@
 package com.CSUF.EventFy;
 
-
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -37,9 +33,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import utils.UtilsDevice;
-import utils.UtilsMiscellaneous;
 
 
 /**
@@ -64,6 +57,7 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private ScrimInsetsFrameLayout mScrimInsetsFrameLayout;
     private boolean isFacebook;
+    NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +66,19 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("signup");
 
-        init_slider();
+if(navigationView==null) {
+    init_slider();
 
-        init_navigator();
+    init_navigator();
 
+    try {
+        set_loginData(signUp);
+    } catch (MalformedURLException e) {
+        e.printStackTrace();
+    } catch (URISyntaxException e) {
+        e.printStackTrace();
+    }
+}
     }
 
 
@@ -202,21 +205,29 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportActionBar().setTitle(R.string.toolbar_title_home);
+
+        toggle.syncState();
 
     }
 
 
     private void set_loginData(SignUp signUp) throws MalformedURLException, URISyntaxException {
 
-        userName = (TextView) findViewById(R.id.navigation_drawer_account_information_display_name);
+
+
+        View headerLayout =
+                navigationView.getHeaderView(0);
+        Log.e("navoigator : ", ""+headerLayout);
+
+        userName = (TextView) headerLayout.findViewById(R.id.navigation_drawer_account_information_display_name);
         userName.setText(signUp.getUserName());
-        profilePic = (ImageView) findViewById(R.id.imageView_user);
+        profilePic = (ImageView) headerLayout.findViewById(R.id.navigation_drawer_user_account_picture_profile);
         //String url = ""+R.string.profile_start_url+userFbId+""+R.string.profile_end_url;
         if(signUp.getIsFacebook().equals("true")) {
             String url = "https://graph.facebook.com/" + signUp.getUserId() + "/picture?type=large";
@@ -276,7 +287,3 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
 
     }
 }
-
-
-
-

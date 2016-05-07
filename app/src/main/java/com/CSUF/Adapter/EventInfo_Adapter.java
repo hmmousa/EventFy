@@ -6,11 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.CSUF.EventFy.R;
 import com.CSUF.EventFy_Beans.Events;
+import com.CSUF.EventFy_Beans.SignUp;
 
 /**
  * Created by swapnil on 4/25/16.
@@ -25,13 +25,14 @@ public class EventInfo_Adapter extends RecyclerView.Adapter<EventInfo_Adapter.Vi
     private Context context;
     private Events event;
     private int position1;
+    private SignUp signUp;
 
 
 
-
-    public EventInfo_Adapter(Context context , Events event) {
+    public EventInfo_Adapter(Context context , Events event, SignUp signUp) {
         this.event = event;
         this.context = context;
+        this.signUp = signUp;
     }
 
     @Override
@@ -63,23 +64,32 @@ public class EventInfo_Adapter extends RecyclerView.Adapter<EventInfo_Adapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        holder.eventName.setText(event.getEventName());
+        holder.eventDate.setText(event.getEventDate());
     //    holder.tv_android.setText();
+
      //   Picasso.with(context).load("https://res.cloudinary.com/eventfy/image/upload/v1461550414/yfg5zs58jd709arktqgn.png").into(holder.img_android);
 
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView tv_android;
-        ImageView img_android;
+        TextView eventLocation;
+        TextView eventName;
+        TextView eventDistance;
+        TextView eventType;
+        TextView eventDate;
+        TextView eventDescription;
+
+
+
         public ViewHolder(View view) {
             super(view);
-
-          //  tv_android = (TextView) view.findViewById(R.id.event_user_name);
-           // img_android = (ImageView) view.findViewById(R.id.event_user);
-
-
-            //Log.e("imf **** : ", ""+img_android);
+            eventName = (TextView) view.findViewById(R.id.txt_event_info_details_name);
+            eventLocation = (TextView) view.findViewById(R.id.txt_event_info_details_location);
+            //eventDescription = view.findViewById(R.id.EventInfoDetails);
+            eventDistance = (TextView) view.findViewById(R.id.txt_input_event_info_details_distance);
+            eventDate = (TextView) view.findViewById(R.id.txt_input_event_info_details_date);
         }
     }
 }

@@ -42,7 +42,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -57,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
     TextView _signupLink;
     SharedPreferences preferences;
     ProgressDialog progressDialog;
+    String  userId;
+    String password;
+    SignUp signUp;
 
     private GoogleApiClient client;
 
@@ -69,17 +71,12 @@ public class LoginActivity extends AppCompatActivity {
 
         String signUpjson = preferences.getString("signUp", "");
 
-        Log.e("data in ca : ", signUpjson);
-        Log.e("data len : ", ""+signUpjson.length());
+        if (signUpjson.length() > 5 && signUpjson != null) {
 
-//        if (signUpjson.length()>5 && signUpjson != null) {
-//
-//            Log.e("in else : ", signUpjson);
-//            Gson gson = new Gson();
-//            SignUp signUp = gson.fromJson(signUpjson, SignUp.class);
-//            onLoginSuccess(signUp, true);
-//        } else {
-
+            Gson gson = new Gson();
+            SignUp signUp = gson.fromJson(signUpjson, SignUp.class);
+            onLoginSuccess(signUp, true);
+        } else {
 
 
             FacebookSdk.sdkInitialize(getApplicationContext());
@@ -89,7 +86,6 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Authenticating...");
 
-            Log.e("in if state : ", signUpjson);
             setContentView(R.layout.activity_login);
             _emailText = (EditText) findViewById(R.id.input_email);
             _loginButton = (Button) findViewById(R.id.btn_login);
@@ -124,14 +120,17 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
-
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
 
+        Log.e("callback manager : ", ""+callbackManager);
+        Log.e("request code : ",""+requestCode);
+        if(callbackManager!=null)
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
     // Private method to handle Facebook login and callback
     private void onFblogin() {
@@ -145,16 +144,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
 
-                        System.out.println("Success");
                         GraphRequest.newMeRequest(
                                 loginResult.getAccessToken(), new GraphJSONObjectCallback() {
                                     @Override
                                     public void onCompleted(JSONObject json, GraphResponse response) {
                                         if (response.getError() != null) {
-                                            // handle error
-                                            System.out.println("ERROR");
+
+                                            facebookErrorMsg();
                                         } else {
-                                            System.out.println("Success");
                                             try {
 
                                                 String jsonresult = String.valueOf(json);
@@ -166,17 +163,12 @@ public class LoginActivity extends AppCompatActivity {
                                                 //  String str_lastname = json.getString("last_name");
 
                                                 Log.e("fb id : ", "" + str_id);
-                                               SignUp signUp = new SignUp();
-                                                signUp.setUserName(""+str_UserName);
+                                                SignUp signUp = new SignUp();
+                                                signUp.setUserId(str_id);
                                                 signUp.setIsFacebook("true");
                                                 signUp.setUserName(str_UserName);
+                                                signUp.setImageUrl("https://graph.facebook.com/" + signUp.getUserId() + "/picture?type=large");
                                                 onLoginSuccess(signUp, false);
-
-//                                                Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
-//                                                intent.putExtra("userId", str_UserName);
-//                                                intent.putExtra("userFbId", str_id);
-//                                                intent.putExtra("isFacebook", true);
-//                                                startActivity(intent);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -185,6 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
 
                                 }).executeAsync();
+
                     }
 
 
@@ -195,10 +188,33 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(FacebookException error) {
-                        Log.d(TAG_ERROR, error.toString());
+                        //facebookErrorMsg();
                     }
 
                 });
+    }
+
+
+    public void facebookErrorMsg()
+    {
+
+//        new AlertDialog.Builder(this.getApplicationContext())
+//                .setTitle("Facebook Login")
+//                .setMessage("Error while login plase retry")
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // continue with delete
+//
+//                    }
+//                })
+//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // do nothing
+//                    }
+//                })
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .show();
+
     }
 
 
@@ -206,15 +222,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-
         // TODO: Implement your own authentication logic here.
 
         new Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         _loginButton.setEnabled(false);
+                        userId = _emailText.getText().toString();
+                        password = _passwordText.getText().toString();
 
                         String result = null;
                         if (!validate()) {
@@ -222,13 +237,8 @@ public class LoginActivity extends AppCompatActivity {
                             return;
                         } else {
                             senddata senddataObj = new senddata(true);
-                            try {
-                                senddataObj.execute(_emailText.getText().toString(), _passwordText.getText().toString()).get();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            }
+
+                            senddataObj.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }, 500);
@@ -245,11 +255,13 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess(SignUp signUp, boolean isSetAlready) {
         // _loginButton.setEnabled(true);
         finish();
-        progressDialog.dismiss();
-//        if (!isSetAlready)
-//            setsharedPref(signUp);
+        if(progressDialog!=null)
+            progressDialog.dismiss();
 
-       Intent intent = new Intent(this, Main2Activity.class);
+        if (!isSetAlready)
+            setsharedPref(signUp);
+
+        Intent intent = new Intent(this, Main2Activity.class);
         intent.putExtra("signup", signUp);
 
         startActivity(intent);
@@ -260,6 +272,8 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
+        if(callbackManager!=null)
+            facebookErrorMsg();
     }
 
     public boolean validate() {
@@ -299,20 +313,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public class senddata extends AsyncTask<String, String, SignUp> {
+    public class senddata extends AsyncTask<Void, Void, Void> {
         String responseText;
 
         public senddata(boolean b) {
         }
 
         @Override
-        protected SignUp doInBackground(String... strings) {
+        protected Void doInBackground(Void... strings) {
 
             User user = new User();
-            user.setUsername(strings[0]);
-            user.setPassword(strings[1]);
+            user.setUsername(userId);
+            user.setPassword(password);
+            String url =  getResources().getString(R.string.ip_local)+getResources().getString(R.string.login);
 
-            final String url = "http://192.168.0.5:8080/EventFy/webapi/login";
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -321,18 +335,17 @@ public class LoginActivity extends AppCompatActivity {
             ResponseEntity<SignUp> rateResponse =
                     restTemplate.exchange(url,
                             HttpMethod.POST, request, SignUp.class);
-            SignUp signUp = rateResponse.getBody();
+            signUp = rateResponse.getBody();
 
 
-            Log.e("return : ", "" + signUp.getUserName());
-
-            return signUp;
+            return null;
 
         }
 
         @Override
-        protected void onPostExecute(SignUp signUp) {
-            super.onPostExecute(signUp);
+        protected void onPreExecute() {
+            super.onPreExecute();
+
             _loginButton.setEnabled(true);
             if (signUp != null && signUp.getUserName().length() > 0)
                 onLoginSuccess(signUp, false);
@@ -353,7 +366,8 @@ public class LoginActivity extends AppCompatActivity {
 
         String signUpjson = preferences.getString("signUp", "");
 
-        Log.e("data shared 2 : ", ""+signUpjson);
+
+
         prefsEditor.commit();
     }
 
