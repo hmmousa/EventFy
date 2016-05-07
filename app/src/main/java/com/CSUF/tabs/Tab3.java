@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.CSUF.EventFy.R;
 import com.CSUF.EventFy_Beans.Events;
@@ -138,7 +139,7 @@ public class Tab3 extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final LinearLayout parent = (LinearLayout) inflater.inflate(R.layout.tab_3, container, false);
+        final RelativeLayout parent = (RelativeLayout) inflater.inflate(R.layout.tab_3, container, false);
         mapView = (MapView) parent.findViewById(R.id.map_tab);
         return parent;
     }
