@@ -41,7 +41,6 @@ import android.widget.Toast;
 
 import com.CSUF.EventFy_Beans.Events;
 import com.CSUF.EventFy_Beans.SignUp;
-import com.CSUF.Notifications.GCMNotificationIntentService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
@@ -174,10 +173,7 @@ public class CreatePublicEvent extends AppCompatActivity implements ObservableSc
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
-        Intent intent = new Intent(this, RegistrationIntentService.class);
-        startService(intent);
-        Intent intent1 = new Intent(this, GCMNotificationIntentService.class);
-        startService(intent1);
+
 
         SharedPreferences preferences;
         preferences = PreferenceManager.getDefaultSharedPreferences(this);

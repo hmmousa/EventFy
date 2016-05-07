@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.CSUF.EventFy_Beans.SignUp;
 import com.CSUF.EventFy_Beans.User;
+import com.CSUF.Notifications.GCMNotificationIntentService;
 import com.facebook.CallbackManager;
 import com.facebook.CallbackManager.Factory;
 import com.facebook.FacebookCallback;

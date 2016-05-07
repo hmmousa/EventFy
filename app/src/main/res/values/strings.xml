@@ -55,9 +55,12 @@
     <!-- Web servises url -->
 
     <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">http://192.168.0.2:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.17:8080/EventFy</string>
     <string name="login">/webapi/login</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
+
+    <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
+
 
     <string name="signup_adduser">/webapi/signup/adduser</string>
 

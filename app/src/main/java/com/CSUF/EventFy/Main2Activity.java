@@ -1,10 +1,12 @@
 package com.CSUF.EventFy;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -22,12 +24,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.CSUF.EventFy_Beans.Location;
 import com.CSUF.EventFy_Beans.SignUp;
 import com.CSUF.customViews.ScrimInsetsFrameLayout;
 import com.CSUF.sliding.SlidingTabLayout;
 import com.CSUF.tabs.ViewPagerAdapter;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView.OnSliderClickListener;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -58,6 +67,8 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
     private ScrimInsetsFrameLayout mScrimInsetsFrameLayout;
     private boolean isFacebook;
     NavigationView navigationView;
+    UpdateUserLocation updateUserLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +77,18 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("signup");
 
-if(navigationView==null) {
+
+    Intent intent = new Intent(this, RegistrationIntentService.class);
+    intent.putExtra("signup", signUp);
+    startService(intent);
+
+//        Intent intent1 = new Intent(this, GCMNotificationIntentService.class);
+//        startService(intent1);
+//
+//        updateUserLocation = new UpdateUserLocation(true);
+//        updateUserLocation.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        if(navigationView==null) {
     init_slider();
 
     init_navigator();
@@ -286,4 +308,52 @@ if(navigationView==null) {
     {
 
     }
+
+
+    class UpdateUserLocation extends AsyncTask<Void, Void, Void>
+    {
+
+        public UpdateUserLocation(String email, String password)
+        {
+
+        }
+
+        public UpdateUserLocation(boolean b) {
+            super();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String url =  getResources().getString(R.string.ip_local)+getResources().getString(R.string.signup_location_update);
+
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            Location location = new Location();
+
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            android.location.Location cLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+             location.setLongitude(cLocation.getLongitude());
+            location.setLongitude(cLocation.getLatitude());
+            location.setUserId(signUp.getUserId());
+
+            HttpEntity<Location> request = new HttpEntity<>(location);
+
+            ResponseEntity<String> rateResponse =
+                    restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+            String result = rateResponse.getBody();
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+        }
+    }
+
+
 }

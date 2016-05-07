@@ -31,7 +31,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -41,7 +40,6 @@ import java.util.List;
 public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private SliderLayout mDemoSlider;
     private List<Events> eventLst;
-    HashMap<String,String> url_maps;
     private android.location.Location cLocation;
 
     GetNearbyEventForTab1 getNearbyEventForTab1;
