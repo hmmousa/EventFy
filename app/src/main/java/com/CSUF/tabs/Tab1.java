@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.CSUF.EventFy.EventInfoActivity;
@@ -42,6 +44,12 @@ public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListen
     private List<Events> eventLst;
     private android.location.Location cLocation;
 
+    TextView eventName;
+    TextView eventDate;
+    TextView eventTime;
+    TextView eventLoc;
+    TextView eventDist;
+
     GetNearbyEventForTab1 getNearbyEventForTab1;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,6 +60,12 @@ public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListen
 
         getNearbyEventForTab1 = new GetNearbyEventForTab1(true);
         getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        eventName = (TextView) v.findViewById(R.id.txt_input_event_info_details_name);
+        eventDate = (TextView) v.findViewById(R.id.txt_input_event_info_details_date);
+        eventTime = (TextView) v.findViewById(R.id.txt_input_event_info_details_time);
+        eventLoc = (TextView) v.findViewById(R.id.txt_input_event_info_details_location);
+        eventDist = (TextView) v.findViewById(R.id.txt_input_event_info_details_distance);
 
         return v;
     }
@@ -75,12 +89,19 @@ public class Tab1 extends Fragment implements BaseSliderView.OnSliderClickListen
 
             mDemoSlider.addSlider(textSliderView);
 
+            eventName.setText(event.getEventName());
+            eventDate.setText(event.getEventDate());
+            eventTime.setText(event.getEventTime());
+            eventLoc.setText(event.getEventLocation());
+
         }
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         mDemoSlider.setCustomAnimation(new DescriptionAnimation());
         mDemoSlider.setDuration(2000);
         mDemoSlider.addOnPageChangeListener(this);
+
+
 
 
     }
