@@ -56,7 +56,7 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"NearBy", "Map", "Trending"};
+    CharSequence Titles[]={"NearBy", "Map", "Notifications"};
     int Numboftabs =3;
     ProgressDialog pDialog;
     TextView userName;
@@ -78,9 +78,9 @@ public class Main2Activity extends ActionBarActivity implements NavigationView.O
         signUp = (SignUp) in.getSerializableExtra("signup");
 
 
-    Intent intent = new Intent(this, RegistrationIntentService.class);
-    intent.putExtra("signup", signUp);
-    startService(intent);
+//    Intent intent = new Intent(this, RegistrationIntentService.class);
+//    intent.putExtra("signup", signUp);
+//    startService(intent);
 
 //        Intent intent1 = new Intent(this, GCMNotificationIntentService.class);
 //        startService(intent1);
